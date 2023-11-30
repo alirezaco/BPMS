@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package autopay;
+
+service AutopayService {
+  rpc CreateProcess (CreateProcessRequest) returns (CreateProcessResponse) {}
+}
+
+// Common
+message Meta {
+  int32 status = 1;
+  optional string message = 2;
+}
+
+message CreateProcessRequest {
+  string name = 1;
+}
+
+message CreateProcessResponse {
+  Meta meta = 1;
+}
