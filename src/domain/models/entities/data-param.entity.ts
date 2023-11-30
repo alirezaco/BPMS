@@ -1,5 +1,7 @@
+import { SourceEnum } from 'infrastructure/enum/source.enum';
+
 export class DataParamEntity {
-  public source: string;
+  public source: SourceEnum;
   public key: string;
   public sourceKey: string;
 

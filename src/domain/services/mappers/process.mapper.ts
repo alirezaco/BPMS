@@ -23,10 +23,11 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
     schema.max_amount = entity?.maxAmount;
     schema.period = entity?.period;
     schema.cron = entity?.cron;
-    schema.validation_data = entity?.validation_data;
+    schema.validation_data = entity?.validationData;
     schema.steps = entity?.steps?.map((step) =>
       this.stepMapper.convertEntityToSchema(step),
     );
+    schema.data = entity?.data;
 
     return schema;
   }
@@ -45,10 +46,11 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       maxAmount: schema?.max_amount,
       period: schema?.period,
       cron: schema?.cron,
-      validation_data: schema?.validation_data,
+      validationData: schema?.validation_data,
       steps: schema?.steps?.map((step) =>
         this.stepMapper.convertSchemaToEntity(step),
       ),
+      data: schema?.data,
     });
   }
 
@@ -65,12 +67,13 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       maxAmount: request?.max_amount,
       period: convertToPeriod(request?.period),
       cron: request?.cron,
-      validation_data: request?.validation_data
+      validationData: request?.validation_data
         ? JSON.parse(request?.validation_data)
         : undefined,
       steps: request?.steps?.map((step) =>
         this.stepMapper.convertRequestToEntity(step),
       ),
+      data: request?.data ? JSON.parse(request?.data) : undefined,
     });
   }
 }

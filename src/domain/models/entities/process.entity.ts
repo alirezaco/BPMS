@@ -10,7 +10,7 @@ export class ProcessEntity extends BaseEntity {
   public maxAmount?: number;
   public period?: PeriodEnum;
   public cron?: string;
-  public validation_data?: Record<string, any>;
+  public validationData?: Record<string, any>;
   public steps: StepEntity[];
   public data: Record<string, any>;
 
@@ -24,8 +24,8 @@ export class ProcessEntity extends BaseEntity {
     this.maxAmount = initial?.maxAmount;
     this.period = initial?.period;
     this.cron = initial?.cron;
-    this.validation_data = initial?.validation_data;
+    this.validationData = initial?.validationData || {};
     this.steps = initial?.steps;
-    this.data = initial?.data;
+    this.data = initial?.data || {};
   }
 }

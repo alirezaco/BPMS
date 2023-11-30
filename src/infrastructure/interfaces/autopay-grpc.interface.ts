@@ -51,6 +51,13 @@ export interface Step {
 }
 
 export interface Process {
+  id: string;
+  owner: string;
+  created_at: string;
+  updated_at?: string | undefined;
+  deleted_at?: string | undefined;
+  restore_at?: string | undefined;
+  tags: string[];
   name: string;
   roles: string[];
   default_fail_step?: string | undefined;

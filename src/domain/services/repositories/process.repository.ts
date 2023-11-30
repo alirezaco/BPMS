@@ -15,4 +15,10 @@ export class ProcessRepository extends BaseRepository<
   ) {
     super(processModel, proceccMapper);
   }
+
+  async findOneByName(name: string): Promise<ProcessEntity> {
+    const result = await this.processModel.findOne({ name });
+
+    return this.proceccMapper.convertSchemaToEntity(result);
+  }
 }

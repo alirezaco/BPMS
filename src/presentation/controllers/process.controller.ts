@@ -10,6 +10,8 @@ import {
 } from 'infrastructure/interfaces';
 import { HttpStatus } from '@nestjs/common';
 import { MessageEnum } from 'infrastructure/enum';
+import { ProcessUseCase } from 'application/use-cases';
+import { ProcessSerializer } from 'presentation/serializers';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
 export class ProcessController
@@ -18,6 +20,7 @@ export class ProcessController
   constructor(
     @InjectPinoLogger(ProcessController.name)
     private readonly logger: PinoLogger,
+    private readonly processUseCase: ProcessUseCase,
   ) {}
 
   private GrpcErrorHandler(error: any): { meta: Meta } {
@@ -39,7 +42,16 @@ export class ProcessController
     metadata?: Metadata,
   ): Promise<CreateProcessResponse> {
     try {
-      return;
+      const me = metadata.get('me')[0];
+
+      const process = await this.processUseCase.create(request, me.toString());
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: new ProcessSerializer(process),
+      };
     } catch (error) {
       this.GrpcErrorHandler(error);
     }

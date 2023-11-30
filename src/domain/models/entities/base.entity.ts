@@ -6,6 +6,7 @@ export class BaseEntity extends AggregateRoot {
   public createdAt: Date;
   public updatedAt: Date;
   public deletedAt: Date;
+  public restoreAt: Date;
   public owner: string;
   public tags: Array<string>;
 
@@ -16,6 +17,7 @@ export class BaseEntity extends AggregateRoot {
     this.createdAt = initial?.createdAt || new Date();
     this.updatedAt = initial?.updatedAt || new Date();
     this.deletedAt = initial?.deletedAt;
+    this.restoreAt = initial?.restoreAt;
     this.owner = initial?.owner;
     this.tags = initial?.tags || [];
   }

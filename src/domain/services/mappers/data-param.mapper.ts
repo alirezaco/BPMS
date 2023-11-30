@@ -2,6 +2,7 @@ import { DataParamEntity, DataParamSchema } from 'domain/models';
 import { BaseMapper } from './base.mapper';
 import { Injectable } from '@nestjs/common';
 import { DataParam } from 'infrastructure/interfaces';
+import { convertToSource } from 'infrastructure/utils';
 
 @Injectable()
 export class DataParamMapper
@@ -27,7 +28,7 @@ export class DataParamMapper
 
   convertRequestToEntity(request: Partial<DataParam>): DataParamEntity {
     return new DataParamEntity({
-      source: request.source,
+      source: convertToSource(request.source),
       key: request.key,
       sourceKey: request.source_key,
     });
