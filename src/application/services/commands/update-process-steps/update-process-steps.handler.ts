@@ -1,34 +1,23 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateProcessCommand } from './create-process.command';
+import { UpdateProcessStepsCommand } from './update-process-steps.command';
+import { ProcessRepository } from 'domain/services';
 import {
   ComparisonStepEntity,
   DataParamEntity,
   ProcessEntity,
   StepEntity,
 } from 'domain/models';
-import { ProcessFactory, ProcessRepository } from 'domain/services';
 import {
   MessageEnum,
-  PeriodEnum,
   ProcessStepTypeEnum,
   SourceEnum,
 } from 'infrastructure/enum';
 
-@CommandHandler(CreateProcessCommand)
-export class CreateProcessHandler
-  implements ICommandHandler<CreateProcessCommand>
+@CommandHandler(UpdateProcessStepsCommand)
+export class UpdateProcessStepsHandler
+  implements ICommandHandler<UpdateProcessStepsCommand>
 {
-  constructor(
-    private readonly processFactory: ProcessFactory,
-    private readonly processRepository: ProcessRepository,
-  ) {}
-
-  async checkUniqName(name: string): Promise<void> {
-    const process = await this.processRepository.findOneByName(name);
-    if (process) {
-      throw new Error(MessageEnum.DUPLICATE_PROCESS_NAME);
-    }
-  }
+  constructor(private readonly processRepository: ProcessRepository) {}
 
   cehckStepNames(steps: StepEntity[]): void {
     const names = steps.map((x) => x.name);
@@ -147,20 +136,31 @@ export class CreateProcessHandler
     }
   }
 
-  checkPeriod(processEntity: ProcessEntity): void {
-    if (processEntity.period === PeriodEnum.CRON && !processEntity.cron) {
-      throw new Error(MessageEnum.INVALID_PERIOD);
-    }
-  }
-
   async execute({
+    processData,
     processEntity,
-  }: CreateProcessCommand): Promise<ProcessEntity> {
-    await this.checkUniqName(processEntity.name);
-    this.checkSteps(processEntity);
-    if (processEntity.defaultFailStep) this.checkDefaultFailStep(processEntity);
-    this.checkPeriod(processEntity);
+    steps,
+    validationData,
+    defaultFailStep,
+  }: UpdateProcessStepsCommand) {
+    // Update the process steps
+    processEntity.steps = steps;
+    processEntity.data = processData;
+    processEntity.validationData = validationData;
+    processEntity.defaultFailStep = defaultFailStep;
 
-    return this.processFactory.create(processEntity);
+    // Check if the default fail step exists
+    if (defaultFailStep) {
+      this.checkDefaultFailStep(processEntity);
+    }
+
+    // Check if the steps are valid
+    this.checkSteps(processEntity);
+
+    // Save the updated process entity
+    await this.processRepository.updateOneById(processEntity);
+
+    // Return the updated process entity
+    return processEntity;
   }
 }

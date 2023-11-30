@@ -19,6 +19,7 @@ export class ProcessSerializer {
   validation_data: string | undefined;
   steps: StepSerializer[];
   data: string;
+  is_active: boolean;
 
   constructor(initial: ProcessEntity) {
     this.id = initial?.id;
@@ -38,5 +39,6 @@ export class ProcessSerializer {
     this.validation_data = JSON.stringify(initial?.validationData || {});
     this.steps = initial?.steps?.map((step) => new StepSerializer(step));
     this.data = JSON.stringify(initial?.data || {});
+    this.is_active = initial?.isActive;
   }
 }

@@ -67,6 +67,7 @@ export interface Process {
   cron?: string | undefined;
   validation_data?: string | undefined;
   steps: Step[];
+  is_active?: boolean | undefined;
   data: string;
 }
 

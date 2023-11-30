@@ -71,6 +71,7 @@ message Process {
   optional string cron = 7;
   optional string validation_data = 8;
   repeated Step steps = 9;
+  optional bool is_active = 18;
   string data = 10;
 }
 

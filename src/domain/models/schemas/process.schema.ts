@@ -42,4 +42,7 @@ export class ProcessSchema extends BaseSchema {
 
   @Prop({ type: mongoose.Schema.Types.Mixed, required: true, default: {} })
   data: Record<string, any>;
+
+  @Prop({ type: Boolean, default: false })
+  is_active: boolean;
 }

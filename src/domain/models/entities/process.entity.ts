@@ -13,6 +13,7 @@ export class ProcessEntity extends BaseEntity {
   public validationData?: Record<string, any>;
   public steps: StepEntity[];
   public data: Record<string, any>;
+  public isActive: boolean;
 
   constructor(initial: Partial<ProcessEntity>) {
     super(initial);
@@ -27,5 +28,6 @@ export class ProcessEntity extends BaseEntity {
     this.validationData = initial?.validationData || {};
     this.steps = initial?.steps;
     this.data = initial?.data || {};
+    this.isActive = initial?.isActive || false;
   }
 }

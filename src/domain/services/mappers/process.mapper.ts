@@ -28,6 +28,7 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       this.stepMapper.convertEntityToSchema(step),
     );
     schema.data = entity?.data;
+    schema.is_active = entity?.isActive;
 
     return schema;
   }
@@ -51,6 +52,7 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
         this.stepMapper.convertSchemaToEntity(step),
       ),
       data: schema?.data,
+      isActive: schema?.is_active,
     });
   }
 

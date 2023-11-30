@@ -81,6 +81,10 @@ export abstract class BaseRepository<
     return this.mapper.convertSchemaToEntity(data);
   }
 
+  async updateOneById(entity: Partial<EntityType>) {
+    return this.updateOne(entity, { _id: new Types.ObjectId(entity.id) });
+  }
+
   async deleteOne(id: string): Promise<EntityType> {
     const data = await this.model.findOneAndUpdate(
       {
