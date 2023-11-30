@@ -12,10 +12,109 @@ message Meta {
   optional string message = 2;
 }
 
+message DataParam {
+  string source = 1;
+  string key = 2;
+  string source_key = 3;
+}
+
+message ComparisonStep {
+  string func = 1;
+  optional DataParam left = 2;
+  optional DataParam right = 3;
+  repeated ComparisonStep children = 4;
+}
+
+message GrpcStep {
+  string service = 1;
+  string method = 2;
+  string protofile = 3;
+  string url = 4;
+  repeated DataParam metadata = 5;
+  repeated DataParam payload = 6;
+}
+
+message ApiStep {
+  string url = 1;
+  string method = 2;
+  repeated DataParam headers = 3;
+  repeated DataParam params = 4;
+  repeated DataParam bodies = 5;
+  repeated DataParam queries = 6;
+}
+
+message Step {
+  string name = 1;
+  string type = 2;
+  oneof oneof_data {
+    ComparisonStep comparison = 3;
+    GrpcStep grpc = 4;
+    ApiStep api = 5;
+  }
+}
+
+message Process {
+  string name = 1;
+  repeated string roles = 2;
+  optional string default_fail_step = 3;
+  optional bool allowed_direct_debit = 4;
+  optional uint64 max_amount = 5;
+  optional string period = 6;
+  optional string cron = 7;
+  optional string validation_data = 8;
+  repeated Step steps = 9;
+  string data = 10;
+}
+
+message ComparisonStepRequest {
+  string func = 1;
+  optional DataParam left = 2;
+  optional DataParam right = 3;
+  repeated ComparisonStepRequest children = 4;
+}
+
+message GrpcStepRequest {
+  string service = 1;
+  string method = 2;
+  string protofile = 3;
+  string url = 4;
+  repeated DataParam metadata = 5;
+  repeated DataParam payload = 6;
+}
+
+message ApiStepRequest {
+  string url = 1;
+  string method = 2;
+  repeated DataParam headers = 3;
+  repeated DataParam params = 4;
+  repeated DataParam bodies = 5;
+  repeated DataParam queries = 6;
+}
+
+message StepRequest {
+  string name = 1;
+  string type = 2;
+  oneof oneof_data {
+    ComparisonStep comparison = 3;
+    GrpcStep grpc = 4;
+    ApiStep api = 5;
+  }
+}
+
 message CreateProcessRequest {
   string name = 1;
+  repeated string roles = 2;
+  optional string default_fail_step = 3;
+  optional bool allowed_direct_debit = 4;
+  optional uint64 max_amount = 5;
+  optional string period = 6;
+  optional string cron = 7;
+  optional string validation_data = 8;
+  repeated Step steps = 9;
+  string data = 10;
 }
 
 message CreateProcessResponse {
   Meta meta = 1;
+  optional Process data = 2;
 }
