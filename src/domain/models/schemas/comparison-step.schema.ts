@@ -4,7 +4,7 @@ import { ComparisonFunctionEnum } from 'infrastructure/enum';
 
 @Schema({ _id: false })
 export class ComparisonStepSchema {
-  @Prop({ required: true, type: ComparisonFunctionEnum })
+  @Prop({ required: true, type: String, enum: ComparisonFunctionEnum })
   func: ComparisonFunctionEnum;
 
   @Prop({ type: DataParamSchema, required: false, default: {} })

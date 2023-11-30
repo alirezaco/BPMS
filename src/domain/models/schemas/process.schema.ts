@@ -23,7 +23,7 @@ export class ProcessSchema extends BaseSchema {
   @Prop({ type: Number, required: false })
   max_amount?: number;
 
-  @Prop({ type: PeriodEnum, required: false })
+  @Prop({ type: String, enum: PeriodEnum, required: false })
   period?: PeriodEnum;
 
   @Prop({ type: String, required: false })

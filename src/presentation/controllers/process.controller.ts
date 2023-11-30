@@ -7,9 +7,9 @@ import {
   CreateProcessRequest,
   CreateProcessResponse,
   Meta,
-} from 'src/infrastructure/interfaces';
+} from 'infrastructure/interfaces';
 import { HttpStatus } from '@nestjs/common';
-import { MessageEnum } from 'src/infrastructure/enum';
+import { MessageEnum } from 'infrastructure/enum';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
 export class ProcessController

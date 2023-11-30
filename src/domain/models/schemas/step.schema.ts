@@ -12,7 +12,7 @@ export class StepSchema {
   @Prop({ type: String, required: true })
   name: string;
 
-  @Prop({ type: ProcessStepTypeEnum, required: true })
+  @Prop({ type: String, enum: ProcessStepTypeEnum, required: true })
   type: ProcessStepTypeEnum;
 
   @Prop({
