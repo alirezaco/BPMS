@@ -142,12 +142,23 @@ export interface UpdateProcessResponse {
   data?: Process | undefined;
 }
 
+export interface DeleteProcessRequest {
+  id: string;
+}
+
+export interface DeleteProcessResponse {
+  meta: Meta | undefined;
+  data?: Process | undefined;
+}
+
 export const AUTOPAY_PACKAGE_NAME = "autopay";
 
 export interface AutopayServiceClient {
   createProcess(request: CreateProcessRequest, metadata?: Metadata): Observable<CreateProcessResponse>;
 
   updateProcess(request: UpdateProcessRequest, metadata?: Metadata): Observable<UpdateProcessResponse>;
+
+  deleteProcess(request: DeleteProcessRequest, metadata?: Metadata): Observable<DeleteProcessResponse>;
 }
 
 export interface AutopayServiceController {
@@ -160,11 +171,16 @@ export interface AutopayServiceController {
     request: UpdateProcessRequest,
     metadata?: Metadata,
   ): Promise<UpdateProcessResponse> | Observable<UpdateProcessResponse> | UpdateProcessResponse;
+
+  deleteProcess(
+    request: DeleteProcessRequest,
+    metadata?: Metadata,
+  ): Promise<DeleteProcessResponse> | Observable<DeleteProcessResponse> | DeleteProcessResponse;
 }
 
 export function AutopayServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createProcess", "updateProcess"];
+    const grpcMethods: string[] = ["createProcess", "updateProcess", "deleteProcess"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AutopayService", method)(constructor.prototype[method], method, descriptor);

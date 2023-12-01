@@ -1,4 +1,5 @@
 import { CreateProcessHandler } from './create-process';
+import { DeleteProcessHandler } from './delete-process';
 import { UpdateProcessAllowedDirectDebitHandler } from './update-process-allow-direct-debit';
 import { UpdateProcessIsActiveHandler } from './update-process-is-active';
 import { UpdateProcessMaxAmountHandler } from './update-process-max-amount';
@@ -15,6 +16,7 @@ export * from './update-process-name';
 export * from './update-process-period';
 export * from './update-process-roles';
 export * from './update-process-steps';
+export * from './delete-process';
 
 export const commandHandlers = [
   CreateProcessHandler,
@@ -25,4 +27,5 @@ export const commandHandlers = [
   UpdateProcessAllowedDirectDebitHandler,
   UpdateProcessMaxAmountHandler,
   UpdateProcessNameHandler,
+  DeleteProcessHandler,
 ];

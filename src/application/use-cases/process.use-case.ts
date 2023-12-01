@@ -1,6 +1,7 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   CreateProcessCommand,
+  DeleteProcessCommand,
   GetProcessQuery,
   UpdateProcessAllowedDirectDebitCommand,
   UpdateProcessIsActiveCommand,
@@ -124,5 +125,11 @@ export class ProcessUseCase {
     }
 
     return process;
+  }
+
+  async delete(id: string): Promise<ProcessEntity> {
+    return this.commandBus.execute<DeleteProcessCommand, ProcessEntity>(
+      new DeleteProcessCommand(id),
+    );
   }
 }

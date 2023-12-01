@@ -5,6 +5,7 @@ package autopay;
 service AutopayService {
   rpc CreateProcess (CreateProcessRequest) returns (CreateProcessResponse) {}
   rpc UpdateProcess (UpdateProcessRequest) returns (UpdateProcessResponse) {}
+  rpc DeleteProcess (DeleteProcessRequest) returns (DeleteProcessResponse) {}
 }
 
 // Common
@@ -145,6 +146,15 @@ message UpdateProcessRequest {
 }
 
 message UpdateProcessResponse {
+  Meta meta = 1;
+  optional Process data = 2;
+}
+
+message DeleteProcessRequest {
+  string id = 1;
+}
+
+message DeleteProcessResponse {
   Meta meta = 1;
   optional Process data = 2;
 }

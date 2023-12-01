@@ -6,6 +6,8 @@ import {
   AutopayServiceController,
   CreateProcessRequest,
   CreateProcessResponse,
+  DeleteProcessRequest,
+  DeleteProcessResponse,
   Meta,
   UpdateProcessRequest,
   UpdateProcessResponse,
@@ -17,7 +19,11 @@ import { ProcessSerializer } from 'presentation/serializers';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
 export class ProcessController
-  implements Pick<AutopayServiceController, 'createProcess' | 'updateProcess'>
+  implements
+    Pick<
+      AutopayServiceController,
+      'deleteProcess' | 'createProcess' | 'updateProcess'
+    >
 {
   constructor(
     @InjectPinoLogger(ProcessController.name)
@@ -67,6 +73,24 @@ export class ProcessController
       const me = metadata.get('me')[0];
 
       const process = await this.processUseCase.update(request, me.toString());
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: new ProcessSerializer(process),
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  async deleteProcess(
+    request: DeleteProcessRequest,
+    _?: Metadata,
+  ): Promise<DeleteProcessResponse> {
+    try {
+      const process = await this.processUseCase.delete(request.id);
 
       return {
         meta: {

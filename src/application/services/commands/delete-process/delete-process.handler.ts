@@ -1,0 +1,21 @@
+import { ProcessRepository } from 'domain/services';
+import { DeleteProcessCommand } from './delete-process.command';
+import { NotFoundException } from '@nestjs/common';
+import { MessageEnum } from 'infrastructure/enum';
+
+export class DeleteProcessHandler {
+  constructor(private readonly processRepository: ProcessRepository) {}
+
+  async execute(command: DeleteProcessCommand): Promise<void> {
+    // Retrieve the process entity from the repository
+    const process = await this.processRepository.findOneById(command.id);
+
+    if (process) {
+      // Delete the process
+      await this.processRepository.deleteOne(process.id);
+    } else {
+      // Handle the case when the process is not found
+      throw new NotFoundException(MessageEnum.PROCESS_NOT_FOUND);
+    }
+  }
+}
