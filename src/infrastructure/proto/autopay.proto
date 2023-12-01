@@ -9,6 +9,7 @@ service AutopayService {
   rpc GetProcess (GetProcessRequest) returns (GetProcessResponse) {}
   rpc ListProcesses (ListProcessesRequest) returns (ListProcessesResponse) {}
   rpc ListProcessesAdmin (ListProcessesAdminRequest) returns (ListProcessesAdminResponse) {}
+  rpc CreateAutopay (CreateAutopayRequest) returns (CreateAutopayResponse) {}
 }
 
 // Common
@@ -222,4 +223,42 @@ message ListProcessesAdminRequest {
 message ListProcessesAdminResponse {
   Meta meta = 1;
   optional ArrayProcess data = 2;
+}
+
+message Autopay {
+  string id = 1;
+  string owner = 2;
+  string created_at = 3;
+  optional string updated_at = 4;
+  optional string deleted_at = 5;
+  optional string restore_at = 6;
+  repeated string tags = 7;
+
+  string name = 8;
+  string user_id = 18;
+  string process_id = 9;
+  optional uint64 max_amount = 10;
+  string period = 11;
+  optional string cron = 12;
+  bool allowed_direct_debit = 13;
+  string data = 14;
+  bool is_active = 15;
+  string last_run_at = 16;
+  string processing_status = 17;
+
+}
+
+message CreateAutopayRequest {
+  string name = 1;
+  string process_id = 3;
+  uint64 max_amount = 4;
+  optional string period = 5;
+  optional string cron = 6;
+  optional bool allowed_direct_debit = 7;
+  string data = 8;
+}
+
+message CreateAutopayResponse {
+  Meta meta = 1;
+  optional Autopay data = 2;
 }

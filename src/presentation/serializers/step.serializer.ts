@@ -11,7 +11,7 @@ export class StepSerializer {
   api?: ApiStepSerializer | undefined;
   is_sync: boolean;
   is_final: boolean;
-  fail_step?: string;
+  fail_step: string;
 
   constructor(initial: StepEntity) {
     this.name = initial?.name;

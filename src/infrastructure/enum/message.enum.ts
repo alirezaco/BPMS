@@ -5,4 +5,5 @@ export enum MessageEnum {
   DUPLICATE_PROCESS_NAME = 'نام پردازه تکراری است.',
   DUPLICATE_STEP_NAME = 'نام مرحله تکراری است.',
   PROCESS_NOT_FOUND = 'پردازه یافت نشد.',
+  DIRECT_DEBIT_NOT_ALLOWED = 'پرداخت مستقیم برای این پردازه غیر فعال است.',
 }

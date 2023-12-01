@@ -16,7 +16,7 @@ export class ProcessSerializer {
   max_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
-  validation_data: string | undefined;
+  validation_data?: string | undefined;
   steps: StepSerializer[];
   data: string;
   is_active: boolean;

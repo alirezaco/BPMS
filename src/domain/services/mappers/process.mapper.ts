@@ -15,6 +15,7 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
     schema.created_at = entity?.createdAt;
     schema.updated_at = entity?.updatedAt;
     schema.deleted_at = entity?.deletedAt;
+    schema.restored_at = entity?.restoreAt;
     schema.owner = new Types.ObjectId(entity?.owner);
     schema.name = entity?.name;
     schema.roles = entity?.roles;
@@ -39,6 +40,7 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       createdAt: schema?.created_at,
       updatedAt: schema?.updated_at,
       deletedAt: schema?.deleted_at,
+      restoreAt: schema?.restored_at,
       owner: schema?.owner?.toString(),
       name: schema?.name,
       roles: schema?.roles,
@@ -67,7 +69,7 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       defaultFailStep: request?.default_fail_step,
       allowedDirectDebit: request?.allowed_direct_debit,
       maxAmount: request?.max_amount,
-      period: convertToPeriod(request?.period),
+      period: request?.period && convertToPeriod(request?.period),
       cron: request?.cron,
       validationData: request?.validation_data
         ? JSON.parse(request?.validation_data)

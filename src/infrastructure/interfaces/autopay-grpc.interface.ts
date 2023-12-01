@@ -212,6 +212,42 @@ export interface ListProcessesAdminResponse {
   data?: ArrayProcess | undefined;
 }
 
+export interface Autopay {
+  id: string;
+  owner: string;
+  created_at: string;
+  updated_at?: string | undefined;
+  deleted_at?: string | undefined;
+  restore_at?: string | undefined;
+  tags: string[];
+  name: string;
+  user_id: string;
+  process_id: string;
+  max_amount?: number | undefined;
+  period: string;
+  cron?: string | undefined;
+  allowed_direct_debit: boolean;
+  data: string;
+  is_active: boolean;
+  last_run_at: string;
+  processing_status: string;
+}
+
+export interface CreateAutopayRequest {
+  name: string;
+  process_id: string;
+  max_amount: number;
+  period?: string | undefined;
+  cron?: string | undefined;
+  allowed_direct_debit?: boolean | undefined;
+  data: string;
+}
+
+export interface CreateAutopayResponse {
+  meta: Meta | undefined;
+  data?: Autopay | undefined;
+}
+
 export const AUTOPAY_PACKAGE_NAME = "autopay";
 
 export interface AutopayServiceClient {
@@ -226,6 +262,8 @@ export interface AutopayServiceClient {
   listProcesses(request: ListProcessesRequest, metadata?: Metadata): Observable<ListProcessesResponse>;
 
   listProcessesAdmin(request: ListProcessesAdminRequest, metadata?: Metadata): Observable<ListProcessesAdminResponse>;
+
+  createAutopay(request: CreateAutopayRequest, metadata?: Metadata): Observable<CreateAutopayResponse>;
 }
 
 export interface AutopayServiceController {
@@ -258,6 +296,11 @@ export interface AutopayServiceController {
     request: ListProcessesAdminRequest,
     metadata?: Metadata,
   ): Promise<ListProcessesAdminResponse> | Observable<ListProcessesAdminResponse> | ListProcessesAdminResponse;
+
+  createAutopay(
+    request: CreateAutopayRequest,
+    metadata?: Metadata,
+  ): Promise<CreateAutopayResponse> | Observable<CreateAutopayResponse> | CreateAutopayResponse;
 }
 
 export function AutopayServiceControllerMethods() {
@@ -269,6 +312,7 @@ export function AutopayServiceControllerMethods() {
       "getProcess",
       "listProcesses",
       "listProcessesAdmin",
+      "createAutopay",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

@@ -5,7 +5,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ProcessMapper } from '../mappers';
 import { ListProcessesAdminRequest } from 'infrastructure/interfaces';
 import { findAndCountAll } from 'infrastructure/database';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ProcessRepository extends BaseRepository<
   ProcessSchema,
   ProcessEntity

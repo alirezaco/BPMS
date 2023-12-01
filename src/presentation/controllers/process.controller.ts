@@ -1,4 +1,4 @@
-import { GrpcService } from '@nestjs/microservices';
+import { GrpcMethod, GrpcService } from '@nestjs/microservices';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { Metadata } from '@grpc/grpc-js';
 import {
@@ -57,6 +57,7 @@ export class ProcessController
     };
   }
 
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
   async createProcess(
     request: CreateProcessRequest,
     metadata?: Metadata,
@@ -77,6 +78,7 @@ export class ProcessController
     }
   }
 
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
   async updateProcess(
     request: UpdateProcessRequest,
     metadata?: Metadata,
@@ -97,6 +99,7 @@ export class ProcessController
     }
   }
 
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
   async deleteProcess(
     request: DeleteProcessRequest,
     _?: Metadata,
@@ -115,6 +118,7 @@ export class ProcessController
     }
   }
 
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
   async getProcess(
     request: GetProcessRequest,
     _?: Metadata,
@@ -133,6 +137,7 @@ export class ProcessController
     }
   }
 
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
   async listProcesses(
     request: ListProcessesRequest,
     metadata?: Metadata,
@@ -159,6 +164,7 @@ export class ProcessController
     }
   }
 
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
   async listProcessesAdmin(
     request: ListProcessesAdminRequest,
     _?: Metadata,

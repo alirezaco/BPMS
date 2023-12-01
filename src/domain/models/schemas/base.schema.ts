@@ -14,7 +14,7 @@ export class BaseSchema {
   deleted_at: Date;
 
   @Prop({ type: Date, default: null })
-  restore_at: Date;
+  restored_at: Date;
 
   @Prop({ type: Types.ObjectId, required: true })
   owner: Types.ObjectId;

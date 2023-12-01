@@ -1,3 +1,4 @@
+import { CreateAutopayHandler } from './create-autopay';
 import { CreateProcessHandler } from './create-process';
 import { DeleteProcessHandler } from './delete-process';
 import { UpdateProcessAllowedDirectDebitHandler } from './update-process-allow-direct-debit';
@@ -17,6 +18,7 @@ export * from './update-process-period';
 export * from './update-process-roles';
 export * from './update-process-steps';
 export * from './delete-process';
+export * from './create-autopay';
 
 export const commandHandlers = [
   CreateProcessHandler,
@@ -28,4 +30,5 @@ export const commandHandlers = [
   UpdateProcessMaxAmountHandler,
   UpdateProcessNameHandler,
   DeleteProcessHandler,
+  CreateAutopayHandler,
 ];
