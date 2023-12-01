@@ -7,6 +7,8 @@ import {
   CreateProcessRequest,
   CreateProcessResponse,
   Meta,
+  UpdateProcessRequest,
+  UpdateProcessResponse,
 } from 'infrastructure/interfaces';
 import { HttpStatus } from '@nestjs/common';
 import { MessageEnum } from 'infrastructure/enum';
@@ -15,7 +17,7 @@ import { ProcessSerializer } from 'presentation/serializers';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
 export class ProcessController
-  implements Pick<AutopayServiceController, 'createProcess'>
+  implements Pick<AutopayServiceController, 'createProcess' | 'updateProcess'>
 {
   constructor(
     @InjectPinoLogger(ProcessController.name)
@@ -53,7 +55,27 @@ export class ProcessController
         data: new ProcessSerializer(process),
       };
     } catch (error) {
-      this.GrpcErrorHandler(error);
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  async updateProcess(
+    request: UpdateProcessRequest,
+    metadata?: Metadata,
+  ): Promise<UpdateProcessResponse> {
+    try {
+      const me = metadata.get('me')[0];
+
+      const process = await this.processUseCase.update(request, me.toString());
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: new ProcessSerializer(process),
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
     }
   }
 }

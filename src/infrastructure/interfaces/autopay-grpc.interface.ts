@@ -122,10 +122,32 @@ export interface CreateProcessResponse {
   data?: Process | undefined;
 }
 
+export interface UpdateProcessRequest {
+  id: string;
+  name?: string | undefined;
+  roles: string[];
+  default_fail_step?: string | undefined;
+  allowed_direct_debit?: boolean | undefined;
+  max_amount?: number | undefined;
+  period?: string | undefined;
+  cron?: string | undefined;
+  validation_data?: string | undefined;
+  steps: Step[];
+  data?: string | undefined;
+  is_active?: boolean | undefined;
+}
+
+export interface UpdateProcessResponse {
+  meta: Meta | undefined;
+  data?: Process | undefined;
+}
+
 export const AUTOPAY_PACKAGE_NAME = "autopay";
 
 export interface AutopayServiceClient {
   createProcess(request: CreateProcessRequest, metadata?: Metadata): Observable<CreateProcessResponse>;
+
+  updateProcess(request: UpdateProcessRequest, metadata?: Metadata): Observable<UpdateProcessResponse>;
 }
 
 export interface AutopayServiceController {
@@ -133,11 +155,16 @@ export interface AutopayServiceController {
     request: CreateProcessRequest,
     metadata?: Metadata,
   ): Promise<CreateProcessResponse> | Observable<CreateProcessResponse> | CreateProcessResponse;
+
+  updateProcess(
+    request: UpdateProcessRequest,
+    metadata?: Metadata,
+  ): Promise<UpdateProcessResponse> | Observable<UpdateProcessResponse> | UpdateProcessResponse;
 }
 
 export function AutopayServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createProcess"];
+    const grpcMethods: string[] = ["createProcess", "updateProcess"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AutopayService", method)(constructor.prototype[method], method, descriptor);

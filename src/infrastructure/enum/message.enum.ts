@@ -4,4 +4,5 @@ export enum MessageEnum {
   INVALID_PERIOD = 'دوره نامعتبر است.',
   DUPLICATE_PROCESS_NAME = 'نام پردازه تکراری است.',
   DUPLICATE_STEP_NAME = 'نام مرحله تکراری است.',
+  PROCESS_NOT_FOUND = 'پردازه یافت نشد.',
 }
