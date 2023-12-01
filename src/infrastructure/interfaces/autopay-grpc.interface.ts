@@ -248,6 +248,21 @@ export interface CreateAutopayResponse {
   data?: Autopay | undefined;
 }
 
+export interface UpdateAutopayRequest {
+  id: string;
+  name?: string | undefined;
+  max_amount?: number | undefined;
+  period?: string | undefined;
+  cron?: string | undefined;
+  allowed_direct_debit?: boolean | undefined;
+  data?: string | undefined;
+}
+
+export interface UpdateAutopayResponse {
+  meta: Meta | undefined;
+  data?: Autopay | undefined;
+}
+
 export const AUTOPAY_PACKAGE_NAME = "autopay";
 
 export interface AutopayServiceClient {
@@ -264,6 +279,8 @@ export interface AutopayServiceClient {
   listProcessesAdmin(request: ListProcessesAdminRequest, metadata?: Metadata): Observable<ListProcessesAdminResponse>;
 
   createAutopay(request: CreateAutopayRequest, metadata?: Metadata): Observable<CreateAutopayResponse>;
+
+  updateAutopay(request: UpdateAutopayRequest, metadata?: Metadata): Observable<UpdateAutopayResponse>;
 }
 
 export interface AutopayServiceController {
@@ -301,6 +318,11 @@ export interface AutopayServiceController {
     request: CreateAutopayRequest,
     metadata?: Metadata,
   ): Promise<CreateAutopayResponse> | Observable<CreateAutopayResponse> | CreateAutopayResponse;
+
+  updateAutopay(
+    request: UpdateAutopayRequest,
+    metadata?: Metadata,
+  ): Promise<UpdateAutopayResponse> | Observable<UpdateAutopayResponse> | UpdateAutopayResponse;
 }
 
 export function AutopayServiceControllerMethods() {
@@ -313,6 +335,7 @@ export function AutopayServiceControllerMethods() {
       "listProcesses",
       "listProcessesAdmin",
       "createAutopay",
+      "updateAutopay",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

@@ -6,4 +6,6 @@ export enum MessageEnum {
   DUPLICATE_STEP_NAME = 'نام مرحله تکراری است.',
   PROCESS_NOT_FOUND = 'پردازه یافت نشد.',
   DIRECT_DEBIT_NOT_ALLOWED = 'پرداخت مستقیم برای این پردازه غیر فعال است.',
+  AUTOPAY_NOT_FOUND = 'پرداخت یافت نشد.',
+  FORBIDDEN = 'دسترسی غیر مجاز.',
 }

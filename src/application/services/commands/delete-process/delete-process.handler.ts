@@ -2,8 +2,12 @@ import { ProcessRepository } from 'domain/services';
 import { DeleteProcessCommand } from './delete-process.command';
 import { NotFoundException } from '@nestjs/common';
 import { MessageEnum } from 'infrastructure/enum';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-export class DeleteProcessHandler {
+@CommandHandler(DeleteProcessCommand)
+export class DeleteProcessHandler
+  implements ICommandHandler<DeleteProcessCommand>
+{
   constructor(private readonly processRepository: ProcessRepository) {}
 
   async execute(command: DeleteProcessCommand): Promise<void> {

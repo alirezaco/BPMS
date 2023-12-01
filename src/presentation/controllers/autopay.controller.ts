@@ -9,13 +9,15 @@ import {
   CreateAutopayRequest,
   CreateAutopayResponse,
   Meta,
+  UpdateAutopayRequest,
+  UpdateAutopayResponse,
 } from 'infrastructure/interfaces';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { AutoPaySerializer } from 'presentation/serializers';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
 export class AutopayController
-  implements Pick<AutopayServiceController, 'createAutopay'>
+  implements Pick<AutopayServiceController, 'updateAutopay' | 'createAutopay'>
 {
   constructor(
     @InjectPinoLogger(AutopayController.name)
@@ -55,7 +57,31 @@ export class AutopayController
           status: HttpStatus.OK,
         },
         data: new AutoPaySerializer(autopay),
-      }
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
+  async updateAutopay(
+    request: UpdateAutopayRequest,
+    metadata?: Metadata,
+  ): Promise<UpdateAutopayResponse> {
+    try {
+      const me = metadata.get('me')[0];
+
+      const autopay = await this.autopayUseCase.updateAutopay(
+        request,
+        me.toString(),
+      );
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: new AutoPaySerializer(autopay),
+      };
     } catch (error) {
       return this.GrpcErrorHandler(error);
     }

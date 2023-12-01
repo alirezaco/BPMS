@@ -15,4 +15,10 @@ export class AutoPayRepository extends BaseRepository<
   ) {
     super(autopayModel, autopayMapper);
   }
+
+  async findOneByName(name: string): Promise<AutoPayEntity> {
+    const result = await this.autopayModel.findOne({ name });
+
+    return this.autopayMapper.convertSchemaToEntity(result);
+  }
 }

@@ -10,6 +10,7 @@ service AutopayService {
   rpc ListProcesses (ListProcessesRequest) returns (ListProcessesResponse) {}
   rpc ListProcessesAdmin (ListProcessesAdminRequest) returns (ListProcessesAdminResponse) {}
   rpc CreateAutopay (CreateAutopayRequest) returns (CreateAutopayResponse) {}
+  rpc UpdateAutopay (UpdateAutopayRequest) returns (UpdateAutopayResponse) {}
 }
 
 // Common
@@ -259,6 +260,21 @@ message CreateAutopayRequest {
 }
 
 message CreateAutopayResponse {
+  Meta meta = 1;
+  optional Autopay data = 2;
+}
+
+message UpdateAutopayRequest {
+  string id = 1;
+  optional string name = 2;
+  optional uint64 max_amount = 4;
+  optional string period = 5;
+  optional string cron = 6;
+  optional bool allowed_direct_debit = 7;
+  optional string data = 8;
+}
+
+message UpdateAutopayResponse {
   Meta meta = 1;
   optional Autopay data = 2;
 }
