@@ -1,7 +1,6 @@
 import { ProcessEntity } from 'domain/models';
-import { StepSerializer } from './step.serializer';
 
-export class ProcessSerializer {
+export class ProcessesSerializer {
   id: string;
   owner: string;
   created_at: string;
@@ -11,14 +10,10 @@ export class ProcessSerializer {
   tags: string[];
   name: string;
   roles: string[];
-  default_fail_step?: string | undefined;
   allowed_direct_debit?: boolean | undefined;
   max_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
-  validation_data: string | undefined;
-  steps: StepSerializer[];
-  data: string;
   is_active: boolean;
 
   constructor(initial: ProcessEntity) {
@@ -31,14 +26,10 @@ export class ProcessSerializer {
     this.tags = initial?.tags;
     this.name = initial?.name;
     this.roles = initial?.roles;
-    this.default_fail_step = initial?.defaultFailStep;
     this.allowed_direct_debit = initial?.allowedDirectDebit;
     this.max_amount = initial?.maxAmount;
     this.period = initial?.period;
     this.cron = initial?.cron;
-    this.validation_data = JSON.stringify(initial?.validationData || {});
-    this.steps = initial?.steps?.map((step) => new StepSerializer(step));
-    this.data = JSON.stringify(initial?.data || {});
     this.is_active = initial?.isActive;
   }
 }

@@ -6,6 +6,9 @@ service AutopayService {
   rpc CreateProcess (CreateProcessRequest) returns (CreateProcessResponse) {}
   rpc UpdateProcess (UpdateProcessRequest) returns (UpdateProcessResponse) {}
   rpc DeleteProcess (DeleteProcessRequest) returns (DeleteProcessResponse) {}
+  rpc GetProcess (GetProcessRequest) returns (GetProcessResponse) {}
+  rpc ListProcesses (ListProcessesRequest) returns (ListProcessesResponse) {}
+  rpc ListProcessesAdmin (ListProcessesAdminRequest) returns (ListProcessesAdminResponse) {}
 }
 
 // Common
@@ -157,4 +160,60 @@ message DeleteProcessRequest {
 message DeleteProcessResponse {
   Meta meta = 1;
   optional Process data = 2;
+}
+
+message GetProcessRequest {
+  string id = 1;
+}
+
+message GetProcessResponse {
+  Meta meta = 1;
+  optional Process data = 2;
+}
+
+message Processes {
+  string id = 11;
+  string owner = 12;
+  string created_at = 13;
+  optional string updated_at = 14;
+  optional string deleted_at = 15;
+  optional string restore_at = 16;
+  repeated string tags = 17;
+
+  string name = 1;
+  repeated string roles = 2;
+  optional bool allowed_direct_debit = 4;
+  optional uint64 max_amount = 5;
+  optional string period = 6;
+  optional string cron = 7;
+  optional bool is_active = 18;
+}
+
+message ArrayProcess {
+  int32 count = 1;
+  repeated Processes rows = 2;
+}
+
+message ListProcessesRequest {
+  int32 limit = 1;
+  int32 skip = 2;
+}
+
+message ListProcessesResponse {
+  Meta meta = 1;
+  optional ArrayProcess data = 2;
+}
+
+message ListProcessesAdminRequest {
+  int32 limit = 2;
+  int32 skip = 3;
+  optional string name = 4;
+  optional bool is_active = 5;
+  repeated string roles = 6;
+  optional bool allowed_direct_debit = 7;
+}
+
+message ListProcessesAdminResponse {
+  Meta meta = 1;
+  optional ArrayProcess data = 2;
 }

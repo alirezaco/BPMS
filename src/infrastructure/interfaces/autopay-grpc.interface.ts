@@ -151,6 +151,61 @@ export interface DeleteProcessResponse {
   data?: Process | undefined;
 }
 
+export interface GetProcessRequest {
+  id: string;
+}
+
+export interface GetProcessResponse {
+  meta: Meta | undefined;
+  data?: Process | undefined;
+}
+
+export interface Processes {
+  id: string;
+  owner: string;
+  created_at: string;
+  updated_at?: string | undefined;
+  deleted_at?: string | undefined;
+  restore_at?: string | undefined;
+  tags: string[];
+  name: string;
+  roles: string[];
+  allowed_direct_debit?: boolean | undefined;
+  max_amount?: number | undefined;
+  period?: string | undefined;
+  cron?: string | undefined;
+  is_active?: boolean | undefined;
+}
+
+export interface ArrayProcess {
+  count: number;
+  rows: Processes[];
+}
+
+export interface ListProcessesRequest {
+  limit: number;
+  skip: number;
+}
+
+export interface ListProcessesResponse {
+  meta: Meta | undefined;
+  data?: ArrayProcess | undefined;
+}
+
+export interface ListProcessesAdminRequest {
+  limit: number;
+  skip: number;
+  name?: string | undefined;
+  is_active?: boolean | undefined;
+  roles: string[];
+  allowed_direct_debit?: boolean | undefined;
+}
+
+export interface ListProcessesAdminResponse {
+  meta: Meta | undefined;
+  data?: ArrayProcess | undefined;
+}
+
 export const AUTOPAY_PACKAGE_NAME = "autopay";
 
 export interface AutopayServiceClient {
@@ -159,6 +214,12 @@ export interface AutopayServiceClient {
   updateProcess(request: UpdateProcessRequest, metadata?: Metadata): Observable<UpdateProcessResponse>;
 
   deleteProcess(request: DeleteProcessRequest, metadata?: Metadata): Observable<DeleteProcessResponse>;
+
+  getProcess(request: GetProcessRequest, metadata?: Metadata): Observable<GetProcessResponse>;
+
+  listProcesses(request: ListProcessesRequest, metadata?: Metadata): Observable<ListProcessesResponse>;
+
+  listProcessesAdmin(request: ListProcessesAdminRequest, metadata?: Metadata): Observable<ListProcessesAdminResponse>;
 }
 
 export interface AutopayServiceController {
@@ -176,11 +237,33 @@ export interface AutopayServiceController {
     request: DeleteProcessRequest,
     metadata?: Metadata,
   ): Promise<DeleteProcessResponse> | Observable<DeleteProcessResponse> | DeleteProcessResponse;
+
+  getProcess(
+    request: GetProcessRequest,
+    metadata?: Metadata,
+  ): Promise<GetProcessResponse> | Observable<GetProcessResponse> | GetProcessResponse;
+
+  listProcesses(
+    request: ListProcessesRequest,
+    metadata?: Metadata,
+  ): Promise<ListProcessesResponse> | Observable<ListProcessesResponse> | ListProcessesResponse;
+
+  listProcessesAdmin(
+    request: ListProcessesAdminRequest,
+    metadata?: Metadata,
+  ): Promise<ListProcessesAdminResponse> | Observable<ListProcessesAdminResponse> | ListProcessesAdminResponse;
 }
 
 export function AutopayServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createProcess", "updateProcess", "deleteProcess"];
+    const grpcMethods: string[] = [
+      "createProcess",
+      "updateProcess",
+      "deleteProcess",
+      "getProcess",
+      "listProcesses",
+      "listProcessesAdmin",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AutopayService", method)(constructor.prototype[method], method, descriptor);

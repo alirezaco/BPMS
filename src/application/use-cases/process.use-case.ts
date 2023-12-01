@@ -3,6 +3,8 @@ import {
   CreateProcessCommand,
   DeleteProcessCommand,
   GetProcessQuery,
+  GetProcessesAdminCommand,
+  GetProcessesCommand,
   UpdateProcessAllowedDirectDebitCommand,
   UpdateProcessIsActiveCommand,
   UpdateProcessMaxAmountCommand,
@@ -13,8 +15,11 @@ import {
 } from 'application/services';
 import { ProcessEntity } from 'domain/models';
 import { ProcessMapper, StepMapper } from 'domain/services';
+import { findAndCountAll } from 'infrastructure/database';
 import {
   CreateProcessRequest,
+  ListProcessesAdminRequest,
+  ListProcessesRequest,
   UpdateProcessRequest,
 } from 'infrastructure/interfaces';
 import { convertToPeriod } from 'infrastructure/utils';
@@ -131,5 +136,30 @@ export class ProcessUseCase {
     return this.commandBus.execute<DeleteProcessCommand, ProcessEntity>(
       new DeleteProcessCommand(id),
     );
+  }
+
+  async getProcess(id: string): Promise<ProcessEntity> {
+    return this.queryBus.execute<GetProcessQuery, ProcessEntity>(
+      new GetProcessQuery(id),
+    );
+  }
+
+  async getProcesses(
+    request: ListProcessesRequest,
+    roles: string[],
+  ): Promise<findAndCountAll<ProcessEntity>> {
+    return this.queryBus.execute<
+      GetProcessesCommand,
+      findAndCountAll<ProcessEntity>
+    >(new GetProcessesCommand(request, roles));
+  }
+
+  async getProcessesAdmin(
+    request: ListProcessesAdminRequest,
+  ): Promise<findAndCountAll<ProcessEntity>> {
+    return this.queryBus.execute<
+      GetProcessesAdminCommand,
+      findAndCountAll<ProcessEntity>
+    >(new GetProcessesAdminCommand(request));
   }
 }

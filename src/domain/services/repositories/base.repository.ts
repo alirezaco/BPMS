@@ -2,6 +2,7 @@ import { BaseEntity, BaseSchema } from 'domain/models';
 import { BaseMapper } from '../mappers';
 import { FilterQuery, Model, Types } from 'mongoose';
 import { FilterType, findAndCountAll } from 'infrastructure/database';
+import { OrderEnum } from 'infrastructure/enum';
 
 export abstract class BaseRepository<
   ModelType extends BaseSchema,
@@ -49,10 +50,14 @@ export abstract class BaseRepository<
   ): Promise<findAndCountAll<EntityType>> {
     if (!fetchDeleted) filter.where['deleted_at'] = { $eq: null };
 
+    if (!filter.order) filter.order = [];
+
+    filter.order.push(['_id', OrderEnum.DESC]);
+
     const result = await this.model
       .find(filter.where, filter.include)
       .sort(filter.order)
-      .skip((filter.page - 1) * filter.limit)
+      .skip(filter.skip)
       .limit(filter.limit);
     const count = await this.model.countDocuments(filter.where);
 

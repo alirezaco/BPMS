@@ -31,5 +31,5 @@ export interface FilterType<Model> {
   /**
    * Skip the results;
    */
-  page?: number;
+  skip?: number;
 }

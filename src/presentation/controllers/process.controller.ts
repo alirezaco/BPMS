@@ -8,6 +8,12 @@ import {
   CreateProcessResponse,
   DeleteProcessRequest,
   DeleteProcessResponse,
+  GetProcessRequest,
+  GetProcessResponse,
+  ListProcessesAdminRequest,
+  ListProcessesAdminResponse,
+  ListProcessesRequest,
+  ListProcessesResponse,
   Meta,
   UpdateProcessRequest,
   UpdateProcessResponse,
@@ -16,13 +22,19 @@ import { HttpStatus } from '@nestjs/common';
 import { MessageEnum } from 'infrastructure/enum';
 import { ProcessUseCase } from 'application/use-cases';
 import { ProcessSerializer } from 'presentation/serializers';
+import { ProcessesSerializer } from 'presentation/serializers/processes.serializer';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
 export class ProcessController
   implements
     Pick<
       AutopayServiceController,
-      'deleteProcess' | 'createProcess' | 'updateProcess'
+      | 'listProcessesAdmin'
+      | 'getProcess'
+      | 'listProcesses'
+      | 'deleteProcess'
+      | 'createProcess'
+      | 'updateProcess'
     >
 {
   constructor(
@@ -97,6 +109,71 @@ export class ProcessController
           status: HttpStatus.OK,
         },
         data: new ProcessSerializer(process),
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  async getProcess(
+    request: GetProcessRequest,
+    _?: Metadata,
+  ): Promise<GetProcessResponse> {
+    try {
+      const process = await this.processUseCase.getProcess(request.id);
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: new ProcessSerializer(process),
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  async listProcesses(
+    request: ListProcessesRequest,
+    metadata?: Metadata,
+  ): Promise<ListProcessesResponse> {
+    try {
+      const roles = metadata.get('roles');
+
+      const processes = await this.processUseCase.getProcesses(
+        request,
+        roles.map((x) => x.toString()),
+      );
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: {
+          count: processes.count,
+          rows: processes.rows.map((x) => new ProcessesSerializer(x)),
+        },
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  async listProcessesAdmin(
+    request: ListProcessesAdminRequest,
+    _?: Metadata,
+  ): Promise<ListProcessesAdminResponse> {
+    try {
+      const processes = await this.processUseCase.getProcessesAdmin(request);
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: {
+          count: processes.count,
+          rows: processes.rows.map((x) => new ProcessesSerializer(x)),
+        },
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
