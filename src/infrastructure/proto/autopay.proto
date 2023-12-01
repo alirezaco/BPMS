@@ -56,6 +56,9 @@ message Step {
     GrpcStep grpc = 4;
     ApiStep api = 5;
   }
+  bool is_sync = 6;
+  string fail_step = 8;
+  bool is_final = 10;
 }
 
 message Process {
@@ -113,6 +116,9 @@ message StepRequest {
     GrpcStep grpc = 4;
     ApiStep api = 5;
   }
+  optional bool is_sync = 6;
+  optional string fail_step = 8;
+  optional bool is_final = 10;
 }
 
 message CreateProcessRequest {

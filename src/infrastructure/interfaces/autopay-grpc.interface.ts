@@ -48,6 +48,9 @@ export interface Step {
   comparison?: ComparisonStep | undefined;
   grpc?: GrpcStep | undefined;
   api?: ApiStep | undefined;
+  is_sync: boolean;
+  fail_step: string;
+  is_final: boolean;
 }
 
 export interface Process {
@@ -102,6 +105,9 @@ export interface StepRequest {
   comparison?: ComparisonStep | undefined;
   grpc?: GrpcStep | undefined;
   api?: ApiStep | undefined;
+  is_sync?: boolean | undefined;
+  fail_step?: string | undefined;
+  is_final?: boolean | undefined;
 }
 
 export interface CreateProcessRequest {

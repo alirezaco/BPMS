@@ -24,6 +24,9 @@ export class StepMapper implements BaseMapper<StepSchema, StepEntity> {
       ),
       grpc: this.grpcStepMapper.convertEntityToSchema(entity?.grpc),
       api: this.apiStepMapper.convertEntityToSchema(entity?.api),
+      is_sync: entity?.isSync,
+      is_final: entity?.isFinal,
+      fail_step: entity?.failStep,
     };
   }
 
@@ -39,6 +42,9 @@ export class StepMapper implements BaseMapper<StepSchema, StepEntity> {
       ),
       grpc: this.grpcStepMapper.convertSchemaToEntity(schema?.grpc),
       api: this.apiStepMapper.convertSchemaToEntity(schema?.api),
+      isSync: schema?.is_sync,
+      isFinal: schema?.is_final,
+      failStep: schema?.fail_step,
     });
   }
 
@@ -55,6 +61,9 @@ export class StepMapper implements BaseMapper<StepSchema, StepEntity> {
       api: request?.api
         ? this.apiStepMapper.convertRequestToEntity(request?.api)
         : undefined,
+      isSync: request?.is_sync,
+      isFinal: request?.is_final,
+      failStep: request?.fail_step,
     });
   }
 }

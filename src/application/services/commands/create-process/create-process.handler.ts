@@ -124,6 +124,12 @@ export class CreateProcessHandler
     this.checkValidComparison(step.comparison, processEntity);
   }
 
+  checkFailStep(steps: StepEntity[], failStep?: string) {
+    if (failStep && !steps.find((x) => x.name === x.failStep)) {
+      throw new Error(MessageEnum.INVALID_STEP_TYPE);
+    }
+  }
+
   checkSteps(processEntity: ProcessEntity): void {
     this.cehckStepNames(processEntity.steps);
 
@@ -135,16 +141,9 @@ export class CreateProcessHandler
       } else if (x.type === ProcessStepTypeEnum.COMPARISON) {
         this.checkValidComparisonSteps(x, processEntity);
       }
-    });
-  }
 
-  checkDefaultFailStep(processEntity: ProcessEntity): void {
-    if (
-      processEntity.defaultFailStep &&
-      !processEntity.steps.find((x) => x.name === processEntity.defaultFailStep)
-    ) {
-      throw new Error(MessageEnum.INVALID_STEP_TYPE);
-    }
+      this.checkFailStep(processEntity.steps, x.failStep);
+    });
   }
 
   checkPeriod(processEntity: ProcessEntity): void {
@@ -153,13 +152,27 @@ export class CreateProcessHandler
     }
   }
 
+  setFinalSteps(processEntity: ProcessEntity) {
+    processEntity.steps[processEntity.steps.length - 1].isFinal = true;
+
+    processEntity.steps = processEntity.steps.map((x) => {
+      if (x.isSync) {
+        x.isFinal = true;
+      }
+      return x;
+    });
+    return processEntity;
+  }
+
   async execute({
     processEntity,
   }: CreateProcessCommand): Promise<ProcessEntity> {
     await this.checkUniqName(processEntity.name);
     this.checkSteps(processEntity);
-    if (processEntity.defaultFailStep) this.checkDefaultFailStep(processEntity);
+    this.checkFailStep(processEntity.steps, processEntity.defaultFailStep);
     this.checkPeriod(processEntity);
+
+    processEntity = this.setFinalSteps(processEntity);
 
     return this.processFactory.create(processEntity);
   }

@@ -31,6 +31,12 @@ export class UpdateProcessStepsHandler
     }
   }
 
+  checkFailStep(steps: StepEntity[], failStep?: string) {
+    if (failStep && !steps.find((x) => x.name === x.failStep)) {
+      throw new Error(MessageEnum.INVALID_STEP_TYPE);
+    }
+  }
+
   checkParams(
     dataParam: DataParamEntity,
     validationData: Record<string, any>,
@@ -124,16 +130,21 @@ export class UpdateProcessStepsHandler
       } else if (x.type === ProcessStepTypeEnum.COMPARISON) {
         this.checkValidComparisonSteps(x, processEntity);
       }
+
+      this.checkFailStep(processEntity.steps, x.failStep);
     });
   }
 
-  checkDefaultFailStep(processEntity: ProcessEntity): void {
-    if (
-      processEntity.defaultFailStep &&
-      !processEntity.steps.find((x) => x.name === processEntity.defaultFailStep)
-    ) {
-      throw new Error(MessageEnum.INVALID_STEP_TYPE);
-    }
+  setFinalSteps(processEntity: ProcessEntity) {
+    processEntity.steps[processEntity.steps.length - 1].isFinal = true;
+
+    processEntity.steps = processEntity.steps.map((x) => {
+      if (x.isSync) {
+        x.isFinal = true;
+      }
+      return x;
+    });
+    return processEntity;
   }
 
   async execute({
@@ -150,12 +161,13 @@ export class UpdateProcessStepsHandler
     processEntity.defaultFailStep = defaultFailStep;
 
     // Check if the default fail step exists
-    if (defaultFailStep) {
-      this.checkDefaultFailStep(processEntity);
-    }
+    this.checkFailStep(processEntity.steps, processEntity.defaultFailStep);
 
     // Check if the steps are valid
     this.checkSteps(processEntity);
+
+    // Set the final step
+    processEntity = this.setFinalSteps(processEntity);
 
     // Save the updated process entity
     await this.processRepository.updateOneById(processEntity);

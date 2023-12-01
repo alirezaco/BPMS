@@ -32,4 +32,22 @@ export class StepSchema {
     required: false,
   })
   api?: ApiStepSchema;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  is_sync: boolean;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  is_final: boolean;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  fail_step?: string;
 }
