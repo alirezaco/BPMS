@@ -3,6 +3,7 @@ import { BaseSchema } from './base.schema';
 import mongoose from 'mongoose';
 import { StepSchema } from './step.schema';
 import { PeriodEnum } from 'infrastructure/enum';
+import { UISchemaSchema } from './ui-schema.schema';
 
 @Schema({
   id: true,
@@ -31,6 +32,12 @@ export class ProcessSchema extends BaseSchema {
 
   @Prop({ type: mongoose.Schema.Types.Mixed, required: false })
   validation_data?: Record<string, any>;
+
+  @Prop({
+    type: [SchemaFactory.createForClass(UISchemaSchema)],
+    required: false,
+  })
+  ui_schema?: UISchemaSchema[];
 
   @Prop({
     type: [SchemaFactory.createForClass(StepSchema)],

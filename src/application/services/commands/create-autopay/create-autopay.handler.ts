@@ -56,10 +56,7 @@ export class CreateAutopayHandler
     validationData: Record<string, any>,
   ) {
     try {
-      const joiSchema = fromJson({
-        type: 'object',
-        properties: validationData,
-      });
+      const joiSchema = fromJson(validationData);
 
       await joiSchema.validateAsync(data);
     } catch (error) {

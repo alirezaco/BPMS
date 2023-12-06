@@ -19,6 +19,23 @@ message Meta {
   optional string message = 2;
 }
 
+message UISchema {
+  string key = 1;
+  string title = 2;
+  string type = 4;
+  optional string hint = 3;
+  optional int32 min = 5;
+  optional int32 max = 6;
+  optional string regex = 7;
+  optional string error_text = 8;
+  optional bool is_required = 9;
+  optional bool is_money = 10;
+  optional bool is_english = 11;
+  optional int32 weight = 12;
+  optional string true_text = 13;
+  optional string false_text = 14;
+}
+
 message DataParam {
   string source = 1;
   string key = 2;
@@ -79,7 +96,7 @@ message Process {
   optional uint64 max_amount = 5;
   optional string period = 6;
   optional string cron = 7;
-  optional string validation_data = 8;
+  repeated UISchema ui_schema = 8;
   repeated Step steps = 9;
   optional bool is_active = 18;
   string data = 10;
@@ -131,7 +148,7 @@ message CreateProcessRequest {
   optional uint64 max_amount = 5;
   optional string period = 6;
   optional string cron = 7;
-  optional string validation_data = 8;
+  repeated UISchema ui_schema = 8;
   repeated Step steps = 9;
   string data = 10;
 }
@@ -150,7 +167,7 @@ message UpdateProcessRequest {
   optional uint64 max_amount = 6;
   optional string period = 7;
   optional string cron = 8;
-  optional string validation_data = 9;
+  repeated UISchema ui_schema = 9;
   repeated Step steps = 10;
   optional string data = 11;
   optional bool is_active = 12;

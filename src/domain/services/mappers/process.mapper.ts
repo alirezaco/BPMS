@@ -1,12 +1,17 @@
-import { CreateProcessRequest } from 'infrastructure/interfaces';
+import { CreateProcessRequest, UISchema } from 'infrastructure/interfaces';
 import { BaseMapper } from './base.mapper';
 import { ProcessEntity, ProcessSchema } from 'domain/models';
 import { StepMapper } from './step.mapper';
 import { Types } from 'mongoose';
-import { convertToPeriod } from 'infrastructure/utils';
+import { convertToPeriod, convertType } from 'infrastructure/utils';
+import { UISchemaMapper } from './ui-schema.mapper';
+import { Schema as joiSchema } from 'json-joi-converter';
 
 export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
-  constructor(private readonly stepMapper: StepMapper) {}
+  constructor(
+    private readonly stepMapper: StepMapper,
+    private readonly UISchemaMapper: UISchemaMapper,
+  ) {}
 
   convertEntityToSchema(entity: ProcessEntity): ProcessSchema {
     const schema = new ProcessSchema();
@@ -30,6 +35,9 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
     );
     schema.data = entity?.data;
     schema.is_active = entity?.isActive;
+    schema.ui_schema = entity?.UISchema?.map((uiSchema) =>
+      this.UISchemaMapper.convertEntityToSchema(uiSchema),
+    );
 
     return schema;
   }
@@ -55,6 +63,9 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       ),
       data: schema?.data,
       isActive: schema?.is_active,
+      UISchema: schema?.ui_schema?.map((uiSchema) =>
+        this.UISchemaMapper.convertSchemaToEntity(uiSchema),
+      ),
     });
   }
 
@@ -71,13 +82,37 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       maxAmount: request?.max_amount,
       period: request?.period && convertToPeriod(request?.period),
       cron: request?.cron,
-      validationData: request?.validation_data
-        ? JSON.parse(request?.validation_data)
-        : undefined,
+      UISchema: request?.ui_schema?.map((uiSchema) =>
+        this.UISchemaMapper.convertRequestToEntity(uiSchema),
+      ),
       steps: request?.steps?.map((step) =>
         this.stepMapper.convertRequestToEntity(step),
       ),
       data: request?.data ? JSON.parse(request?.data) : undefined,
+      validationData: this.createValidationDataFromUISchema(request?.ui_schema),
     });
+  }
+
+  private createValidationDataFromUISchema(
+    uiSchema: UISchema[],
+  ): Record<string, any> {
+    const validationData: joiSchema = {
+      type: 'object',
+      properties: {},
+    };
+
+    if (uiSchema) {
+      uiSchema.forEach((uiSchema) => {
+        validationData.properties[uiSchema?.key] = {
+          type: convertType(uiSchema?.type),
+          min: uiSchema?.min,
+          max: uiSchema?.max,
+          pattern: `/${uiSchema?.regex}/`,
+          required: uiSchema?.is_required,
+        };
+      });
+    }
+
+    return validationData;
   }
 }

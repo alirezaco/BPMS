@@ -1,6 +1,7 @@
 import { PeriodEnum } from 'infrastructure/enum';
 import { StepEntity } from './step.entity';
 import { BaseEntity } from './base.entity';
+import { UISchemaEntity } from './ui-schema.entity';
 
 export class ProcessEntity extends BaseEntity {
   public name: string;
@@ -14,6 +15,7 @@ export class ProcessEntity extends BaseEntity {
   public steps: StepEntity[];
   public data: Record<string, any>;
   public isActive: boolean;
+  public UISchema?: UISchemaEntity[];
 
   constructor(initial: Partial<ProcessEntity>) {
     super(initial);
@@ -29,5 +31,6 @@ export class ProcessEntity extends BaseEntity {
     this.steps = initial?.steps;
     this.data = initial?.data || {};
     this.isActive = initial?.isActive || false;
+    this.UISchema = initial?.UISchema;
   }
 }

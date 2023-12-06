@@ -5,6 +5,7 @@ import { DataParamEntity } from './data-param.entity';
 import { GrpcStepEntity } from './grpc-step.entity';
 import { ProcessEntity } from './process.entity';
 import { StepEntity } from './step.entity';
+import { UISchemaEntity } from './ui-schema.entity';
 
 export * from './base.entity';
 export * from './data-param.entity';
@@ -14,6 +15,7 @@ export * from './comparison-step.entity';
 export * from './api-step.entity';
 export * from './grpc-step.entity';
 export * from './autopay.entity';
+export * from './ui-schema.entity';
 
 export const entities = [
   DataParamEntity,
@@ -23,4 +25,5 @@ export const entities = [
   GrpcStepEntity,
   ProcessEntity,
   AutoPayEntity,
+  UISchemaEntity,
 ];

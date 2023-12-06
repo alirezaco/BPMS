@@ -11,6 +11,23 @@ export interface Meta {
   message?: string | undefined;
 }
 
+export interface UISchema {
+  key: string;
+  title: string;
+  type: string;
+  hint?: string | undefined;
+  min?: number | undefined;
+  max?: number | undefined;
+  regex?: string | undefined;
+  error_text?: string | undefined;
+  is_required?: boolean | undefined;
+  is_money?: boolean | undefined;
+  is_english?: boolean | undefined;
+  weight?: number | undefined;
+  true_text?: string | undefined;
+  false_text?: string | undefined;
+}
+
 export interface DataParam {
   source: string;
   key: string;
@@ -68,7 +85,7 @@ export interface Process {
   max_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
-  validation_data?: string | undefined;
+  ui_schema: UISchema[];
   steps: Step[];
   is_active?: boolean | undefined;
   data: string;
@@ -118,7 +135,7 @@ export interface CreateProcessRequest {
   max_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
-  validation_data?: string | undefined;
+  ui_schema: UISchema[];
   steps: Step[];
   data: string;
 }
@@ -137,7 +154,7 @@ export interface UpdateProcessRequest {
   max_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
-  validation_data?: string | undefined;
+  ui_schema: UISchema[];
   steps: Step[];
   data?: string | undefined;
   is_active?: boolean | undefined;

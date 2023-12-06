@@ -10,6 +10,7 @@ export * from './data-param.schema';
 export * from './process.schema';
 export * from './step.schema';
 export * from './autopay.schema';
+export * from './ui-schema.schema';
 
 export const schemas: ModelDefinition[] = [
   {

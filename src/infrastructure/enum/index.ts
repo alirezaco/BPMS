@@ -5,3 +5,5 @@ export * from './process-step-type.enum';
 export * from './period.enum';
 export * from './source.enum';
 export * from './processing-status.enum';
+export * from './validation-type.enum';
+export * from './ui-type.enum';
