@@ -5,3 +5,4 @@ export * from './grpc-step.serializer';
 export * from './process.serializer';
 export * from './step.serializer';
 export * from './autopay.serializer';
+export * from './ui-schema.serializer';

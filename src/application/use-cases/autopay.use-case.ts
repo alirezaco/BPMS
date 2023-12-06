@@ -2,6 +2,7 @@ import { ForbiddenException } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   CreateAutopayCommand,
+  DeleteAutopayCommand,
   GetAutopayQuery,
   UpdateAutoPayDataCommand,
   UpdateAutopayDirectDebitCommand,
@@ -108,8 +109,18 @@ export class AutopayUseCase {
     return autopay;
   }
 
-  async deleteAutopay(id: string): Promise<AutoPayEntity> {
-    return;
+  async deleteAutopay(id: string, me: string): Promise<AutoPayEntity> {
+    let autopay = await this.queryBus.execute<GetAutopayQuery, AutoPayEntity>(
+      new GetAutopayQuery(id),
+    );
+
+    if (autopay.owner !== me) {
+      throw new ForbiddenException(MessageEnum.FORBIDDEN);
+    }
+
+    return this.commandBus.execute<DeleteAutopayCommand, AutoPayEntity>(
+      new DeleteAutopayCommand(id),
+    );
   }
 
   async getAutopay(id: string): Promise<AutoPayEntity> {

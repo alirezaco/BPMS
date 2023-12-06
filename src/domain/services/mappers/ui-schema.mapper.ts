@@ -22,6 +22,8 @@ export class UISchemaMapper
     schema.is_money = entity.isMoney;
     schema.is_english = entity.isEnglish;
     schema.weight = entity.weight;
+    schema.true_text = entity.trueText;
+    schema.false_text = entity.falseText;
 
     return schema;
   }
@@ -40,6 +42,8 @@ export class UISchemaMapper
       isMoney: schema.is_money,
       isEnglish: schema.is_english,
       weight: schema.weight,
+      trueText: schema.true_text,
+      falseText: schema.false_text,
     });
   }
 
@@ -57,6 +61,8 @@ export class UISchemaMapper
       isMoney: request?.is_money,
       isEnglish: request?.is_english,
       weight: request?.weight,
+      trueText: request?.true_text,
+      falseText: request?.false_text,
     });
   }
 }

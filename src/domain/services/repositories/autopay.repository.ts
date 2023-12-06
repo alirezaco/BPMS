@@ -21,4 +21,8 @@ export class AutoPayRepository extends BaseRepository<
 
     return this.autopayMapper.convertSchemaToEntity(result);
   }
+
+  async deleteManyByProcessId(processId: string): Promise<void> {
+    await this.autopayModel.deleteMany({ process_id: processId });
+  }
 }

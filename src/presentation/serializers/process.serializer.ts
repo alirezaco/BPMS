@@ -1,5 +1,6 @@
 import { ProcessEntity } from 'domain/models';
 import { StepSerializer } from './step.serializer';
+import { UISchemaSerializer } from './ui-schema.serializer';
 
 export class ProcessSerializer {
   id: string;
@@ -16,7 +17,7 @@ export class ProcessSerializer {
   max_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
-  validation_data?: string | undefined;
+  ui_schema: UISchemaSerializer[] | undefined;
   steps: StepSerializer[];
   data: string;
   is_active: boolean;
@@ -36,7 +37,9 @@ export class ProcessSerializer {
     this.max_amount = initial?.maxAmount;
     this.period = initial?.period;
     this.cron = initial?.cron;
-    this.validation_data = JSON.stringify(initial?.validationData || {});
+    this.ui_schema = initial?.UISchema?.map(
+      (schema) => new UISchemaSerializer(schema),
+    );
     this.steps = initial?.steps?.map((step) => new StepSerializer(step));
     this.data = JSON.stringify(initial?.data || {});
     this.is_active = initial?.isActive;

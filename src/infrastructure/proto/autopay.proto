@@ -11,6 +11,7 @@ service AutopayService {
   rpc ListProcessesAdmin (ListProcessesAdminRequest) returns (ListProcessesAdminResponse) {}
   rpc CreateAutopay (CreateAutopayRequest) returns (CreateAutopayResponse) {}
   rpc UpdateAutopay (UpdateAutopayRequest) returns (UpdateAutopayResponse) {}
+  rpc DeleteAutopay (DeleteAutopayRequest) returns (DeleteAutopayResponse) {}
 }
 
 // Common
@@ -292,6 +293,15 @@ message UpdateAutopayRequest {
 }
 
 message UpdateAutopayResponse {
+  Meta meta = 1;
+  optional Autopay data = 2;
+}
+
+message DeleteAutopayRequest {
+  string id = 1;
+}
+
+message DeleteAutopayResponse {
   Meta meta = 1;
   optional Autopay data = 2;
 }

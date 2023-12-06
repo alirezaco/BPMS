@@ -37,4 +37,10 @@ export class UISchemaSchema {
 
   @Prop({ type: Number, required: false })
   weight?: number;
+
+  @Prop({ type: String, required: false })
+  true_text?: string;
+
+  @Prop({ type: String, required: false })
+  false_text?: string;
 }

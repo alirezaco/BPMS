@@ -69,7 +69,7 @@ export class ProcessController
 
       return {
         meta: {
-          status: HttpStatus.OK,
+          status: HttpStatus.CREATED,
         },
         data: new ProcessSerializer(process),
       };

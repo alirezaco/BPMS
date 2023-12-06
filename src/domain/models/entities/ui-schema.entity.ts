@@ -11,6 +11,8 @@ export class UISchemaEntity {
   public isMoney?: boolean;
   public isEnglish?: boolean;
   public weight?: number;
+  public trueText?: string;
+  public falseText?: string;
 
   constructor(initial: Partial<UISchemaEntity>) {
     this.key = initial?.key;
@@ -25,5 +27,7 @@ export class UISchemaEntity {
     this.isMoney = initial?.isMoney || false;
     this.isEnglish = initial?.isEnglish || false;
     this.weight = initial?.weight || 1;
+    this.trueText = initial?.trueText;
+    this.falseText = initial?.falseText;
   }
 }

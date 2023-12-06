@@ -1,5 +1,6 @@
 import { CreateAutopayHandler } from './create-autopay';
 import { CreateProcessHandler } from './create-process';
+import { DeleteAutopayHandler } from './delete-autopay';
 import { DeleteProcessHandler } from './delete-process';
 import { UpdateAutoPayDataHandler } from './update-autopay-data';
 import { UpdateAutopayDirectDebitHandler } from './update-autopay-direct-debit';
@@ -27,6 +28,7 @@ export * from './update-autopay-max-amount';
 export * from './update-autopay-direct-debit';
 export * from './update-autopay-period';
 export * from './update-autopay-data';
+export * from './delete-autopay';
 
 export const commandHandlers = [
   CreateProcessHandler,
@@ -43,4 +45,5 @@ export const commandHandlers = [
   UpdateAutopayDirectDebitHandler,
   UpdateAutopayPeriodHandler,
   UpdateAutoPayDataHandler,
+  DeleteAutopayHandler,
 ];

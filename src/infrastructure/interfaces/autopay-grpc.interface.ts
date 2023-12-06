@@ -280,6 +280,15 @@ export interface UpdateAutopayResponse {
   data?: Autopay | undefined;
 }
 
+export interface DeleteAutopayRequest {
+  id: string;
+}
+
+export interface DeleteAutopayResponse {
+  meta: Meta | undefined;
+  data?: Autopay | undefined;
+}
+
 export const AUTOPAY_PACKAGE_NAME = "autopay";
 
 export interface AutopayServiceClient {
@@ -298,6 +307,8 @@ export interface AutopayServiceClient {
   createAutopay(request: CreateAutopayRequest, metadata?: Metadata): Observable<CreateAutopayResponse>;
 
   updateAutopay(request: UpdateAutopayRequest, metadata?: Metadata): Observable<UpdateAutopayResponse>;
+
+  deleteAutopay(request: DeleteAutopayRequest, metadata?: Metadata): Observable<DeleteAutopayResponse>;
 }
 
 export interface AutopayServiceController {
@@ -340,6 +351,11 @@ export interface AutopayServiceController {
     request: UpdateAutopayRequest,
     metadata?: Metadata,
   ): Promise<UpdateAutopayResponse> | Observable<UpdateAutopayResponse> | UpdateAutopayResponse;
+
+  deleteAutopay(
+    request: DeleteAutopayRequest,
+    metadata?: Metadata,
+  ): Promise<DeleteAutopayResponse> | Observable<DeleteAutopayResponse> | DeleteAutopayResponse;
 }
 
 export function AutopayServiceControllerMethods() {
@@ -353,6 +369,7 @@ export function AutopayServiceControllerMethods() {
       "listProcessesAdmin",
       "createAutopay",
       "updateAutopay",
+      "deleteAutopay",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

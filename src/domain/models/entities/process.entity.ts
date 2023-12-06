@@ -31,6 +31,6 @@ export class ProcessEntity extends BaseEntity {
     this.steps = initial?.steps;
     this.data = initial?.data || {};
     this.isActive = initial?.isActive || false;
-    this.UISchema = initial?.UISchema;
+    this.UISchema = initial?.UISchema || [];
   }
 }
