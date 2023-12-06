@@ -153,12 +153,14 @@ export class UpdateProcessStepsHandler
     steps,
     validationData,
     defaultFailStep,
+    UISchema,
   }: UpdateProcessStepsCommand) {
     // Update the process steps
     processEntity.steps = steps;
     processEntity.data = processData;
     processEntity.validationData = validationData;
     processEntity.defaultFailStep = defaultFailStep;
+    processEntity.UISchema = UISchema;
 
     // Check if the default fail step exists
     this.checkFailStep(processEntity.steps, processEntity.defaultFailStep);

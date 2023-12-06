@@ -1,4 +1,4 @@
-import { ProcessEntity, StepEntity } from 'domain/models';
+import { ProcessEntity, StepEntity, UISchemaEntity } from 'domain/models';
 
 export class UpdateProcessStepsCommand {
   constructor(
@@ -6,6 +6,7 @@ export class UpdateProcessStepsCommand {
     public steps: StepEntity[],
     public validationData: Record<string, any>,
     public processData: Record<string, any>,
+    public UISchema: UISchemaEntity[],
     public defaultFailStep?: string,
   ) {}
 }

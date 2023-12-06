@@ -15,6 +15,7 @@ import {
 } from 'application/services';
 import { ProcessEntity } from 'domain/models';
 import { ProcessMapper, StepMapper } from 'domain/services';
+import { UISchemaMapper } from 'domain/services/mappers/ui-schema.mapper';
 import { findAndCountAll } from 'infrastructure/database';
 import {
   CreateProcessRequest,
@@ -30,6 +31,7 @@ export class ProcessUseCase {
     private readonly queryBus: QueryBus,
     private readonly processMapper: ProcessMapper,
     private readonly stepMapper: StepMapper,
+    private readonly UISchemaMapper: UISchemaMapper,
   ) {}
 
   async create(
@@ -104,10 +106,11 @@ export class ProcessUseCase {
       >(new UpdateProcessRolesCommand(process, request.roles));
     }
 
-    if (request.data || request.validation_data || request.steps) {
+    if (request.data || request.ui_schema || request.steps) {
       let steps = process.steps;
       let validationData = process.validationData;
       let data = process.data;
+      let UISchema = process.UISchema;
 
       if (request.steps) {
         steps = request.steps.map((x) =>
@@ -115,8 +118,13 @@ export class ProcessUseCase {
         );
       }
 
-      if (request.validation_data) {
-        validationData = JSON.parse(request.validation_data);
+      if (request.ui_schema) {
+        UISchema = request.ui_schema.map((x) =>
+          this.UISchemaMapper.convertRequestToEntity(x),
+        );
+        validationData = this.processMapper.createValidationDataFromUISchema(
+          request.ui_schema,
+        );
       }
 
       if (request.data) {
@@ -126,7 +134,16 @@ export class ProcessUseCase {
       process = await this.commandBus.execute<
         UpdateProcessStepsCommand,
         ProcessEntity
-      >(new UpdateProcessStepsCommand(process, steps, validationData, data));
+      >(
+        new UpdateProcessStepsCommand(
+          process,
+          steps,
+          validationData,
+          data,
+          UISchema,
+          request.default_fail_step || process.defaultFailStep,
+        ),
+      );
     }
 
     return process;

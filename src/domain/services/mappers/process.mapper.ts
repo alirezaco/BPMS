@@ -93,9 +93,7 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
     });
   }
 
-  private createValidationDataFromUISchema(
-    uiSchema: UISchema[],
-  ): Record<string, any> {
+  createValidationDataFromUISchema(uiSchema: UISchema[]): Record<string, any> {
     const validationData: joiSchema = {
       type: 'object',
       properties: {},
