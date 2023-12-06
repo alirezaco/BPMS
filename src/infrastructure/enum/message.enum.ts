@@ -8,4 +8,5 @@ export enum MessageEnum {
   DIRECT_DEBIT_NOT_ALLOWED = 'پرداخت مستقیم برای این پردازه غیر فعال است.',
   AUTOPAY_NOT_FOUND = 'پرداخت یافت نشد.',
   FORBIDDEN = 'دسترسی غیر مجاز.',
+  INVALID_DATA = 'اطلاعات وارد شده نامعتبر است.',
 }

@@ -3,6 +3,8 @@ import { CreateAutopayCommand } from './create-autopay.command';
 import { AutoPayFactory, ProcessRepository } from 'domain/services';
 import { AutoPayEntity, ProcessEntity } from 'domain/models';
 import { MessageEnum, PeriodEnum } from 'infrastructure/enum';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { fromJson } from 'json-joi-converter';
 
 @CommandHandler(CreateAutopayCommand)
 export class CreateAutopayHandler
@@ -17,7 +19,7 @@ export class CreateAutopayHandler
     const process = await this.processRepository.findOneById(id);
 
     if (!process) {
-      throw new Error(MessageEnum.PROCESS_NOT_FOUND);
+      throw new NotFoundException(MessageEnum.PROCESS_NOT_FOUND);
     }
 
     return process;
@@ -28,7 +30,7 @@ export class CreateAutopayHandler
     autopayEntity: AutoPayEntity,
   ) {
     if (!processEntity.allowedDirectDebit && autopayEntity.allowedDirectDebit) {
-      throw new Error(MessageEnum.DIRECT_DEBIT_NOT_ALLOWED);
+      throw new NotFoundException(MessageEnum.DIRECT_DEBIT_NOT_ALLOWED);
     }
   }
 
@@ -37,11 +39,12 @@ export class CreateAutopayHandler
     processEntity: ProcessEntity,
   ) {
     if (autopayEntity.period === PeriodEnum.CRON && !autopayEntity.cron) {
-      throw new Error(MessageEnum.INVALID_PERIOD);
+      throw new NotFoundException(MessageEnum.INVALID_PERIOD);
     }
 
     if (processEntity.period) {
-      if (autopayEntity.period) throw new Error(MessageEnum.INVALID_PERIOD);
+      if (autopayEntity.period)
+        throw new NotFoundException(MessageEnum.INVALID_PERIOD);
 
       autopayEntity.period = processEntity.period;
       autopayEntity.cron = processEntity.cron;
@@ -52,7 +55,16 @@ export class CreateAutopayHandler
     data: Record<string, any>,
     validationData: Record<string, any>,
   ) {
-    // TODO
+    try {
+      const joiSchema = fromJson({
+        type: 'object',
+        properties: validationData,
+      });
+
+      await joiSchema.validateAsync(data);
+    } catch (error) {
+      throw new BadRequestException(MessageEnum.INVALID_DATA);
+    }
   }
 
   async execute({

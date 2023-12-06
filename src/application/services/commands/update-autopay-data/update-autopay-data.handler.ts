@@ -2,6 +2,9 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateAutoPayDataCommand } from './update-autopay-data.command';
 import { AutoPayRepository, ProcessRepository } from 'domain/services';
 import { AutoPayEntity } from 'domain/models';
+import { fromJson } from 'json-joi-converter';
+import { BadRequestException } from '@nestjs/common';
+import { MessageEnum } from 'infrastructure/enum';
 
 @CommandHandler(UpdateAutoPayDataCommand)
 export class UpdateAutoPayDataHandler
@@ -16,7 +19,16 @@ export class UpdateAutoPayDataHandler
     data: Record<string, any>,
     validationData: Record<string, any>,
   ) {
-    // TODO
+    try {
+      const joiSchema = fromJson({
+        type: 'object',
+        properties: validationData,
+      });
+
+      await joiSchema.validateAsync(data);
+    } catch (error) {
+      throw new BadRequestException(MessageEnum.INVALID_DATA);
+    }
   }
 
   async execute(command: UpdateAutoPayDataCommand): Promise<AutoPayEntity> {
