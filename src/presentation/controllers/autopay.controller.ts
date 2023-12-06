@@ -10,6 +10,8 @@ import {
   CreateAutopayResponse,
   DeleteAutopayRequest,
   DeleteAutopayResponse,
+  GetAutopayRequest,
+  GetAutopayResponse,
   Meta,
   UpdateAutopayRequest,
   UpdateAutopayResponse,
@@ -22,7 +24,7 @@ export class AutopayController
   implements
     Pick<
       AutopayServiceController,
-      'deleteAutopay' | 'updateAutopay' | 'createAutopay'
+      'getAutopay' | 'deleteAutopay' | 'updateAutopay' | 'createAutopay'
     >
 {
   constructor(
@@ -102,6 +104,30 @@ export class AutopayController
       const me = metadata.get('me')[0];
 
       const autopay = await this.autopayUseCase.deleteAutopay(
+        request.id,
+        me.toString(),
+      );
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: new AutoPaySerializer(autopay),
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
+  async getAutopay(
+    request: GetAutopayRequest,
+    metadata?: Metadata,
+  ): Promise<GetAutopayResponse> {
+    try {
+      const me = metadata.get('me')[0];
+
+      const autopay = await this.autopayUseCase.getAutopay(
         request.id,
         me.toString(),
       );

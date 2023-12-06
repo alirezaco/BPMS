@@ -123,8 +123,16 @@ export class AutopayUseCase {
     );
   }
 
-  async getAutopay(id: string): Promise<AutoPayEntity> {
-    return;
+  async getAutopay(id: string, me: string): Promise<AutoPayEntity> {
+    const autopay = await this.queryBus.execute<GetAutopayQuery, AutoPayEntity>(
+      new GetAutopayQuery(id),
+    );
+
+    if (autopay.owner !== me) {
+      throw new ForbiddenException(MessageEnum.FORBIDDEN);
+    }
+
+    return autopay;
   }
 
   async getAllAutopays(): Promise<findAndCountAll<AutoPayEntity>> {

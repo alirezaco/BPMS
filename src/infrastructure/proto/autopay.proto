@@ -12,6 +12,7 @@ service AutopayService {
   rpc CreateAutopay (CreateAutopayRequest) returns (CreateAutopayResponse) {}
   rpc UpdateAutopay (UpdateAutopayRequest) returns (UpdateAutopayResponse) {}
   rpc DeleteAutopay (DeleteAutopayRequest) returns (DeleteAutopayResponse) {}
+  rpc GetAutopay (GetAutopayRequest) returns (GetAutopayResponse) {}
 }
 
 // Common
@@ -302,6 +303,15 @@ message DeleteAutopayRequest {
 }
 
 message DeleteAutopayResponse {
+  Meta meta = 1;
+  optional Autopay data = 2;
+}
+
+message GetAutopayRequest {
+  string id = 1;
+}
+
+message GetAutopayResponse {
   Meta meta = 1;
   optional Autopay data = 2;
 }
