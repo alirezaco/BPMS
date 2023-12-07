@@ -4,18 +4,22 @@ import {
   CreateAutopayCommand,
   DeleteAutopayCommand,
   GetAutopayQuery,
+  GetAutopaysQuery,
+  GetProcessQuery,
   UpdateAutoPayDataCommand,
   UpdateAutopayDirectDebitCommand,
   UpdateAutopayMaxAmountCommand,
   UpdateAutopayPeriodCommand,
 } from 'application/services';
 import { UpdateAutoPayNameCommand } from 'application/services/commands/update-autopay-name';
-import { AutoPayEntity } from 'domain/models';
+import { AutoPayEntity, ProcessEntity } from 'domain/models';
 import { AutoPayMapper } from 'domain/services';
 import { findAndCountAll } from 'infrastructure/database';
 import { MessageEnum } from 'infrastructure/enum';
 import {
   CreateAutopayRequest,
+  FindAutopayInterface,
+  ListAutopayRequest,
   UpdateAutopayRequest,
 } from 'infrastructure/interfaces';
 import { convertToPeriod } from 'infrastructure/utils';
@@ -46,7 +50,7 @@ export class AutopayUseCase {
       new GetAutopayQuery(updateAutopayRequest.id),
     );
 
-    if (autopay.owner !== me) {
+    if (autopay.userId !== me) {
       throw new ForbiddenException(MessageEnum.FORBIDDEN);
     }
 
@@ -114,7 +118,7 @@ export class AutopayUseCase {
       new GetAutopayQuery(id),
     );
 
-    if (autopay.owner !== me) {
+    if (autopay.userId !== me) {
       throw new ForbiddenException(MessageEnum.FORBIDDEN);
     }
 
@@ -128,14 +132,26 @@ export class AutopayUseCase {
       new GetAutopayQuery(id),
     );
 
-    if (autopay.owner !== me) {
+    if (autopay.userId !== me) {
       throw new ForbiddenException(MessageEnum.FORBIDDEN);
     }
+
+    const process = await this.queryBus.execute<GetProcessQuery, ProcessEntity>(
+      new GetProcessQuery(autopay.processId),
+    );
+
+    autopay.setUISchema(process.UISchema);
 
     return autopay;
   }
 
-  async getAllAutopays(): Promise<findAndCountAll<AutoPayEntity>> {
-    return;
+  async getAllAutopays(
+    request: ListAutopayRequest,
+    me: string,
+  ): Promise<findAndCountAll<FindAutopayInterface<AutoPayEntity>>> {
+    return this.queryBus.execute<
+      GetAutopaysQuery,
+      findAndCountAll<FindAutopayInterface<AutoPayEntity>>
+    >(new GetAutopaysQuery(request, me));
   }
 }

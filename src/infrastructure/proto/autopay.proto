@@ -13,6 +13,7 @@ service AutopayService {
   rpc UpdateAutopay (UpdateAutopayRequest) returns (UpdateAutopayResponse) {}
   rpc DeleteAutopay (DeleteAutopayRequest) returns (DeleteAutopayResponse) {}
   rpc GetAutopay (GetAutopayRequest) returns (GetAutopayResponse) {}
+  rpc ListAutopays (ListAutopayRequest) returns (ListAutopayResponse) {}
 }
 
 // Common
@@ -265,7 +266,7 @@ message Autopay {
   bool is_active = 15;
   string last_run_at = 16;
   string processing_status = 17;
-
+  repeated UISchema ui_schema = 19;
 }
 
 message CreateAutopayRequest {
@@ -314,4 +315,27 @@ message GetAutopayRequest {
 message GetAutopayResponse {
   Meta meta = 1;
   optional Autopay data = 2;
+}
+
+message autopays {
+  string id = 1;
+  string title = 2;
+  int32 count = 3;
+  repeated Autopay values = 4;
+}
+
+message ArrayAutopay {
+  int32 count = 1;
+  repeated autopays rows = 2;
+}
+
+message ListAutopayRequest {
+  int32 limit = 1;
+  int32 skip = 2;
+  optional string process_id = 3;
+}
+
+message ListAutopayResponse {
+  Meta meta = 1;
+  optional ArrayAutopay data = 2;
 }

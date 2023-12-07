@@ -12,6 +12,8 @@ import {
   DeleteAutopayResponse,
   GetAutopayRequest,
   GetAutopayResponse,
+  ListAutopayRequest,
+  ListAutopayResponse,
   Meta,
   UpdateAutopayRequest,
   UpdateAutopayResponse,
@@ -137,6 +139,36 @@ export class AutopayController
           status: HttpStatus.OK,
         },
         data: new AutoPaySerializer(autopay),
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
+  async listAutopays(
+    request: ListAutopayRequest,
+    metadata?: Metadata,
+  ): Promise<ListAutopayResponse> {
+    try {
+      const me = metadata.get('me')[0];
+
+      const res = await this.autopayUseCase.getAllAutopays(
+        request,
+        me.toString(),
+      );
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: {
+          count: res.count,
+          rows: res.rows.map((x) => ({
+            ...x,
+            values: x.values.map((y) => new AutoPaySerializer(y)),
+          })),
+        },
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);

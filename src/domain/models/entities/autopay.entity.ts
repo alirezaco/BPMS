@@ -1,5 +1,6 @@
 import { PeriodEnum, ProcessingStatusEnum } from 'infrastructure/enum';
 import { BaseEntity } from './base.entity';
+import { UISchemaEntity } from './ui-schema.entity';
 
 export class AutoPayEntity extends BaseEntity {
   public name: string;
@@ -13,6 +14,7 @@ export class AutoPayEntity extends BaseEntity {
   public lastRunAt: Date;
   public processingStatus: ProcessingStatusEnum;
   public data: Record<string, any>;
+  public UISchema?: UISchemaEntity[];
 
   constructor(initial: Partial<AutoPayEntity>) {
     super(initial);
@@ -29,5 +31,13 @@ export class AutoPayEntity extends BaseEntity {
     this.processingStatus =
       initial?.processingStatus || ProcessingStatusEnum.PENDING;
     this.data = initial?.data || {};
+  }
+
+  public setUISchema(uiSchema: UISchemaEntity[]) {
+    this.UISchema = uiSchema;
+  }
+
+  public setLastRunAt() {
+    this.lastRunAt = new Date();
   }
 }

@@ -29,7 +29,7 @@ export class ProcessRepository extends BaseRepository<
   async findAllAdmin(
     request: ListProcessesAdminRequest,
   ): Promise<findAndCountAll<ProcessEntity>> {
-    const where: FilterQuery<ProcessSchema> = {};
+    const where: FilterQuery<ProcessSchema> = { deleted_at: null };
 
     if (request?.name) {
       where['name'] = { $regex: request.name, $options: 'i' };

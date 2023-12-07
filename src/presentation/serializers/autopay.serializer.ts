@@ -1,4 +1,5 @@
-import { AutoPayEntity } from 'domain/models';
+import { AutoPayEntity, UISchemaEntity } from 'domain/models';
+import { UISchemaSerializer } from './ui-schema.serializer';
 
 export class AutoPaySerializer {
   id: string;
@@ -19,6 +20,7 @@ export class AutoPaySerializer {
   last_run_at: string;
   processing_status: string;
   data: string;
+  ui_schema: UISchemaSerializer[];
 
   constructor(initial: AutoPayEntity) {
     this.id = initial?.id;
@@ -39,5 +41,8 @@ export class AutoPaySerializer {
     this.processing_status = initial?.processingStatus;
     this.data = JSON.stringify(initial?.data || {});
     this.tags = initial?.tags;
+    this.ui_schema = initial.UISchema?.map(
+      (schema) => new UISchemaSerializer(schema),
+    );
   }
 }
