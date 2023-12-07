@@ -26,7 +26,11 @@ export class AutopayController
   implements
     Pick<
       AutopayServiceController,
-      'getAutopay' | 'deleteAutopay' | 'updateAutopay' | 'createAutopay'
+      | 'listAutopays'
+      | 'getAutopay'
+      | 'deleteAutopay'
+      | 'updateAutopay'
+      | 'createAutopay'
     >
 {
   constructor(
