@@ -1,4 +1,5 @@
 import { ApiStepEntity } from './api-step.entity';
+import { AutoPayActivityEntity } from './autopay-activity.entity';
 import { AutoPayEntity } from './autopay.entity';
 import { ComparisonStepEntity } from './comparison-step.entity';
 import { DataParamEntity } from './data-param.entity';
@@ -16,6 +17,7 @@ export * from './api-step.entity';
 export * from './grpc-step.entity';
 export * from './autopay.entity';
 export * from './ui-schema.entity';
+export * from './autopay-activity.entity';
 
 export const entities = [
   DataParamEntity,
@@ -26,4 +28,5 @@ export const entities = [
   ProcessEntity,
   AutoPayEntity,
   UISchemaEntity,
+  AutoPayActivityEntity,
 ];

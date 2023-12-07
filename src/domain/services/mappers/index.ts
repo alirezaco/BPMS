@@ -1,4 +1,5 @@
 import { ApiStepMapper } from './api-step.mapper';
+import { AutoPayActivityMapper } from './autopay-activity.mapper';
 import { AutoPayMapper } from './autopay.mapper';
 import { ComparisonStepMapper } from './comparison-step.mapper';
 import { DataParamMapper } from './data-param.mapper';
@@ -14,6 +15,7 @@ export * from './api-step.mapper';
 export * from './comparison-step.mapper';
 export * from './data-param.mapper';
 export * from './autopay.mapper';
+export * from './autopay-activity.mapper';
 
 export const mappers = [
   ProcessMapper,
@@ -23,4 +25,5 @@ export const mappers = [
   ComparisonStepMapper,
   DataParamMapper,
   AutoPayMapper,
+  AutoPayActivityMapper,
 ];

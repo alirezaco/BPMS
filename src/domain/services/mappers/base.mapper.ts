@@ -3,5 +3,5 @@ export interface BaseMapper<Scheme, Entity, RequestInterface = any> {
 
   convertEntityToSchema(entity: Entity): Scheme;
 
-  convertRequestToEntity(request: Partial<RequestInterface>): Entity;
+  convertRequestToEntity?: (request: Partial<RequestInterface>) => Entity;
 }

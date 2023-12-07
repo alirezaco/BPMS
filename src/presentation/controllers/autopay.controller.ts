@@ -1,7 +1,7 @@
 import { Metadata } from '@grpc/grpc-js';
 import { HttpStatus } from '@nestjs/common';
 import { GrpcMethod, GrpcService } from '@nestjs/microservices';
-import { AutopayUseCase } from 'application/use-cases/autopay.use-case';
+import { AutopayUseCase } from 'application/use-cases';
 import { MessageEnum } from 'infrastructure/enum';
 import {
   AUTOPAY_SERVICE_NAME,

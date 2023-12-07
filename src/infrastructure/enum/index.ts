@@ -7,3 +7,4 @@ export * from './source.enum';
 export * from './processing-status.enum';
 export * from './validation-type.enum';
 export * from './ui-type.enum';
+export * from './activity-status.enum';

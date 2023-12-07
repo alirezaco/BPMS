@@ -8,10 +8,10 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AutoPayFactory extends BaseFactory<AutoPaySchema, AutoPayEntity> {
   constructor(
-    protected readonly mapper: AutoPayMapper,
+    protected readonly autopayMapper: AutoPayMapper,
     @InjectModel(AutoPaySchema.name)
-    protected readonly model: Model<AutoPaySchema>,
+    protected readonly autopayModel: Model<AutoPaySchema>,
   ) {
-    super(mapper, model);
+    super(autopayMapper, autopayModel);
   }
 }

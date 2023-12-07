@@ -6,3 +6,4 @@ export * from './process.serializer';
 export * from './step.serializer';
 export * from './autopay.serializer';
 export * from './ui-schema.serializer';
+export * from './autopay-activity.serializer';

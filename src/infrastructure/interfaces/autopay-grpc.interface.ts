@@ -322,6 +322,45 @@ export interface ListAutopayResponse {
   data?: ArrayAutopay | undefined;
 }
 
+export interface AutopayActivity {
+  id: string;
+  owner: string;
+  created_at: string;
+  updated_at?: string | undefined;
+  deleted_at?: string | undefined;
+  restore_at?: string | undefined;
+  tags: string[];
+  autopay_id: string;
+  process_id: string;
+  status: string;
+  running_time: number;
+  successful_steps: string[];
+  failed_steps: string[];
+  has_payment?: boolean | undefined;
+  payment_amount?: number | undefined;
+}
+
+export interface ArrayAutopayActivity {
+  count: number;
+  rows: AutopayActivity[];
+}
+
+export interface ListAutopayActivityRequest {
+  autopay_id?: string | undefined;
+  process_id?: string | undefined;
+  status?: string | undefined;
+  start_date?: string | undefined;
+  end_date?: string | undefined;
+  has_payment?: boolean | undefined;
+  limit: number;
+  skip: number;
+}
+
+export interface ListAutopayActivityResponse {
+  meta: Meta | undefined;
+  data?: ArrayAutopayActivity | undefined;
+}
+
 export const AUTOPAY_PACKAGE_NAME = "autopay";
 
 export interface AutopayServiceClient {
@@ -346,6 +385,11 @@ export interface AutopayServiceClient {
   getAutopay(request: GetAutopayRequest, metadata?: Metadata): Observable<GetAutopayResponse>;
 
   listAutopays(request: ListAutopayRequest, metadata?: Metadata): Observable<ListAutopayResponse>;
+
+  listAutopayActivity(
+    request: ListAutopayActivityRequest,
+    metadata?: Metadata,
+  ): Observable<ListAutopayActivityResponse>;
 }
 
 export interface AutopayServiceController {
@@ -403,6 +447,11 @@ export interface AutopayServiceController {
     request: ListAutopayRequest,
     metadata?: Metadata,
   ): Promise<ListAutopayResponse> | Observable<ListAutopayResponse> | ListAutopayResponse;
+
+  listAutopayActivity(
+    request: ListAutopayActivityRequest,
+    metadata?: Metadata,
+  ): Promise<ListAutopayActivityResponse> | Observable<ListAutopayActivityResponse> | ListAutopayActivityResponse;
 }
 
 export function AutopayServiceControllerMethods() {
@@ -419,6 +468,7 @@ export function AutopayServiceControllerMethods() {
       "deleteAutopay",
       "getAutopay",
       "listAutopays",
+      "listAutopayActivity",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

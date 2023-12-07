@@ -8,10 +8,10 @@ import { ProcessEntity, ProcessSchema } from 'domain/models';
 @Injectable()
 export class ProcessFactory extends BaseFactory<ProcessSchema, ProcessEntity> {
   constructor(
-    protected readonly mapper: ProcessMapper,
+    protected readonly processMapper: ProcessMapper,
     @InjectModel(ProcessSchema.name)
-    protected readonly model: Model<ProcessSchema>,
+    protected readonly processModel: Model<ProcessSchema>,
   ) {
-    super(mapper, model);
+    super(processMapper, processModel);
   }
 }
