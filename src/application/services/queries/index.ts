@@ -1,3 +1,4 @@
+import { AutopayQueueHandler } from './autopay-queue';
 import { GetAutopayHandler } from './get-autopay';
 import { GetAutopayActivitiesHandler } from './get-autopay-activities';
 import { GetAutopaysHandler } from './get-autopays';
@@ -11,6 +12,7 @@ export * from './get-processes-admin';
 export * from './get-autopay';
 export * from './get-autopays';
 export * from './get-autopay-activities';
+export * from './autopay-queue';
 
 export const queryHandlers = [
   GetProcessHandler,
@@ -19,4 +21,5 @@ export const queryHandlers = [
   GetAutopayHandler,
   GetAutopaysHandler,
   GetAutopayActivitiesHandler,
+  AutopayQueueHandler,
 ];

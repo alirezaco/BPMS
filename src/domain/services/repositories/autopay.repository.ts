@@ -5,6 +5,8 @@ import { AutoPayMapper } from '../mappers';
 import { InjectModel } from '@nestjs/mongoose';
 import { findAndCountAll } from 'infrastructure/database';
 import { ListAutopayRequest } from 'infrastructure/interfaces';
+import { CronRegexUtil } from 'infrastructure/utils';
+import { PeriodEnum } from 'infrastructure/enum';
 
 export class AutoPayRepository extends BaseRepository<
   AutoPaySchema,
@@ -43,5 +45,172 @@ export class AutoPayRepository extends BaseRepository<
     });
 
     return autopays;
+  }
+
+  async getHourlyQueue(): Promise<AutoPayEntity[]> {
+    const autopays = await this.findAll({
+      where: {
+        deleted_at: null,
+        $and: [
+          {
+            $or: [
+              { period: PeriodEnum.HOUR },
+              {
+                period: PeriodEnum.CRON,
+                cron: { $regex: CronRegexUtil.hourlyRegex() },
+              },
+            ],
+          },
+          {
+            $or: [
+              {
+                last_run_at: {
+                  $gt: new Date(new Date().getTime() - 60 * 60 * 1000),
+                },
+              },
+              {
+                last_run_at: null,
+              },
+            ],
+          },
+        ],
+      },
+      order: [['last_run_at', 'asc']],
+      limit: 1,
+    });
+
+    return autopays.rows;
+  }
+
+  async getDailyQueue(): Promise<AutoPayEntity[]> {
+    const autopays = await this.findAll({
+      where: {
+        deleted_at: null,
+        $and: [
+          {
+            $or: [
+              { period: PeriodEnum.DAY },
+              {
+                period: PeriodEnum.CRON,
+                cron: { $regex: CronRegexUtil.dailyRegex() },
+              },
+            ],
+          },
+          {
+            $or: [
+              {
+                last_run_at: {
+                  $gt: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+                },
+              },
+              {
+                last_run_at: null,
+              },
+            ],
+          },
+        ],
+      },
+      order: [['last_run_at', 'asc']],
+      limit: 1,
+    });
+
+    return autopays.rows;
+  }
+
+  async getWeeklyQueue(): Promise<AutoPayEntity[]> {
+    const autopays = await this.findAll({
+      where: {
+        deleted_at: null,
+        $and: [
+          {
+            $or: [{ period: PeriodEnum.WEEK }],
+          },
+          {
+            $or: [
+              {
+                last_run_at: {
+                  $gt: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+                },
+              },
+              {
+                last_run_at: null,
+              },
+            ],
+          },
+        ],
+      },
+      order: [['last_run_at', 'asc']],
+      limit: 1,
+    });
+
+    return autopays.rows;
+  }
+
+  async getMonthlyQueue(): Promise<AutoPayEntity[]> {
+    const autopays = await this.findAll({
+      where: {
+        deleted_at: null,
+        $and: [
+          {
+            $or: [
+              { period: PeriodEnum.MONTH },
+              {
+                period: PeriodEnum.CRON,
+                cron: { $regex: CronRegexUtil.monthlyRegex() },
+              },
+            ],
+          },
+          {
+            $or: [
+              {
+                last_run_at: {
+                  $gt: new Date(
+                    new Date().getTime() - 30 * 24 * 60 * 60 * 1000,
+                  ),
+                },
+              },
+              {
+                last_run_at: null,
+              },
+            ],
+          },
+        ],
+      },
+      order: [['last_run_at', 'asc']],
+      limit: 1,
+    });
+
+    return autopays.rows;
+  }
+
+  async getYearlyQueue(): Promise<AutoPayEntity[]> {
+    const autopays = await this.findAll({
+      where: {
+        deleted_at: null,
+        $and: [
+          {
+            $or: [{ period: PeriodEnum.YEAR }],
+          },
+          {
+            $or: [
+              {
+                last_run_at: {
+                  $gt: new Date(
+                    new Date().getTime() - 365 * 24 * 60 * 60 * 1000,
+                  ),
+                },
+              },
+              {
+                last_run_at: null,
+              },
+            ],
+          },
+        ],
+      },
+      order: [['last_run_at', 'asc']],
+      limit: 1,
+    });
+
+    return autopays.rows;
   }
 }
