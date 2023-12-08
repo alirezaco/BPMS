@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { findAndCountAll } from 'infrastructure/database';
 import { ListAutopayRequest } from 'infrastructure/interfaces';
 import { CronRegexUtil } from 'infrastructure/utils';
-import { PeriodEnum } from 'infrastructure/enum';
+import { PeriodEnum, ProcessingStatusEnum } from 'infrastructure/enum';
 
 export class AutoPayRepository extends BaseRepository<
   AutoPaySchema,
@@ -51,6 +51,7 @@ export class AutoPayRepository extends BaseRepository<
     const autopays = await this.findAll({
       where: {
         deleted_at: null,
+        processing_status: { $ne: ProcessingStatusEnum.IN_PROGRESS },
         $and: [
           {
             $or: [
@@ -86,6 +87,7 @@ export class AutoPayRepository extends BaseRepository<
     const autopays = await this.findAll({
       where: {
         deleted_at: null,
+        processing_status: { $ne: ProcessingStatusEnum.IN_PROGRESS },
         $and: [
           {
             $or: [
@@ -121,6 +123,7 @@ export class AutoPayRepository extends BaseRepository<
     const autopays = await this.findAll({
       where: {
         deleted_at: null,
+        processing_status: { $ne: ProcessingStatusEnum.IN_PROGRESS },
         $and: [
           {
             $or: [{ period: PeriodEnum.WEEK }],
@@ -150,6 +153,7 @@ export class AutoPayRepository extends BaseRepository<
     const autopays = await this.findAll({
       where: {
         deleted_at: null,
+        processing_status: { $ne: ProcessingStatusEnum.IN_PROGRESS },
         $and: [
           {
             $or: [
@@ -187,6 +191,7 @@ export class AutoPayRepository extends BaseRepository<
     const autopays = await this.findAll({
       where: {
         deleted_at: null,
+        processing_status: { $ne: ProcessingStatusEnum.IN_PROGRESS },
         $and: [
           {
             $or: [{ period: PeriodEnum.YEAR }],

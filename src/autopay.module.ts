@@ -4,12 +4,18 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerModule } from 'nestjs-pino';
 import { schemas } from './domain/models';
 import { CqrsModule } from '@nestjs/cqrs';
-import { commandHandlers, events, queryHandlers } from './application/services';
+import {
+  commandHandlers,
+  events,
+  queryHandlers,
+  standalones,
+} from './application/services';
 import { useCases } from './application/use-cases';
 import { factories, mappers, repositories } from './domain/services';
 import { controllers } from './presentation/controllers';
 import { mongoConfig } from './infrastructure/config';
 import { proxies } from 'domain/services/proxies';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -38,6 +44,11 @@ import { proxies } from 'domain/services/proxies';
     }),
     MongooseModule.forFeature(schemas),
     CqrsModule.forRoot(),
+    EventEmitterModule.forRoot({
+      global: true,
+      maxListeners: 1,
+      ignoreErrors: true,
+    }),
   ],
   controllers: [...controllers],
   providers: [
@@ -49,6 +60,7 @@ import { proxies } from 'domain/services/proxies';
     ...repositories,
     ...events,
     ...proxies,
+    ...standalones,
   ],
 })
 export class AutopayModule {}

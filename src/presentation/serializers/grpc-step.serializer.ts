@@ -3,6 +3,7 @@ import { DataParamSerializer } from './data-param.serializer';
 
 export class GrpcStepSerializer {
   service: string;
+  package: string;
   method: string;
   protofile: string;
   url: string;
@@ -11,6 +12,7 @@ export class GrpcStepSerializer {
 
   constructor(initial: GrpcStepEntity) {
     this.service = initial?.service;
+    this.package = initial?.package;
     this.method = initial?.method;
     this.protofile = initial?.protofile;
     this.url = initial?.url;
