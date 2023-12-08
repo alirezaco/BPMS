@@ -55,6 +55,7 @@ message ComparisonStep {
 
 message GrpcStep {
   string service = 1;
+  string package = 7;
   string method = 2;
   string protofile = 3;
   string url = 4;
@@ -115,6 +116,7 @@ message ComparisonStepRequest {
 
 message GrpcStepRequest {
   string service = 1;
+  string package = 7;
   string method = 2;
   string protofile = 3;
   string url = 4;

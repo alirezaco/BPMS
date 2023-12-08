@@ -8,3 +8,4 @@ export * from './processing-status.enum';
 export * from './validation-type.enum';
 export * from './ui-type.enum';
 export * from './activity-status.enum';
+export * from './running-message.enum';

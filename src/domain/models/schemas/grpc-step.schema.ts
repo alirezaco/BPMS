@@ -7,6 +7,9 @@ export class GrpcStepSchema {
   service: string;
 
   @Prop({ required: true, type: String })
+  package: string;
+
+  @Prop({ required: true, type: String })
   method: string;
 
   @Prop({ required: true, type: String })

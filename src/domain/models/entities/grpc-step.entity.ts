@@ -2,6 +2,7 @@ import { DataParamEntity } from './data-param.entity';
 
 export class GrpcStepEntity {
   public service: string;
+  public package: string;
   public method: string;
   public protofile: string;
   public url: string;
@@ -13,6 +14,7 @@ export class GrpcStepEntity {
     this.method = initial?.method;
     this.protofile = initial?.protofile;
     this.url = initial?.url;
+    this.package = initial?.package;
     this.metadata = initial?.metadata || [];
     this.payload = initial?.payload || [];
   }

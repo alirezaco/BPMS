@@ -9,6 +9,7 @@ import { useCases } from './application/use-cases';
 import { factories, mappers, repositories } from './domain/services';
 import { controllers } from './presentation/controllers';
 import { mongoConfig } from './infrastructure/config';
+import { proxies } from 'domain/services/proxies';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { mongoConfig } from './infrastructure/config';
     ...mappers,
     ...repositories,
     ...events,
+    ...proxies,
   ],
 })
 export class AutopayModule {}

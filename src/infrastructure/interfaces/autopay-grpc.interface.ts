@@ -43,6 +43,7 @@ export interface ComparisonStep {
 
 export interface GrpcStep {
   service: string;
+  package: string;
   method: string;
   protofile: string;
   url: string;
@@ -100,6 +101,7 @@ export interface ComparisonStepRequest {
 
 export interface GrpcStepRequest {
   service: string;
+  package: string;
   method: string;
   protofile: string;
   url: string;

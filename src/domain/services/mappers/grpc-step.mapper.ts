@@ -22,6 +22,7 @@ export class GrpcStepMapper
       payload: entity?.payload.map((payload) =>
         this.DataParamMapper.convertEntityToSchema(payload),
       ),
+      package: entity?.package,
     };
   }
 
@@ -39,6 +40,7 @@ export class GrpcStepMapper
       payload: schema?.payload.map((payload) =>
         this.DataParamMapper.convertSchemaToEntity(payload),
       ),
+      package: schema?.package,
     });
   }
 
@@ -58,6 +60,7 @@ export class GrpcStepMapper
             this.DataParamMapper.convertRequestToEntity(payload),
           )
         : [],
+      package: request?.package,
     });
   }
 }
