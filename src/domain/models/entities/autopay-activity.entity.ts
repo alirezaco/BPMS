@@ -1,15 +1,18 @@
 import { ActivityStatusEnum } from 'infrastructure/enum';
 import { BaseEntity } from './base.entity';
+import { ResultStep, RunningStepType } from 'infrastructure/types';
 
 export class AutoPayActivityEntity extends BaseEntity {
   autopayId: string;
   processId: string;
   status: ActivityStatusEnum;
   runningTime: number;
-  successfulSteps?: string[];
-  failedSteps?: string[];
+  successfulSteps?: RunningStepType[];
+  failedSteps?: RunningStepType[];
   hasPayment?: boolean;
   paymentAmount?: number;
+  RunningStep?: RunningStepType;
+  responsesSteps?: ResultStep[];
 
   constructor(initial: Partial<AutoPayActivityEntity>) {
     super(initial);

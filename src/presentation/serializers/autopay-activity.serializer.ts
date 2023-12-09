@@ -28,8 +28,8 @@ export class AutoPayActivitySerializer {
     this.process_id = initial?.processId;
     this.status = initial?.status;
     this.running_time = initial?.runningTime;
-    this.successful_steps = initial?.successfulSteps;
-    this.failed_steps = initial?.failedSteps;
+    this.successful_steps = initial?.successfulSteps.map((x) => x[0]);
+    this.failed_steps = initial?.failedSteps.map((x) => x[0]);
     this.has_payment = initial?.hasPayment;
     this.payment_amount = initial?.paymentAmount;
     this.owner = initial?.owner;

@@ -18,6 +18,8 @@ export class AutoPayActivityMapper
     schema.failed_steps = entity.failedSteps || [];
     schema.has_payment = entity.hasPayment || false;
     schema.payment_amount = entity.paymentAmount || 0;
+    schema.RunningStep = entity.RunningStep;
+    schema.responsesSteps = entity.responsesSteps || [];
 
     return schema;
   }
@@ -32,6 +34,8 @@ export class AutoPayActivityMapper
       failedSteps: schema?.failed_steps,
       hasPayment: schema?.has_payment,
       paymentAmount: schema?.payment_amount,
+      RunningStep: schema?.RunningStep,
+      responsesSteps: schema?.responsesSteps,
     });
   }
 }

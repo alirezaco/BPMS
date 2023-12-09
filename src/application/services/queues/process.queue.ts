@@ -64,7 +64,7 @@ export class ProcessQueue {
     const res = await this.runAutopayProcessor.run(autopay, process);
 
     //update autopay status
-    if (res) {
+    if (res.success) {
       await this.updateAutoPayStatus(autopay, ProcessingStatusEnum.COMPLETED);
     } else {
       await this.updateAutoPayStatus(autopay, ProcessingStatusEnum.FAILED);
