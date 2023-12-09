@@ -1,39 +1,33 @@
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { AutoPayEntity, ProcessEntity } from 'domain/models';
-import { EVENT_NAME } from 'infrastructure/constants';
 import { ProcessingStatusEnum, RunningMessageEnum } from 'infrastructure/enum';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { AutopayQueueQuery, GetProcessQuery } from '../queries';
+import { GetAutopayQuery, GetProcessQuery } from '../queries';
 import {
   UpdateAutopayLastRunCommand,
   UpdateAutopayStatusCommand,
 } from '../commands';
-import { RunAutopayStandalone } from './run-autopay.standalone';
+import { RunAutopayProcessor } from '../processors';
+import { Process, Processor } from '@nestjs/bull';
+import { JOBS_QUEUE, JOB_PROCESS } from 'infrastructure/constants';
+import { Job } from 'bull';
 
-@Injectable()
-export class ProcessStandalones implements OnApplicationBootstrap {
+@Processor(JOBS_QUEUE)
+export class ProcessQueue {
   constructor(
-    private readonly eventEmitter: EventEmitter2,
-    @InjectPinoLogger(ProcessStandalones.name)
+    @InjectPinoLogger(ProcessQueue.name)
     private readonly logger: PinoLogger,
     private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
-    private readonly runAutopayStandlone: RunAutopayStandalone,
+    private readonly runAutopayProcessor: RunAutopayProcessor,
   ) {}
 
-  onApplicationBootstrap() {
-    this.run().then().catch();
-  }
+  private async getAutoPay(id: string): Promise<AutoPayEntity> {
+    const autopay = await this.queryBus.execute<GetAutopayQuery, AutoPayEntity>(
+      new GetAutopayQuery(id),
+    );
 
-  private async getAutoPay(): Promise<AutoPayEntity> {
-    const autoPay = await this.queryBus.execute<
-      AutopayQueueQuery,
-      AutoPayEntity
-    >(new AutopayQueueQuery());
-
-    return autoPay;
+    return autopay;
   }
 
   private async getProcess(id: string): Promise<ProcessEntity> {
@@ -59,28 +53,15 @@ export class ProcessStandalones implements OnApplicationBootstrap {
     );
   }
 
-  private raiseEvent(time: number = 500) {
-    setTimeout(() => {
-      this.eventEmitter.emit(EVENT_NAME);
-    }, time);
-  }
-
-  @OnEvent(EVENT_NAME)
-  async run() {
-    const autopay = await this.getAutoPay();
-
-    //check exist autopay
-    if (!autopay) {
-      this.logger.info(RunningMessageEnum.NOT_EXIST_AUTOPAY);
-      this.raiseEvent(1000 * 60 * 30);
-      return;
-    }
+  @Process(JOB_PROCESS)
+  async run(job: Job<{ autopayId: string }>) {
+    const autopay = await this.getAutoPay(job.data.autopayId);
 
     //start autopay
     this.logger.info(RunningMessageEnum.START.replace('%id', autopay.id));
     await this.updateAutoPayStatus(autopay, ProcessingStatusEnum.IN_PROGRESS);
     const process = await this.getProcess(autopay.id);
-    const res = await this.runAutopayStandlone.run(autopay, process);
+    const res = await this.runAutopayProcessor.run(autopay, process);
 
     //update autopay status
     if (res) {
@@ -91,9 +72,6 @@ export class ProcessStandalones implements OnApplicationBootstrap {
 
     //update autopay last run
     await this.updateAutoPayLastRunAt(autopay);
-
-    //raise event for next autopay
-    this.raiseEvent();
 
     this.logger.info(RunningMessageEnum.FINISH.replace('%id', autopay.id));
   }

@@ -77,7 +77,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
-      limit: 1,
+      include: { _id: 1 },
     });
 
     return autopays.rows;
@@ -113,7 +113,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
-      limit: 1,
+      include: { _id: 1 },
     });
 
     return autopays.rows;
@@ -143,7 +143,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
-      limit: 1,
+      include: { _id: 1 },
     });
 
     return autopays.rows;
@@ -181,7 +181,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
-      limit: 1,
+      include: { _id: 1 },
     });
 
     return autopays.rows;
@@ -213,7 +213,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
-      limit: 1,
+      include: { _id: 1 },
     });
 
     return autopays.rows;

@@ -6,17 +6,20 @@ import { schemas } from './domain/models';
 import { CqrsModule } from '@nestjs/cqrs';
 import {
   commandHandlers,
+  crons,
   events,
+  processors,
   queryHandlers,
-  standalones,
+  queues,
 } from './application/services';
 import { useCases } from './application/use-cases';
 import { factories, mappers, repositories } from './domain/services';
 import { controllers } from './presentation/controllers';
 import { mongoConfig } from './infrastructure/config';
 import { proxies } from 'domain/services/proxies';
-import { EventEmitterModule } from '@nestjs/event-emitter';
-
+import { BullModule } from '@nestjs/bull';
+import { FAILED_QUEUE, JOBS_QUEUE } from 'infrastructure/constants';
+import { ScheduleModule } from '@nestjs/schedule';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -44,11 +47,29 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     }),
     MongooseModule.forFeature(schemas),
     CqrsModule.forRoot(),
-    EventEmitterModule.forRoot({
-      global: true,
-      maxListeners: 1,
-      ignoreErrors: true,
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        redis: {
+          host: configService.get<string>('REDIS_HOST', 'localhost'),
+          port: configService.get<number>('REDIS_PORT', 6379),
+          password: configService.get<string>('REDIS_PASSWORD', ''),
+        },
+        defaultJobOptions: {
+          removeOnComplete: true,
+          removeOnFail: true,
+        },
+      }),
     }),
+    BullModule.registerQueue(
+      {
+        name: JOBS_QUEUE,
+      },
+      {
+        name: FAILED_QUEUE,
+      },
+    ),
+    ScheduleModule.forRoot(),
   ],
   controllers: [...controllers],
   providers: [
@@ -60,7 +81,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     ...repositories,
     ...events,
     ...proxies,
-    ...standalones,
+    ...processors,
+    ...crons,
+    ...queues,
   ],
 })
 export class AutopayModule {}

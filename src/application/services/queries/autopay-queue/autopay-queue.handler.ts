@@ -2,70 +2,64 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { AutopayQueueQuery } from './autopay-queue.query';
 import { AutoPayEntity } from 'domain/models';
 import { AutoPayRepository } from 'domain/services';
+import { PeriodEnum } from 'infrastructure/enum';
+import { AutoPayQueue } from 'infrastructure/interfaces';
 
 @QueryHandler(AutopayQueueQuery)
 export class AutopayQueueHandler implements IQueryHandler<AutopayQueueQuery> {
   constructor(private readonly autopayRepository: AutoPayRepository) {}
 
-  async getFromHourlyQueue(): Promise<AutoPayEntity> {
+  async getFromHourlyQueue(): Promise<AutoPayEntity[]> {
     const data = await this.autopayRepository.getHourlyQueue();
 
-    return data[0];
+    return data;
   }
 
-  async getFromDailyQueue(): Promise<AutoPayEntity> {
+  async getFromDailyQueue(): Promise<AutoPayEntity[]> {
     const data = await this.autopayRepository.getDailyQueue();
 
-    return data[0];
+    return data;
   }
 
-  async getFromWeeklyQueue(): Promise<AutoPayEntity> {
+  async getFromWeeklyQueue(): Promise<AutoPayEntity[]> {
     const data = await this.autopayRepository.getWeeklyQueue();
 
-    return data[0];
+    return data;
   }
 
-  async getFromMonthlyQueue(): Promise<AutoPayEntity> {
+  async getFromMonthlyQueue(): Promise<AutoPayEntity[]> {
     const data = await this.autopayRepository.getMonthlyQueue();
 
-    return data[0];
+    return data;
   }
 
-  async getFromYearlyQueue(): Promise<AutoPayEntity> {
+  async getFromYearlyQueue(): Promise<AutoPayEntity[]> {
     const data = await this.autopayRepository.getYearlyQueue();
 
-    return data[0];
+    return data;
   }
 
-  async execute(_: AutopayQueueQuery): Promise<AutoPayEntity> {
-    const hourlyAutopay = await this.getFromHourlyQueue();
-
-    if (hourlyAutopay) {
-      return hourlyAutopay;
+  private async getAutopayFromQueue(
+    period: PeriodEnum,
+  ): Promise<AutoPayEntity[]> {
+    switch (period) {
+      case PeriodEnum.HOUR:
+        return this.getFromHourlyQueue();
+      case PeriodEnum.DAY:
+        return this.getFromDailyQueue();
+      case PeriodEnum.WEEK:
+        return this.getFromWeeklyQueue();
+      case PeriodEnum.MONTH:
+        return this.getFromMonthlyQueue();
+      case PeriodEnum.YEAR:
+        return this.getFromYearlyQueue();
     }
+  }
 
-    const dailyAutopay = await this.getFromDailyQueue();
-
-    if (dailyAutopay) {
-      return dailyAutopay;
-    }
-
-    const weeklyAutopay = await this.getFromWeeklyQueue();
-
-    if (weeklyAutopay) {
-      return weeklyAutopay;
-    }
-
-    const monthlyAutopay = await this.getFromMonthlyQueue();
-
-    if (monthlyAutopay) {
-      return monthlyAutopay;
-    }
-
-    const yearlyAutopay = await this.getFromYearlyQueue();
-
-    if (yearlyAutopay) {
-      return yearlyAutopay;
-    }
+  async execute({
+    period,
+  }: AutopayQueueQuery): Promise<AutoPayQueue<AutoPayEntity>> {
+    const autopay = await this.getAutopayFromQueue(period);
+    return { type: period, autopay };
   }
 }

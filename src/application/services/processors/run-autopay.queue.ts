@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { AutoPayEntity, ProcessEntity, StepEntity } from 'domain/models';
 import { ResultStep, RunningStepType } from 'infrastructure/types';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @Injectable()
-export class RunAutopayStandalone {
+export class RunAutopayProcessor {
   private process: ProcessEntity;
   private data: Record<string, any>;
   private stepsImplemented: RunningStepType[];
   private RunningStep: RunningStepType;
   private responsesSteps: ResultStep[];
 
-  constructor() {}
+  constructor(
+    @InjectPinoLogger(RunAutopayProcessor.name)
+    private readonly logger: PinoLogger,
+  ) {}
 
   init(process: ProcessEntity, data: Record<string, any>) {
     this.process = process;

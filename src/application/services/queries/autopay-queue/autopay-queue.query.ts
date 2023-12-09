@@ -1,3 +1,5 @@
+import { PeriodEnum } from 'infrastructure/enum';
+
 export class AutopayQueueQuery {
-  constructor() {}
+  constructor(public period: PeriodEnum) {}
 }
