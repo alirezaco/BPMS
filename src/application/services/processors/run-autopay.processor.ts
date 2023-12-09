@@ -7,7 +7,7 @@ import {
   StepEntity,
 } from 'domain/models';
 import { ApiProxy, GrpcProxy } from 'domain/services/proxies';
-import { RunningMessageEnum, SourceEnum } from 'infrastructure/enum';
+import { ProcessStepTypeEnum, RunningMessageEnum, SourceEnum } from 'infrastructure/enum';
 import {
   ProcessResultInterface,
   StepResultInterface,
@@ -101,6 +101,11 @@ export class RunAutopayProcessor {
 
   async runAstep(step: StepEntity): Promise<StepResultInterface> {
     const type = step.type;
+
+    switch (type) {
+      case ProcessStepTypeEnum.API:
+        return await this.runApiStep(step);
+    }
   }
 
   getValueDate(dataParam: DataParamEntity): any {

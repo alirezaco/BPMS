@@ -1,5 +1,5 @@
-import { RunAutopayProcessor } from './run-autopay.queue';
+import { RunAutopayProcessor } from './run-autopay.processor';
 
-export * from './run-autopay.queue';
+export * from './run-autopay.processor';
 
 export const processors = [RunAutopayProcessor];
