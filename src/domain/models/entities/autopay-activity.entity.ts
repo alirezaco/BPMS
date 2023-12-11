@@ -25,5 +25,7 @@ export class AutoPayActivityEntity extends BaseEntity {
     this.failedSteps = initial?.failedSteps || [];
     this.hasPayment = initial?.hasPayment || false;
     this.paymentAmount = initial?.paymentAmount || 0;
+    this.RunningStep = initial?.RunningStep;
+    this.responsesSteps = initial?.responsesSteps || [];
   }
 }
