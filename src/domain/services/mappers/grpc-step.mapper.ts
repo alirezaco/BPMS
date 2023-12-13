@@ -3,6 +3,7 @@ import { GrpcStepEntity, GrpcStepSchema } from 'domain/models';
 import { Injectable } from '@nestjs/common';
 import { GrpcStepRequest } from 'infrastructure/interfaces';
 import { DataParamMapper } from './data-param.mapper';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class GrpcStepMapper
@@ -14,7 +15,9 @@ export class GrpcStepMapper
     return {
       method: entity?.method,
       url: entity?.url,
-      protofile: entity?.protofile,
+      protofile: entity?.protofile
+        ? new Types.ObjectId(entity?.protofile)
+        : null,
       service: entity?.service,
       metadata: entity?.metadata.map((metadata) =>
         this.DataParamMapper.convertEntityToSchema(metadata),
@@ -32,7 +35,7 @@ export class GrpcStepMapper
     return new GrpcStepEntity({
       method: schema?.method,
       url: schema?.url,
-      protofile: schema?.protofile,
+      protofile: schema?.protofile?.toString(),
       service: schema?.service,
       metadata: schema?.metadata.map((metadata) =>
         this.DataParamMapper.convertSchemaToEntity(metadata),

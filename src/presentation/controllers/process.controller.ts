@@ -4,6 +4,8 @@ import { Metadata } from '@grpc/grpc-js';
 import {
   AUTOPAY_SERVICE_NAME,
   AutopayServiceController,
+  CreateFileRequest,
+  CreateFileResponse,
   CreateProcessRequest,
   CreateProcessResponse,
   DeleteProcessRequest,
@@ -21,7 +23,7 @@ import {
 import { HttpStatus } from '@nestjs/common';
 import { MessageEnum } from 'infrastructure/enum';
 import { ProcessUseCase } from 'application/use-cases';
-import { ProcessSerializer } from 'presentation/serializers';
+import { FileSerializer, ProcessSerializer } from 'presentation/serializers';
 import { ProcessesSerializer } from 'presentation/serializers/processes.serializer';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
@@ -29,6 +31,7 @@ export class ProcessController
   implements
     Pick<
       AutopayServiceController,
+      | 'createFile'
       | 'listProcessesAdmin'
       | 'getProcess'
       | 'listProcesses'
@@ -180,6 +183,27 @@ export class ProcessController
           count: processes.count,
           rows: processes.rows.map((x) => new ProcessesSerializer(x)),
         },
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
+  async createFile(
+    request: CreateFileRequest,
+    metadata?: Metadata,
+  ): Promise<CreateFileResponse> {
+    try {
+      const me = metadata.get('me')[0];
+
+      const file = await this.processUseCase.createFile(request, me.toString());
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: new FileSerializer(file),
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);

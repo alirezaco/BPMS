@@ -2,6 +2,7 @@ import { ModelDefinition, SchemaFactory } from '@nestjs/mongoose';
 import { ProcessSchema } from './process.schema';
 import { AutoPaySchema } from './autopay.schema';
 import { AutoPayActivitySchema } from './autopay-activity.schema';
+import { FileSchema } from './file.schema';
 
 export * from './base.schema';
 export * from './comparison-step.schema';
@@ -13,6 +14,7 @@ export * from './step.schema';
 export * from './autopay.schema';
 export * from './ui-schema.schema';
 export * from './autopay-activity.schema';
+export * from './file.schema';
 
 export const schemas: ModelDefinition[] = [
   {
@@ -29,5 +31,10 @@ export const schemas: ModelDefinition[] = [
     name: AutoPayActivitySchema.name,
     schema: SchemaFactory.createForClass(AutoPayActivitySchema),
     collection: 'activities',
+  },
+  {
+    name: FileSchema.name,
+    schema: SchemaFactory.createForClass(FileSchema),
+    collection: 'files',
   },
 ];

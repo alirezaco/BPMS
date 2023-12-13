@@ -1,4 +1,5 @@
 import { CreateAutopayHandler } from './create-autopay';
+import { CreateFileHandler } from './create-file';
 import { CreateProcessHandler } from './create-process';
 import { DeleteAutopayHandler } from './delete-autopay';
 import { DeleteProcessHandler } from './delete-process';
@@ -33,6 +34,7 @@ export * from './update-autopay-data';
 export * from './delete-autopay';
 export * from './update-autopay-last-run';
 export * from './update-autopay-status';
+export * from './create-file';
 
 export const commandHandlers = [
   CreateProcessHandler,
@@ -52,4 +54,5 @@ export const commandHandlers = [
   DeleteAutopayHandler,
   UpdateAutopayLastRunHandler,
   UpdateAutopayStatusHandler,
+  CreateFileHandler,
 ];

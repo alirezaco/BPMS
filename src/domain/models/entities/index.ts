@@ -3,6 +3,7 @@ import { AutoPayActivityEntity } from './autopay-activity.entity';
 import { AutoPayEntity } from './autopay.entity';
 import { ComparisonStepEntity } from './comparison-step.entity';
 import { DataParamEntity } from './data-param.entity';
+import { FileEntity } from './file.entity';
 import { GrpcStepEntity } from './grpc-step.entity';
 import { ProcessEntity } from './process.entity';
 import { StepEntity } from './step.entity';
@@ -18,6 +19,7 @@ export * from './grpc-step.entity';
 export * from './autopay.entity';
 export * from './ui-schema.entity';
 export * from './autopay-activity.entity';
+export * from './file.entity';
 
 export const entities = [
   DataParamEntity,
@@ -29,4 +31,5 @@ export const entities = [
   AutoPayEntity,
   UISchemaEntity,
   AutoPayActivityEntity,
+  FileEntity,
 ];

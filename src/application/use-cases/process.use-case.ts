@@ -1,5 +1,6 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
+  CreateFileCommand,
   CreateProcessCommand,
   DeleteProcessCommand,
   GetProcessQuery,
@@ -13,11 +14,12 @@ import {
   UpdateProcessRolesCommand,
   UpdateProcessStepsCommand,
 } from 'application/services';
-import { ProcessEntity } from 'domain/models';
-import { ProcessMapper, StepMapper } from 'domain/services';
+import { FileEntity, ProcessEntity } from 'domain/models';
+import { FileMapper, ProcessMapper, StepMapper } from 'domain/services';
 import { UISchemaMapper } from 'domain/services/mappers/ui-schema.mapper';
 import { findAndCountAll } from 'infrastructure/database';
 import {
+  CreateFileRequest,
   CreateProcessRequest,
   ListProcessesAdminRequest,
   ListProcessesRequest,
@@ -32,6 +34,7 @@ export class ProcessUseCase {
     private readonly processMapper: ProcessMapper,
     private readonly stepMapper: StepMapper,
     private readonly UISchemaMapper: UISchemaMapper,
+    private readonly fileMapper: FileMapper,
   ) {}
 
   async create(
@@ -178,5 +181,16 @@ export class ProcessUseCase {
       GetProcessesAdminCommand,
       findAndCountAll<ProcessEntity>
     >(new GetProcessesAdminCommand(request));
+  }
+
+  async createFile(
+    request: CreateFileRequest,
+    me: string,
+  ): Promise<FileEntity> {
+    return this.commandBus.execute<CreateFileCommand, FileEntity>(
+      new CreateFileCommand(
+        this.fileMapper.convertRequestToEntity(request, me),
+      ),
+    );
   }
 }

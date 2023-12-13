@@ -15,6 +15,7 @@ service AutopayService {
   rpc GetAutopay (GetAutopayRequest) returns (GetAutopayResponse) {}
   rpc ListAutopays (ListAutopayRequest) returns (ListAutopayResponse) {}
   rpc ListAutopayActivity (ListAutopayActivityRequest) returns (ListAutopayActivityResponse) {}
+  rpc CreateFile (CreateFileRequest) returns (CreateFileResponse) {}
 }
 
 // Common
@@ -385,4 +386,27 @@ message ListAutopayActivityRequest {
 message ListAutopayActivityResponse {
   Meta meta = 1;
   optional ArrayAutopayActivity data = 2;
+}
+
+message File {
+  string id = 1;
+  string owner = 2;
+  string created_at = 3;
+  optional string updated_at = 4;
+  optional string deleted_at = 5;
+  optional string restore_at = 6;
+  repeated string tags = 7;
+
+  string name = 8;
+  string value = 9;
+}
+
+message CreateFileRequest {
+  string name = 1;
+  string value = 2;
+}
+
+message CreateFileResponse {
+  Meta meta = 1;
+  optional File data = 2;
 }

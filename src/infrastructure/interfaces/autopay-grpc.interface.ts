@@ -367,6 +367,28 @@ export interface ListAutopayActivityResponse {
   data?: ArrayAutopayActivity | undefined;
 }
 
+export interface File {
+  id: string;
+  owner: string;
+  created_at: string;
+  updated_at?: string | undefined;
+  deleted_at?: string | undefined;
+  restore_at?: string | undefined;
+  tags: string[];
+  name: string;
+  value: string;
+}
+
+export interface CreateFileRequest {
+  name: string;
+  value: string;
+}
+
+export interface CreateFileResponse {
+  meta: Meta | undefined;
+  data?: File | undefined;
+}
+
 export const AUTOPAY_PACKAGE_NAME = "autopay";
 
 export interface AutopayServiceClient {
@@ -396,6 +418,8 @@ export interface AutopayServiceClient {
     request: ListAutopayActivityRequest,
     metadata?: Metadata,
   ): Observable<ListAutopayActivityResponse>;
+
+  createFile(request: CreateFileRequest, metadata?: Metadata): Observable<CreateFileResponse>;
 }
 
 export interface AutopayServiceController {
@@ -458,6 +482,11 @@ export interface AutopayServiceController {
     request: ListAutopayActivityRequest,
     metadata?: Metadata,
   ): Promise<ListAutopayActivityResponse> | Observable<ListAutopayActivityResponse> | ListAutopayActivityResponse;
+
+  createFile(
+    request: CreateFileRequest,
+    metadata?: Metadata,
+  ): Promise<CreateFileResponse> | Observable<CreateFileResponse> | CreateFileResponse;
 }
 
 export function AutopayServiceControllerMethods() {
@@ -475,6 +504,7 @@ export function AutopayServiceControllerMethods() {
       "getAutopay",
       "listAutopays",
       "listAutopayActivity",
+      "createFile",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
