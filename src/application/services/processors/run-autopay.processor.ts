@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { EventBus } from '@nestjs/cqrs';
+import { EventBus, QueryBus } from '@nestjs/cqrs';
 import {
   AutoPayActivityEntity,
   AutoPayEntity,
   ComparisonStepEntity,
   DataParamEntity,
+  FileEntity,
   ProcessEntity,
   StepEntity,
 } from 'domain/models';
@@ -23,6 +24,7 @@ import { ResultStep, RunningStepType } from 'infrastructure/types';
 import { ComparisonUtil } from 'infrastructure/utils';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { CreateAutopayActivityEvent } from '../events';
+import { GetFileQuery } from '../queries';
 
 @Injectable()
 export class RunAutopayProcessor {
@@ -44,6 +46,7 @@ export class RunAutopayProcessor {
     private readonly apiProxy: ApiProxy,
     private readonly grpcProxy: GrpcProxy,
     private readonly eventBus: EventBus,
+    private readonly queryBus: QueryBus,
   ) {}
 
   private checkBusy() {
@@ -267,6 +270,14 @@ export class RunAutopayProcessor {
     }
   }
 
+  async getGrpcProtofile(id: string): Promise<string> {
+    const file = await this.queryBus.execute<GetFileQuery, FileEntity>(
+      new GetFileQuery(id),
+    );
+
+    return file.value;
+  }
+
   async runGrpcStep(step: StepEntity) {
     const payload = step.grpc.payload ? {} : undefined;
     const metadata = step.grpc.metadata ? {} : undefined;
@@ -279,7 +290,14 @@ export class RunAutopayProcessor {
       metadata[x.key] = this.getValueDate(x);
     });
 
-    const { data } = await this.grpcProxy.request(step.grpc, payload, metadata);
+    const file = await this.getGrpcProtofile(step.grpc.protofile);
+
+    const { data } = await this.grpcProxy.request(
+      step.grpc,
+      payload,
+      metadata,
+      file,
+    );
 
     this.responsesSteps.push([step.name, data]);
   }

@@ -2,6 +2,8 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import { Injectable } from '@nestjs/common';
 import { GrpcStepEntity } from 'domain/models';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class GrpcProxy {
@@ -31,18 +33,32 @@ export class GrpcProxy {
     return client;
   }
 
-  async uploadProtoFile(file: string): Promise<string> {
-    //todo upload proto file
+  checkAndCreateTmpFolder(): string {
+    const path = join(process.cwd(), 'tmp');
+    if (existsSync(path)) {
+      return path;
+    } else {
+      mkdirSync(path);
+      return path;
+    }
+  }
 
-    return '';
+  uploadProtoFile(name: string, file: string): string {
+    const tmpFolder = this.checkAndCreateTmpFolder();
+    const path = `${join(tmpFolder, name)}.proto`;
+
+    writeFileSync(path, file, 'utf-8');
+
+    return path;
   }
 
   async request(
     grpcStep: GrpcStepEntity,
     payload: any,
     metadata: Record<string, any>,
+    file: string,
   ): Promise<any> {
-    const protoPath = await this.uploadProtoFile(grpcStep.protofile);
+    const protoPath = this.uploadProtoFile(grpcStep.protofile, file);
 
     const client = this.createClient(
       grpcStep.url,
