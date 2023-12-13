@@ -3,4 +3,5 @@ export interface ProcessResultInterface {
   error?: Record<string, any>;
   isHandledError?: boolean;
   isRetry?: boolean;
+  activityId?: string;
 }

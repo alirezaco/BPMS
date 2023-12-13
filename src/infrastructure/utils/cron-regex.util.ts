@@ -1,7 +1,7 @@
 export class CronRegexUtil {
   static rangeRegex(num: number, max: number) {
-    let minExpr = 'd+';
-    let maxExpr = 'd+';
+    let minExpr = `\\d+`;
+    let maxExpr = `\\d+`;
 
     if (num < 10) {
       minExpr = `([0-${num}])`;
@@ -33,7 +33,7 @@ export class CronRegexUtil {
   }
 
   static listRegex(num: number) {
-    return `(${num},(\d+,)*\d+|(\d+,)+${num},?(\d+,?))`;
+    return `(${num},(\\d+,)*\\d+|(\\d+,)+${num},?(\\d+,?))`;
   }
 
   static hourlyRegex() {
@@ -47,30 +47,30 @@ export class CronRegexUtil {
     const hourExpr = `(${CronRegexUtil.rangeRegex(
       hour,
       24,
-    )}|${CronRegexUtil.listRegex(hour)}|(${hour}))|*`;
+    )}|${CronRegexUtil.listRegex(hour)}|(${hour}))|\\*`;
 
     const day = +today[2];
 
     const dayExpr = `(${CronRegexUtil.rangeRegex(
       day,
       31,
-    )}|${CronRegexUtil.listRegex(day)}|(${hour})|*)`;
+    )}|${CronRegexUtil.listRegex(day)}|(${day})|\\*)`;
 
     const month = +today[1];
 
     const monthExpr = `(${CronRegexUtil.rangeRegex(
       month,
       12,
-    )}|${CronRegexUtil.listRegex(month)}|(${month})|*)`;
+    )}|${CronRegexUtil.listRegex(month)}|(${month})|\\*)`;
 
     const weekDay = date.getDay();
 
     const weekDayExpr = `(${CronRegexUtil.rangeRegex(
       weekDay,
       7,
-    )}|${CronRegexUtil.listRegex(weekDay)}|(${weekDay})|*)`;
+    )}|${CronRegexUtil.listRegex(weekDay)}|(${weekDay})|\\*)`;
 
-    return `${minuteExpr} ${hourExpr} ${dayExpr} ${monthExpr} ${weekDayExpr}`;
+    return `(${minuteExpr}) (${hourExpr}) (${dayExpr}) (${monthExpr}) (${weekDayExpr})`;
   }
 
   static dailyRegex() {
@@ -86,23 +86,23 @@ export class CronRegexUtil {
     const dayExpr = `(${CronRegexUtil.rangeRegex(
       day,
       31,
-    )}|${CronRegexUtil.listRegex(day)}|(${day}))|*`;
+    )}|${CronRegexUtil.listRegex(day)}|(${day}))|\\*`;
 
     const month = +today[1];
 
     const monthExpr = `(${CronRegexUtil.rangeRegex(
       month,
       12,
-    )}|${CronRegexUtil.listRegex(month)}|(${month})|*)`;
+    )}|${CronRegexUtil.listRegex(month)}|(${month})|\\*)`;
 
     const weekDay = date.getDay();
 
     const weekDayExpr = `(${CronRegexUtil.rangeRegex(
       weekDay,
       7,
-    )}|${CronRegexUtil.listRegex(weekDay)}|(${weekDay})|*)`;
+    )}|${CronRegexUtil.listRegex(weekDay)}|(${weekDay})|\\*)`;
 
-    return `${minuteExpr} ${hourExpr} ${dayExpr} ${monthExpr} ${weekDayExpr}`;
+    return `(${minuteExpr}) (${hourExpr}) (${dayExpr}) (${monthExpr}) (${weekDayExpr})`;
   }
 
   static monthlyRegex() {
@@ -112,7 +112,7 @@ export class CronRegexUtil {
 
     const hourExpr = '(0)';
 
-    const dayExpr = '(*)';
+    const dayExpr = '(\\*)';
 
     const month = +today[1];
 
@@ -121,8 +121,8 @@ export class CronRegexUtil {
       12,
     )}|${CronRegexUtil.listRegex(month)}|(${month}))`;
 
-    const weekDayExpr = '(*)';
+    const weekDayExpr = '(\\*)';
 
-    return `${minuteExpr} ${hourExpr} ${dayExpr} ${monthExpr} ${weekDayExpr}`;
+    return `(${minuteExpr}) (${hourExpr}) (${dayExpr}) (${monthExpr}) (${weekDayExpr})`;
   }
 }

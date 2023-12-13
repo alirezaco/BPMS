@@ -100,7 +100,7 @@ export class InitialJobsCron {
     await this.initialJobs(PeriodEnum.MONTH);
   }
 
-  @Cron(CronExpression.EVERY_YEAR)
+  @Cron('0 0 1 1 *')
   async executeYearly() {
     await this.initialJobs(PeriodEnum.YEAR);
   }

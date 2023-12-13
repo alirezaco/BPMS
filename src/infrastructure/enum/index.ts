@@ -9,3 +9,4 @@ export * from './validation-type.enum';
 export * from './ui-type.enum';
 export * from './activity-status.enum';
 export * from './running-message.enum';
+export * from './failed-delay.enum';

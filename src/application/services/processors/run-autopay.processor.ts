@@ -98,6 +98,8 @@ export class RunAutopayProcessor {
     });
 
     this.eventBus.publish(new CreateAutopayActivityEvent(activity));
+
+    return activity;
   }
 
   async handleProcessError(
@@ -141,6 +143,7 @@ export class RunAutopayProcessor {
       const result = await this.runAstep(step);
 
       if (!result.success) {
+        return this.handleProcessError(result);
       }
 
       if (step.isFinal) break;
@@ -374,19 +377,20 @@ export class RunAutopayProcessor {
     oldInstance?: AutoPayActivityEntity,
   ): Promise<ProcessResultInterface> {
     const time = Date.now();
+    let activity: AutoPayActivityEntity;
     this.init(process, autopay.data, oldInstance);
 
-    const result = await this.runSteps();
+    let result = await this.runSteps();
 
     if (result.success) {
-      this.createActivity(
+      activity = this.createActivity(
         autopay.id,
         ActivityStatusEnum.SUCCESSFUL,
         Date.now() - time,
         false,
       );
     } else {
-      this.createActivity(
+      activity = this.createActivity(
         autopay.id,
         ActivityStatusEnum.FAILED,
         Date.now() - time,
@@ -396,6 +400,12 @@ export class RunAutopayProcessor {
 
     this.clear();
 
-    return result;
+    return {
+      success: result.success,
+      error: result.error,
+      isHandledError: result.isHandledError,
+      isRetry: result.isRetry,
+      activityId: activity.id,
+    };
   }
 }
