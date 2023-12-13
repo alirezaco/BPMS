@@ -4,6 +4,7 @@ import { ComparisonStepSchema } from './comparison-step.schema';
 import { GrpcStepSchema } from './grpc-step.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
+import { DataParamSchema } from './data-param.schema';
 
 @Schema({ _id: true })
 export class StepSchema {
@@ -50,4 +51,16 @@ export class StepSchema {
     required: false,
   })
   fail_step?: string;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  is_payment?: boolean;
+
+  @Prop({
+    type: SchemaFactory.createForClass(DataParamSchema),
+    required: false,
+  })
+  payment_param?: DataParamSchema;
 }

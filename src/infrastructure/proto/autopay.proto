@@ -80,9 +80,11 @@ message Step {
     GrpcStep grpc = 4;
     ApiStep api = 5;
   }
-  bool is_sync = 6;
-  string fail_step = 8;
-  bool is_final = 10;
+  optional bool is_sync = 6;
+  optional string fail_step = 8;
+  optional  bool is_final = 10;
+  optional bool is_payment = 11;
+  optional DataParam payment_param = 12;
 }
 
 message Process {
@@ -144,6 +146,8 @@ message StepRequest {
   optional bool is_sync = 6;
   optional string fail_step = 8;
   optional bool is_final = 10;
+  optional bool is_payment = 11;
+  optional DataParam payment_param = 12;
 }
 
 message CreateProcessRequest {

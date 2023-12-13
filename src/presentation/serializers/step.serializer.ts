@@ -2,6 +2,7 @@ import { StepEntity } from 'domain/models';
 import { ComparisonStepSerializer } from './comparison-step.serializer';
 import { GrpcStepSerializer } from './grpc-step.serializer';
 import { ApiStepSerializer } from './api-step.serializer';
+import { DataParamSerializer } from './data-param.serializer';
 
 export class StepSerializer {
   name: string;
@@ -12,6 +13,8 @@ export class StepSerializer {
   is_sync: boolean;
   is_final: boolean;
   fail_step: string;
+  is_payment?: boolean;
+  payment_param?: DataParamSerializer;
 
   constructor(initial: StepEntity) {
     this.name = initial?.name;
@@ -26,5 +29,9 @@ export class StepSerializer {
     this.is_sync = initial?.isSync;
     this.is_final = initial?.isFinal;
     this.fail_step = initial?.failStep;
+    this.is_payment = initial?.isPayment;
+    this.payment_param = initial?.paymentParam
+      ? new DataParamSerializer(initial?.paymentParam)
+      : undefined;
   }
 }

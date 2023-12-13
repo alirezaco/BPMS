@@ -8,4 +8,5 @@ export enum RunningMessageEnum {
   PROCESSOR_BUSY = 'Processor is busy',
   INVALID_STEP_TYPE = 'Invalid step type',
   MAX_DELAY_REACHED = 'Max delay reached: %id',
+  PAYMENT = 'start a payment by amount: %amount for autopay: %id',
 }

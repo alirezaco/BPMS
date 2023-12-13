@@ -36,6 +36,7 @@ export class RunAutopayProcessor {
   private responsesSteps: ResultStep[];
   private hasPayment: boolean;
   private paymentAmount: number = 0;
+  private maxAmount: number = Infinity;
 
   constructor(
     @InjectPinoLogger(RunAutopayProcessor.name)
@@ -139,6 +140,21 @@ export class RunAutopayProcessor {
       }
 
       this.RunningStep = [step.name, i];
+
+      if (step.isPayment) {
+        const res = this.checkPayment(step);
+
+        if (!res) {
+          return {
+            success: false,
+            error: {
+              message: 'Payment amount is too big',
+            },
+            isHandledError: false,
+            isRetry: false,
+          };
+        }
+      }
 
       const result = await this.runAstep(step);
 
@@ -371,6 +387,38 @@ export class RunAutopayProcessor {
     }
   }
 
+  checkPayment(step: StepEntity): boolean {
+    const amount = +this.getValueDate(step.paymentParam);
+
+    if (!amount) {
+      return false;
+    }
+
+    this.paymentAmount = amount;
+    this.hasPayment = true;
+
+    if (amount > this.maxAmount) {
+      return false;
+    }
+
+    this.logger.info(
+      RunningMessageEnum.PAYMENT.replace('%amount', String(amount)).replace(
+        '%id',
+        this.process.id,
+      ),
+    );
+
+    return true;
+  }
+
+  setMaxAmount(autopayMaxAmount: number) {
+    if (autopayMaxAmount && autopayMaxAmount > this.process.maxAmount) {
+      this.maxAmount = autopayMaxAmount;
+    } else if (this.process.maxAmount) {
+      this.maxAmount = this.process.maxAmount;
+    }
+  }
+
   async run(
     autopay: AutoPayEntity,
     process: ProcessEntity,
@@ -379,6 +427,7 @@ export class RunAutopayProcessor {
     const time = Date.now();
     let activity: AutoPayActivityEntity;
     this.init(process, autopay.data, oldInstance);
+    this.setMaxAmount(autopay.maxAmount);
 
     let result = await this.runSteps();
 
