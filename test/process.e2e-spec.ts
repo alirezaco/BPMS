@@ -87,6 +87,20 @@ describe('ProcessController (e2e)', () => {
     );
   });
 
+  it('get process', async () => {
+    const metadata = new Metadata();
+    metadata.add('me', new Types.ObjectId().toString());
+
+    const response = await processController.getProcess(
+      { id: updateProcessRequestMock.id },
+      metadata,
+    );
+
+    expect(response.meta?.status).toBe(HttpStatus.OK);
+
+    expect(response.data).toHaveProperty('id');
+  });
+
   it('delete process', async () => {
     const metadata = new Metadata();
     metadata.add('me', new Types.ObjectId().toString());
@@ -100,5 +114,60 @@ describe('ProcessController (e2e)', () => {
 
     expect(response.data).toHaveProperty('id');
     expect(response.data.deleted_at).not.toEqual(null);
+  });
+
+  it('list processes', async () => {
+    const metadata = new Metadata();
+    metadata.add('me', new Types.ObjectId().toString());
+
+    const response = await processController.listProcesses(
+      {
+        limit: 5,
+        skip: 0,
+      },
+      metadata,
+    );
+
+    expect(response.meta?.status).toBe(HttpStatus.OK);
+
+    expect(response.data).toHaveProperty('count');
+    expect(response.data).toHaveProperty('rows');
+  });
+
+  it('list processes admin', async () => {
+    const metadata = new Metadata();
+    metadata.add('me', new Types.ObjectId().toString());
+
+    const response = await processController.listProcessesAdmin(
+      {
+        limit: 5,
+        skip: 0,
+        roles: [],
+        is_active: true,
+      },
+      metadata,
+    );
+
+    expect(response.meta?.status).toBe(HttpStatus.OK);
+
+    expect(response.data).toHaveProperty('count');
+    expect(response.data).toHaveProperty('rows');
+  });
+
+  it('create file', async () => {
+    const metadata = new Metadata();
+    metadata.add('me', new Types.ObjectId().toString());
+
+    const response = await processController.createFile(
+      {
+        name: 'test',
+        value: 'test1234',
+      },
+      metadata,
+    );
+
+    expect(response.meta?.status).toBe(HttpStatus.CREATED);
+
+    expect(response.data).toHaveProperty('id');
   });
 });
