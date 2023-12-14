@@ -35,7 +35,7 @@ export class UpdateAutoPayDataHandler
     );
 
     // Validate the data
-    this.validatData(data, process.data);
+    this.validatData(data, process.validationData);
 
     // Update the autopay data
     autopayEntity.data = data;

@@ -10,6 +10,7 @@ describe('ProcessController (e2e)', () => {
   let processController: ProcessController;
 
   beforeAll(async () => {
+    process.env['MONGO_DB'] = 'autopay-process-test';
     app = await initialApp();
     await loadDbUtil(app);
     processController = app.get<ProcessController>(ProcessController);
@@ -27,7 +28,6 @@ describe('ProcessController (e2e)', () => {
       createProcessRequestMock,
       metadata,
     );
-    console.log(response.meta.message);
 
     expect(response.meta?.status).toBe(HttpStatus.CREATED);
 

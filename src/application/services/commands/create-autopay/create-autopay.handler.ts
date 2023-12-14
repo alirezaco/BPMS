@@ -73,7 +73,7 @@ export class CreateAutopayHandler
 
     await this.checkAndSetPeriod(autopayEntity, process);
 
-    await this.validatData(autopayEntity.data, process.data);
+    await this.validatData(autopayEntity.data, process.validationData);
 
     return this.autoPayFactory.create(autopayEntity);
   }

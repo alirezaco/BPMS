@@ -5,6 +5,8 @@ import {
 } from 'infrastructure/interfaces';
 import { Types } from 'mongoose';
 
+export const processIdMock = '657ac17efc13ae364bfa20e8';
+
 export const createProcessRequestMock: CreateProcessRequest = {
   name: 'test',
   roles: [],
