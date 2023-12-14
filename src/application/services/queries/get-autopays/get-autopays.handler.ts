@@ -61,7 +61,9 @@ export class GetAutopaysHandler implements IQueryHandler<GetAutopaysQuery> {
     return {
       count: process.count,
       rows: await Promise.all(
-        process.rows.map(async (x) => this.findByProcess(request, x, userId)),
+        process.rows.map(async (x) =>
+          this.findByProcess({ ...request, process_id: x.id }, x, userId),
+        ),
       ),
     };
   }

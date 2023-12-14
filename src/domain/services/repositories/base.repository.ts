@@ -48,6 +48,8 @@ export abstract class BaseRepository<
     filter: FilterType<ModelType>,
     fetchDeleted = false,
   ): Promise<findAndCountAll<EntityType>> {
+    if (!filter.where) filter.where = {};
+
     if (!fetchDeleted) filter.where['deleted_at'] = { $eq: null };
 
     if (!filter.order) filter.order = [];

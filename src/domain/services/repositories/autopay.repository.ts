@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { BaseRepository } from './base.repository';
 import { AutoPayEntity, AutoPaySchema } from 'domain/models';
 import { AutoPayMapper } from '../mappers';
@@ -27,7 +27,9 @@ export class AutoPayRepository extends BaseRepository<
   }
 
   async deleteManyByProcessId(processId: string): Promise<void> {
-    await this.autopayModel.deleteMany({ process_id: processId });
+    await this.autopayModel.deleteMany({
+      process_id: new Types.ObjectId(processId),
+    });
   }
 
   async findByUserId(
@@ -36,9 +38,9 @@ export class AutoPayRepository extends BaseRepository<
   ): Promise<findAndCountAll<AutoPayEntity>> {
     const autopays = await this.findAll({
       where: {
-        user_id: userId,
+        user_id: new Types.ObjectId(userId),
         deleted_at: null,
-        process_id: listAutopayRequest.process_id,
+        process_id: new Types.ObjectId(listAutopayRequest.process_id),
       },
       limit: listAutopayRequest.limit,
       skip: listAutopayRequest.skip,

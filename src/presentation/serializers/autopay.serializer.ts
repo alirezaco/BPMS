@@ -41,7 +41,7 @@ export class AutoPaySerializer {
     this.processing_status = initial?.processingStatus;
     this.data = JSON.stringify(initial?.data || {});
     this.tags = initial?.tags;
-    this.ui_schema = initial.UISchema?.map(
+    this.ui_schema = initial?.UISchema?.map(
       (schema) => new UISchemaSerializer(schema),
     );
   }
