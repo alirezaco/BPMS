@@ -280,6 +280,7 @@ export interface UpdateAutopayRequest {
   cron?: string | undefined;
   allowed_direct_debit?: boolean | undefined;
   data?: string | undefined;
+  is_active?: boolean | undefined;
 }
 
 export interface UpdateAutopayResponse {

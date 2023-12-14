@@ -84,7 +84,7 @@ export class ProcessUseCase {
       >(new UpdateProcessMaxAmountCommand(process, request.max_amount));
     }
 
-    if (request.is_active) {
+    if (request.is_active !== undefined) {
       process = await this.commandBus.execute<
         UpdateProcessIsActiveCommand,
         ProcessEntity

@@ -1,5 +1,8 @@
 import { ProcessStepTypeEnum, SourceEnum } from 'infrastructure/enum';
-import { CreateProcessRequest } from 'infrastructure/interfaces';
+import {
+  CreateProcessRequest,
+  UpdateProcessRequest,
+} from 'infrastructure/interfaces';
 import { Types } from 'mongoose';
 
 export const createProcessRequestMock: CreateProcessRequest = {
@@ -72,5 +75,47 @@ export const createProcessRequestMock: CreateProcessRequest = {
   ],
   period: 'day',
   max_amount: 1000,
-  default_fail_step: "Y-Solowarmmmmm"
+  default_fail_step: 'Y-Solowarmmmmm',
+};
+
+export const updateProcessRequestMock: UpdateProcessRequest = {
+  id: '657ac17efc13ae364bfa20e1',
+  roles: ['user', 'merchant'],
+  steps: [
+    {
+      name: 'Y-Solowarmmmmm',
+      type: ProcessStepTypeEnum.API,
+      is_payment: false,
+      is_final: true,
+      api: {
+        bodies: [],
+        headers: [],
+        params: [],
+        queries: [],
+        url: 'http://test.com',
+        method: 'post',
+      },
+    },
+  ],
+  ui_schema: [
+    {
+      key: 'name',
+      title: 'name',
+      type: 'string',
+    },
+    {
+      key: 'name2',
+      title: 'name2',
+      type: 'string',
+    },
+  ],
+  period: 'day',
+  max_amount: 555,
+  default_fail_step: 'Y-Solowarmmmmm',
+  is_active: false,
+  name: 'oop',
+  data: JSON.stringify({
+    amount: 1000,
+  }),
+  allowed_direct_debit: false,
 };

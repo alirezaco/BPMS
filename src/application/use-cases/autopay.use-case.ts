@@ -8,6 +8,7 @@ import {
   GetProcessQuery,
   UpdateAutoPayDataCommand,
   UpdateAutopayDirectDebitCommand,
+  UpdateAutopayIsActiveCommand,
   UpdateAutopayMaxAmountCommand,
   UpdateAutopayPeriodCommand,
 } from 'application/services';
@@ -95,6 +96,18 @@ export class AutopayUseCase {
         new UpdateAutoPayDataCommand(
           autopay,
           JSON.parse(updateAutopayRequest.data),
+        ),
+      );
+    }
+
+    if (updateAutopayRequest.is_active !== undefined) {
+      autopay = await this.commandBus.execute<
+        UpdateAutopayIsActiveCommand,
+        AutoPayEntity
+      >(
+        new UpdateAutopayIsActiveCommand(
+          autopay,
+          updateAutopayRequest.is_active,
         ),
       );
     }

@@ -300,6 +300,7 @@ message UpdateAutopayRequest {
   optional string cron = 6;
   optional bool allowed_direct_debit = 7;
   optional string data = 8;
+  optional bool is_active = 9;
 }
 
 message UpdateAutopayResponse {
