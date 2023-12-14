@@ -86,4 +86,19 @@ describe('ProcessController (e2e)', () => {
       updateProcessRequestMock.default_fail_step,
     );
   });
+
+  it('delete process', async () => {
+    const metadata = new Metadata();
+    metadata.add('me', new Types.ObjectId().toString());
+
+    const response = await processController.deleteProcess(
+      { id: updateProcessRequestMock.id },
+      metadata,
+    );
+
+    expect(response.meta?.status).toBe(HttpStatus.OK);
+
+    expect(response.data).toHaveProperty('id');
+    expect(response.data.deleted_at).not.toEqual(null);
+  });
 });
