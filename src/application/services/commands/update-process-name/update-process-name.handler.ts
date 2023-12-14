@@ -3,6 +3,7 @@ import { UpdateProcessNameCommand } from './update-process-name.command';
 import { ProcessRepository } from 'domain/services';
 import { MessageEnum } from 'infrastructure/enum';
 import { ProcessEntity } from 'domain/models';
+import { BadRequestException } from '@nestjs/common';
 
 @CommandHandler(UpdateProcessNameCommand)
 export class UpdateProcessNameHandler
@@ -16,7 +17,7 @@ export class UpdateProcessNameHandler
   ): Promise<void> {
     const process = await this.processRepository.findOneByName(name);
     if (process && process.id !== processEntity.id) {
-      throw new Error(MessageEnum.DUPLICATE_PROCESS_NAME);
+      throw new BadRequestException(MessageEnum.DUPLICATE_PROCESS_NAME);
     }
   }
 

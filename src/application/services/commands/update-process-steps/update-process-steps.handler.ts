@@ -12,6 +12,7 @@ import {
   ProcessStepTypeEnum,
   SourceEnum,
 } from 'infrastructure/enum';
+import { BadRequestException } from '@nestjs/common';
 
 @CommandHandler(UpdateProcessStepsCommand)
 export class UpdateProcessStepsHandler
@@ -27,13 +28,13 @@ export class UpdateProcessStepsHandler
     );
 
     if (duplicatedNames.length > 0) {
-      throw new Error(MessageEnum.DUPLICATE_STEP_NAME);
+      throw new BadRequestException(MessageEnum.DUPLICATE_STEP_NAME);
     }
   }
 
   checkFailStep(steps: StepEntity[], failStep?: string) {
     if (failStep && !steps.find((x) => x.name === failStep)) {
-      throw new Error(MessageEnum.INVALID_STEP_TYPE);
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
     }
   }
 
@@ -46,17 +47,18 @@ export class UpdateProcessStepsHandler
       dataParam.source === SourceEnum.AUTO_PAY &&
       !validationData['properties'][dataParam.sourceKey]
     ) {
-      throw new Error(MessageEnum.INVALID_STEP_TYPE);
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
     } else if (
       dataParam.source === SourceEnum.PROCESS &&
       !processData[dataParam.sourceKey]
     ) {
-      throw new Error(MessageEnum.INVALID_STEP_TYPE);
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
     }
   }
 
   checkValidGrpcSteps(step: StepEntity, processEntity: ProcessEntity): void {
-    if (!step.grpc) throw new Error(MessageEnum.INVALID_STEP_TYPE);
+    if (!step.grpc)
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
 
     step.grpc.metadata.map((x) => {
       this.checkParams(x, processEntity.validationData, processEntity.data);
@@ -68,7 +70,7 @@ export class UpdateProcessStepsHandler
   }
 
   checkValidApiSteps(step: StepEntity, processEntity: ProcessEntity): void {
-    if (!step.api) throw new Error(MessageEnum.INVALID_STEP_TYPE);
+    if (!step.api) throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
 
     step.api.headers.map((x) => {
       this.checkParams(x, processEntity.validationData, processEntity.data);
@@ -114,7 +116,8 @@ export class UpdateProcessStepsHandler
     step: StepEntity,
     processEntity: ProcessEntity,
   ): void {
-    if (!step.comparison) throw new Error(MessageEnum.INVALID_STEP_TYPE);
+    if (!step.comparison)
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
 
     this.checkValidComparison(step.comparison, processEntity);
   }

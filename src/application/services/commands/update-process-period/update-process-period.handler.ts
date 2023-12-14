@@ -2,6 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateProcessPeriodCommand } from './update-process-period.command';
 import { ProcessRepository } from 'domain/services';
 import { MessageEnum, PeriodEnum } from 'infrastructure/enum';
+import { BadRequestException } from '@nestjs/common';
 
 @CommandHandler(UpdateProcessPeriodCommand)
 export class UpdateProcessPeriodHandler
@@ -11,7 +12,7 @@ export class UpdateProcessPeriodHandler
 
   checkPeriod(period: PeriodEnum, cron?: string): void {
     if (period === PeriodEnum.CRON && !cron) {
-      throw new Error(MessageEnum.INVALID_PERIOD);
+      throw new BadRequestException(MessageEnum.INVALID_PERIOD);
     }
   }
 

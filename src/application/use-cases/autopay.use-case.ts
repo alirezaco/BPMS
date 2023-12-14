@@ -7,12 +7,12 @@ import {
   GetAutopaysQuery,
   GetProcessQuery,
   UpdateAutoPayDataCommand,
+  UpdateAutoPayNameCommand,
   UpdateAutopayDirectDebitCommand,
   UpdateAutopayIsActiveCommand,
   UpdateAutopayMaxAmountCommand,
   UpdateAutopayPeriodCommand,
 } from 'application/services';
-import { UpdateAutoPayNameCommand } from 'application/services/commands/update-autopay-name';
 import { AutoPayEntity, ProcessEntity } from 'domain/models';
 import { AutoPayMapper } from 'domain/services';
 import { findAndCountAll } from 'infrastructure/database';
@@ -63,7 +63,7 @@ export class AutopayUseCase {
       >(new UpdateAutoPayNameCommand(autopay, updateAutopayRequest.name));
     }
 
-    if (updateAutopayRequest.allowed_direct_debit) {
+    if (updateAutopayRequest.allowed_direct_debit !== undefined) {
       autopay = await this.commandBus.execute<
         UpdateAutopayDirectDebitCommand,
         AutoPayEntity

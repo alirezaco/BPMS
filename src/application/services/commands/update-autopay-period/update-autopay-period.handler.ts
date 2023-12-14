@@ -3,6 +3,7 @@ import { AutoPayEntity, ProcessEntity } from 'domain/models';
 import { AutoPayRepository, ProcessRepository } from 'domain/services';
 import { MessageEnum, PeriodEnum } from 'infrastructure/enum';
 import { UpdateAutopayPeriodCommand } from './update-autopay-period.command';
+import { BadRequestException } from '@nestjs/common';
 
 @CommandHandler(UpdateAutopayPeriodCommand)
 export class UpdateAutopayPeriodHandler
@@ -18,11 +19,11 @@ export class UpdateAutopayPeriodHandler
     processEntity: ProcessEntity,
   ) {
     if (autopayEntity.period === PeriodEnum.CRON && !autopayEntity.cron) {
-      throw new Error(MessageEnum.INVALID_PERIOD);
+      throw new BadRequestException(MessageEnum.INVALID_PERIOD);
     }
 
     if (processEntity.period) {
-      throw new Error(MessageEnum.INVALID_PERIOD);
+      throw new BadRequestException(MessageEnum.INVALID_PERIOD);
     }
   }
 

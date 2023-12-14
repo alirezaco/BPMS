@@ -58,7 +58,7 @@ export class ProcessUseCase {
       new GetProcessQuery(request.id),
     );
 
-    if (request.allowed_direct_debit) {
+    if (request.allowed_direct_debit !== undefined) {
       process = await this.commandBus.execute<
         UpdateProcessAllowedDirectDebitCommand,
         ProcessEntity

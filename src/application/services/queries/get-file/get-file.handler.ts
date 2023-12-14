@@ -3,6 +3,7 @@ import { GetFileQuery } from './get-file.query';
 import { FileRepository } from 'domain/services';
 import { FileEntity } from 'domain/models';
 import { MessageEnum } from 'infrastructure/enum';
+import { NotFoundException } from '@nestjs/common';
 
 @QueryHandler(GetFileQuery)
 export class GetFileHandler implements IQueryHandler<GetFileQuery> {
@@ -13,7 +14,7 @@ export class GetFileHandler implements IQueryHandler<GetFileQuery> {
     const file = await this.fileRepository.findOneById(id);
 
     if (!file) {
-      throw new Error(MessageEnum.FILE_NOT_FOUND);
+      throw new NotFoundException(MessageEnum.FILE_NOT_FOUND);
     }
 
     return file;

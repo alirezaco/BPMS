@@ -3,6 +3,7 @@ import { UpdateAutopayDirectDebitCommand } from './update-autopay-direct-debit.c
 import { AutoPayRepository, ProcessRepository } from 'domain/services';
 import { AutoPayEntity, ProcessEntity } from 'domain/models';
 import { MessageEnum } from 'infrastructure/enum';
+import { BadRequestException } from '@nestjs/common';
 
 @CommandHandler(UpdateAutopayDirectDebitCommand)
 export class UpdateAutopayDirectDebitHandler
@@ -15,7 +16,7 @@ export class UpdateAutopayDirectDebitHandler
 
   checkDirectDebit(processEntity: ProcessEntity, autopayEntity: AutoPayEntity) {
     if (!processEntity.allowedDirectDebit && autopayEntity.allowedDirectDebit) {
-      throw new Error(MessageEnum.DIRECT_DEBIT_NOT_ALLOWED);
+      throw new BadRequestException(MessageEnum.DIRECT_DEBIT_NOT_ALLOWED);
     }
   }
 

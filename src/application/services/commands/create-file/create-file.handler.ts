@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateFileCommand } from './create-file.command';
-import { FileFactory, FileRepository } from 'domain/services';
+import { FileFactory } from 'domain/services';
 import { FileEntity } from 'domain/models';
 
 @CommandHandler(CreateFileCommand)
