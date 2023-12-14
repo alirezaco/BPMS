@@ -7,6 +7,7 @@ import { FileMapper } from './file.mapper';
 import { GrpcStepMapper } from './grpc-step.mapper';
 import { ProcessMapper } from './process.mapper';
 import { StepMapper } from './step.mapper';
+import { UISchemaMapper } from './ui-schema.mapper';
 
 export * from './base.mapper';
 export * from './process.mapper';
@@ -18,6 +19,7 @@ export * from './data-param.mapper';
 export * from './autopay.mapper';
 export * from './autopay-activity.mapper';
 export * from './file.mapper';
+export * from './ui-schema.mapper';
 
 export const mappers = [
   ProcessMapper,
@@ -29,4 +31,5 @@ export const mappers = [
   AutoPayMapper,
   AutoPayActivityMapper,
   FileMapper,
+  UISchemaMapper,
 ];

@@ -19,6 +19,8 @@ export class DataParamMapper
   }
 
   convertSchemaToEntity(schema: DataParamSchema): DataParamEntity {
+    if (!schema) return;
+
     return new DataParamEntity({
       source: schema.source,
       key: schema.key,

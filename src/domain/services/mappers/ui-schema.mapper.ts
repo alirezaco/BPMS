@@ -29,6 +29,8 @@ export class UISchemaMapper
   }
 
   convertSchemaToEntity(schema: UISchemaSchema): UISchemaEntity {
+    if (!schema) return;
+
     return new UISchemaEntity({
       key: schema.key,
       title: schema.title,

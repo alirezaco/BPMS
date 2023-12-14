@@ -38,13 +38,13 @@ export class StepSchema {
     type: Boolean,
     default: false,
   })
-  is_sync: boolean;
+  is_sync?: boolean;
 
   @Prop({
     type: Boolean,
     default: false,
   })
-  is_final: boolean;
+  is_final?: boolean;
 
   @Prop({
     type: String,

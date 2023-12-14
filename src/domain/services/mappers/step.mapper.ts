@@ -7,7 +7,9 @@ import { ApiStepMapper } from './api-step.mapper';
 import { ComparisonStepMapper } from './comparison-step.mapper';
 import { convertToStepType } from 'infrastructure/utils/convert-to-step-type.util';
 import { DataParamMapper } from './data-param.mapper';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class StepMapper implements BaseMapper<StepSchema, StepEntity> {
   constructor(
     private readonly grpcStepMapper: GrpcStepMapper,

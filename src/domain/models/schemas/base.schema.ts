@@ -11,14 +11,14 @@ export class BaseSchema {
   updated_at: Date;
 
   @Prop({ type: Date, default: null })
-  deleted_at: Date;
+  deleted_at?: Date;
 
   @Prop({ type: Date, default: null })
-  restored_at: Date;
+  restored_at?: Date;
 
   @Prop({ type: Types.ObjectId, required: true })
   owner: Types.ObjectId;
 
   @Prop({ type: [String], required: false, default: [] })
-  tags: Array<string>;
+  tags?: Array<string>;
 }

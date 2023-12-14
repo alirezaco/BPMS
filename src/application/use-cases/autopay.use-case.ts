@@ -1,4 +1,4 @@
-import { ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   CreateAutopayCommand,
@@ -24,6 +24,7 @@ import {
 } from 'infrastructure/interfaces';
 import { convertToPeriod } from 'infrastructure/utils';
 
+@Injectable()
 export class AutopayUseCase {
   constructor(
     private readonly commandBus: CommandBus,

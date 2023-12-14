@@ -21,6 +21,8 @@ export class FileMapper {
   }
 
   convertSchemaToEntity(schema: FileSchema): FileEntity {
+    if (!schema) return;
+
     return new FileEntity({
       id: schema?._id?.toString(),
       createdAt: schema?.created_at,

@@ -13,6 +13,7 @@ import {
   ProcessStepTypeEnum,
   SourceEnum,
 } from 'infrastructure/enum';
+import { BadRequestException } from '@nestjs/common';
 
 @CommandHandler(CreateProcessCommand)
 export class CreateProcessHandler
@@ -25,8 +26,8 @@ export class CreateProcessHandler
 
   async checkUniqName(name: string): Promise<void> {
     const process = await this.processRepository.findOneByName(name);
-    if (process) {
-      throw new Error(MessageEnum.DUPLICATE_PROCESS_NAME);
+    if (process?.id) {
+      throw new BadRequestException(MessageEnum.DUPLICATE_PROCESS_NAME);
     }
   }
 
@@ -38,7 +39,7 @@ export class CreateProcessHandler
     );
 
     if (duplicatedNames.length > 0) {
-      throw new Error(MessageEnum.DUPLICATE_STEP_NAME);
+      throw new BadRequestException(MessageEnum.DUPLICATE_STEP_NAME);
     }
   }
 
@@ -49,19 +50,20 @@ export class CreateProcessHandler
   ): void {
     if (
       dataParam.source === SourceEnum.AUTO_PAY &&
-      !validationData[dataParam.sourceKey]
+      !validationData['properties'][dataParam.sourceKey]
     ) {
-      throw new Error(MessageEnum.INVALID_STEP_TYPE);
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
     } else if (
       dataParam.source === SourceEnum.PROCESS &&
       !processData[dataParam.sourceKey]
     ) {
-      throw new Error(MessageEnum.INVALID_STEP_TYPE);
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
     }
   }
 
   checkValidGrpcSteps(step: StepEntity, processEntity: ProcessEntity): void {
-    if (!step.grpc) throw new Error(MessageEnum.INVALID_STEP_TYPE);
+    if (!step.grpc)
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
 
     step.grpc.metadata.map((x) => {
       this.checkParams(x, processEntity.validationData, processEntity.data);
@@ -73,7 +75,7 @@ export class CreateProcessHandler
   }
 
   checkValidApiSteps(step: StepEntity, processEntity: ProcessEntity): void {
-    if (!step.api) throw new Error(MessageEnum.INVALID_STEP_TYPE);
+    if (!step.api) throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
 
     step.api.headers.map((x) => {
       this.checkParams(x, processEntity.validationData, processEntity.data);
@@ -119,18 +121,23 @@ export class CreateProcessHandler
     step: StepEntity,
     processEntity: ProcessEntity,
   ): void {
-    if (!step.comparison) throw new Error(MessageEnum.INVALID_STEP_TYPE);
+    if (!step.comparison)
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
 
     this.checkValidComparison(step.comparison, processEntity);
   }
 
   checkFailStep(steps: StepEntity[], failStep?: string) {
-    if (failStep && !steps.find((x) => x.name === x.failStep)) {
-      throw new Error(MessageEnum.INVALID_STEP_TYPE);
+    if (failStep && !steps.find((x) => x.name === failStep)) {
+      throw new BadRequestException(MessageEnum.INVALID_STEP_TYPE);
     }
   }
 
   checkSteps(processEntity: ProcessEntity): void {
+    if (processEntity.steps.length < 1) {
+      throw new BadRequestException(MessageEnum.INVALID_PROCESS_STEPS);
+    }
+
     this.cehckStepNames(processEntity.steps);
 
     processEntity.steps.map((x) => {
@@ -148,7 +155,7 @@ export class CreateProcessHandler
 
   checkPeriod(processEntity: ProcessEntity): void {
     if (processEntity.period === PeriodEnum.CRON && !processEntity.cron) {
-      throw new Error(MessageEnum.INVALID_PERIOD);
+      throw new BadRequestException(MessageEnum.INVALID_PERIOD);
     }
   }
 

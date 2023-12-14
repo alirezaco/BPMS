@@ -59,7 +59,7 @@ export class AutopayController
     metadata?: Metadata,
   ): Promise<CreateAutopayResponse> {
     try {
-      const me = metadata.get('me')[0];
+      const me = metadata?.get('me')[0];
 
       const autopay = await this.autopayUseCase.createAutopay(
         request,
@@ -83,7 +83,7 @@ export class AutopayController
     metadata?: Metadata,
   ): Promise<UpdateAutopayResponse> {
     try {
-      const me = metadata.get('me')[0];
+      const me = metadata?.get('me')[0];
 
       const autopay = await this.autopayUseCase.updateAutopay(
         request,
@@ -107,7 +107,7 @@ export class AutopayController
     metadata?: Metadata,
   ): Promise<DeleteAutopayResponse> {
     try {
-      const me = metadata.get('me')[0];
+      const me = metadata?.get('me')[0];
 
       const autopay = await this.autopayUseCase.deleteAutopay(
         request.id,
@@ -131,7 +131,7 @@ export class AutopayController
     metadata?: Metadata,
   ): Promise<GetAutopayResponse> {
     try {
-      const me = metadata.get('me')[0];
+      const me = metadata?.get('me')[0];
 
       const autopay = await this.autopayUseCase.getAutopay(
         request.id,
@@ -155,7 +155,7 @@ export class AutopayController
     metadata?: Metadata,
   ): Promise<ListAutopayResponse> {
     try {
-      const me = metadata.get('me')[0];
+      const me = metadata?.get('me')[0];
 
       const res = await this.autopayUseCase.getAllAutopays(
         request,

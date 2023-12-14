@@ -11,4 +11,5 @@ export enum MessageEnum {
   INVALID_DATA = 'اطلاعات وارد شده نامعتبر است.',
   ACTIVITY_NOT_FOUND = 'فعالیت یافت نشد.',
   FILE_NOT_FOUND = 'فایل یافت نشد.',
+  INVALID_PROCESS_STEPS = 'مراحل پردازش نامعتبر است.',
 }

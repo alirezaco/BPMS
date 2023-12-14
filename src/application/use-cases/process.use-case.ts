@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   CreateFileCommand,
@@ -27,6 +28,7 @@ import {
 } from 'infrastructure/interfaces';
 import { convertToPeriod } from 'infrastructure/utils';
 
+@Injectable()
 export class ProcessUseCase {
   constructor(
     private readonly commandBus: CommandBus,

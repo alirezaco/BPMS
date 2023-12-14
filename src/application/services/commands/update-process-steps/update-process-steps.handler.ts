@@ -32,7 +32,7 @@ export class UpdateProcessStepsHandler
   }
 
   checkFailStep(steps: StepEntity[], failStep?: string) {
-    if (failStep && !steps.find((x) => x.name === x.failStep)) {
+    if (failStep && !steps.find((x) => x.name === failStep)) {
       throw new Error(MessageEnum.INVALID_STEP_TYPE);
     }
   }
@@ -44,7 +44,7 @@ export class UpdateProcessStepsHandler
   ): void {
     if (
       dataParam.source === SourceEnum.AUTO_PAY &&
-      !validationData[dataParam.sourceKey]
+      !validationData['properties'][dataParam.sourceKey]
     ) {
       throw new Error(MessageEnum.INVALID_STEP_TYPE);
     } else if (

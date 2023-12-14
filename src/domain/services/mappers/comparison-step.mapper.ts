@@ -23,6 +23,8 @@ export class ComparisonStepMapper
   }
 
   convertSchemaToEntity(schema: ComparisonStepSchema): ComparisonStepEntity {
+    if (!schema) return;
+
     return new ComparisonStepEntity({
       func: schema?.func,
       left: this.dataParamMapper.convertSchemaToEntity(schema?.left),

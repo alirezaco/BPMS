@@ -32,6 +32,8 @@ export class AutoPayMapper implements BaseMapper<AutoPaySchema, AutoPayEntity> {
   }
 
   convertSchemaToEntity(schema: AutoPaySchema): AutoPayEntity {
+    if (!schema) return;
+
     return new AutoPayEntity({
       id: schema?._id?.toString(),
       createdAt: schema?.created_at,

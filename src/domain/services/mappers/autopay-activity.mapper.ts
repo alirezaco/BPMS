@@ -25,6 +25,8 @@ export class AutoPayActivityMapper
   }
 
   convertSchemaToEntity(schema: AutoPayActivitySchema): AutoPayActivityEntity {
+    if (!schema) return;
+
     return new AutoPayActivityEntity({
       autopayId: schema?.autopay_id?.toString(),
       processId: schema?.process_id?.toString(),

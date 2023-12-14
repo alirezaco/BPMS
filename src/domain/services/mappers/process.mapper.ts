@@ -6,7 +6,9 @@ import { Types } from 'mongoose';
 import { convertToPeriod, convertType } from 'infrastructure/utils';
 import { UISchemaMapper } from './ui-schema.mapper';
 import { Schema as joiSchema } from 'json-joi-converter';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
   constructor(
     private readonly stepMapper: StepMapper,
@@ -43,6 +45,8 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
   }
 
   convertSchemaToEntity(schema: ProcessSchema): ProcessEntity {
+    if (!schema) return;
+
     return new ProcessEntity({
       id: schema?._id?.toString(),
       createdAt: schema?.created_at,
@@ -105,7 +109,7 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
           type: convertType(uiSchema?.type),
           min: uiSchema?.min,
           max: uiSchema?.max,
-          pattern: `/${uiSchema?.regex}/`,
+          pattern: uiSchema?.regex && `/${uiSchema?.regex}/`,
           required: uiSchema?.is_required,
         };
       });

@@ -66,7 +66,7 @@ export class ProcessController
     metadata?: Metadata,
   ): Promise<CreateProcessResponse> {
     try {
-      const me = metadata.get('me')[0];
+      const me = metadata?.get('me')[0];
 
       const process = await this.processUseCase.create(request, me.toString());
 
@@ -87,7 +87,7 @@ export class ProcessController
     metadata?: Metadata,
   ): Promise<UpdateProcessResponse> {
     try {
-      const me = metadata.get('me')[0];
+      const me = metadata?.get('me')[0];
 
       const process = await this.processUseCase.update(request, me.toString());
 
@@ -146,7 +146,7 @@ export class ProcessController
     metadata?: Metadata,
   ): Promise<ListProcessesResponse> {
     try {
-      const roles = metadata.get('roles');
+      const roles = metadata?.get('roles');
 
       const processes = await this.processUseCase.getProcesses(
         request,
@@ -195,7 +195,7 @@ export class ProcessController
     metadata?: Metadata,
   ): Promise<CreateFileResponse> {
     try {
-      const me = metadata.get('me')[0];
+      const me = metadata?.get('me')[0];
 
       const file = await this.processUseCase.createFile(request, me.toString());
 
