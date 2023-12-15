@@ -141,9 +141,9 @@ message StepRequest {
   string name = 1;
   string type = 2;
   oneof oneof_data {
-    ComparisonStep comparison = 3;
-    GrpcStep grpc = 4;
-    ApiStep api = 5;
+    ComparisonStepRequest comparison = 3;
+    GrpcStepRequest grpc = 4;
+    ApiStepRequest api = 5;
   }
   optional bool is_sync = 6;
   optional string fail_step = 8;

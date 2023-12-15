@@ -123,9 +123,9 @@ export interface ApiStepRequest {
 export interface StepRequest {
   name: string;
   type: string;
-  comparison?: ComparisonStep | undefined;
-  grpc?: GrpcStep | undefined;
-  api?: ApiStep | undefined;
+  comparison?: ComparisonStepRequest | undefined;
+  grpc?: GrpcStepRequest | undefined;
+  api?: ApiStepRequest | undefined;
   is_sync?: boolean | undefined;
   fail_step?: string | undefined;
   is_final?: boolean | undefined;

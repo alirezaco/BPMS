@@ -83,7 +83,7 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       roles: request?.roles,
       defaultFailStep: request?.default_fail_step,
       allowedDirectDebit: request?.allowed_direct_debit,
-      maxAmount: request?.max_amount,
+      maxAmount: request?.max_amount && +request?.max_amount.toString(),
       period: request?.period && convertToPeriod(request?.period),
       cron: request?.cron,
       UISchema: request?.ui_schema?.map((uiSchema) =>

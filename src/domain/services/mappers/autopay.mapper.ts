@@ -64,7 +64,7 @@ export class AutoPayMapper implements BaseMapper<AutoPaySchema, AutoPayEntity> {
       name: request?.name,
       userId: me,
       processId: request?.process_id,
-      maxAmount: request?.max_amount,
+      maxAmount: request?.max_amount && +request?.max_amount.toString(),
       allowedDirectDebit: request?.allowed_direct_debit,
       period: request?.period && convertToPeriod(request?.period),
       cron: request?.cron,
