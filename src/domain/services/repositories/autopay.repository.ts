@@ -113,7 +113,7 @@ export class AutoPayRepository extends BaseRepository<
             $or: [
               {
                 last_run_at: {
-                  $gt: new Date(new Date().getTime() - 60 * 60 * 1000),
+                  $lt: new Date(new Date().getTime() - 60 * 60 * 1000),
                 },
               },
               {
@@ -149,7 +149,7 @@ export class AutoPayRepository extends BaseRepository<
             $or: [
               {
                 last_run_at: {
-                  $gt: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+                  $lt: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
                 },
               },
               {
@@ -171,21 +171,15 @@ export class AutoPayRepository extends BaseRepository<
       where: {
         deleted_at: null,
         processing_status: { $ne: ProcessingStatusEnum.IN_PROGRESS },
-        $and: [
+        period: PeriodEnum.WEEK,
+        $or: [
           {
-            $or: [{ period: PeriodEnum.WEEK }],
+            last_run_at: {
+              $lt: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+            },
           },
           {
-            $or: [
-              {
-                last_run_at: {
-                  $gt: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
-                },
-              },
-              {
-                last_run_at: null,
-              },
-            ],
+            last_run_at: null,
           },
         ],
       },
@@ -215,7 +209,7 @@ export class AutoPayRepository extends BaseRepository<
             $or: [
               {
                 last_run_at: {
-                  $gt: new Date(
+                  $lt: new Date(
                     new Date().getTime() - 30 * 24 * 60 * 60 * 1000,
                   ),
                 },
@@ -239,23 +233,15 @@ export class AutoPayRepository extends BaseRepository<
       where: {
         deleted_at: null,
         processing_status: { $ne: ProcessingStatusEnum.IN_PROGRESS },
-        $and: [
+        period: PeriodEnum.YEAR,
+        $or: [
           {
-            $or: [{ period: PeriodEnum.YEAR }],
+            last_run_at: {
+              $lt: new Date(new Date().getTime() - 365 * 24 * 60 * 60 * 1000),
+            },
           },
           {
-            $or: [
-              {
-                last_run_at: {
-                  $gt: new Date(
-                    new Date().getTime() - 365 * 24 * 60 * 60 * 1000,
-                  ),
-                },
-              },
-              {
-                last_run_at: null,
-              },
-            ],
+            last_run_at: null,
           },
         ],
       },
