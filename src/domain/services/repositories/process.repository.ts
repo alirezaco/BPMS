@@ -35,15 +35,15 @@ export class ProcessRepository extends BaseRepository<
       where['name'] = { $regex: request.name, $options: 'i' };
     }
 
-    if (request?.roles) {
+    if (request?.roles && request.roles.length > 0) {
       where['roles'] = { $in: request.roles };
     }
 
-    if (request?.is_active) {
+    if (request?.is_active !== undefined) {
       where['is_active'] = request.is_active;
     }
 
-    if (request?.allowed_direct_debit) {
+    if (request?.allowed_direct_debit !== undefined) {
       where['allowed_direct_debit'] = request.allowed_direct_debit;
     }
 

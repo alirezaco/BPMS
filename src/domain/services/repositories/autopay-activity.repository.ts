@@ -35,7 +35,7 @@ export class AutoPayActivityRepository extends BaseRepository<
       where['status'] = request.status;
     }
 
-    if (request?.has_payment) {
+    if (request?.has_payment !== undefined) {
       where['has_payment'] = request.has_payment;
     }
 
