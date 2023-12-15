@@ -306,7 +306,7 @@ export interface GetAutopayResponse {
   data?: Autopay | undefined;
 }
 
-export interface autopays {
+export interface Autopays {
   id: string;
   title: string;
   count: number;
@@ -315,7 +315,7 @@ export interface autopays {
 
 export interface ArrayAutopay {
   count: number;
-  rows: autopays[];
+  rows: Autopays[];
 }
 
 export interface ListAutopayRequest {
@@ -327,6 +327,28 @@ export interface ListAutopayRequest {
 export interface ListAutopayResponse {
   meta: Meta | undefined;
   data?: ArrayAutopay | undefined;
+}
+
+export interface ListAutopayAdminRequest {
+  limit: number;
+  skip: number;
+  name?: string | undefined;
+  process_id?: string | undefined;
+  status?: string | undefined;
+  user_id?: string | undefined;
+  period?: string | undefined;
+  allowed_direct_debit?: boolean | undefined;
+  is_active?: boolean | undefined;
+}
+
+export interface ArrayAutopays {
+  count: number;
+  rows: Autopay[];
+}
+
+export interface ListAutopayAdminResponse {
+  meta: Meta | undefined;
+  data?: ArrayAutopays | undefined;
 }
 
 export interface AutopayActivity {
@@ -415,6 +437,8 @@ export interface AutopayServiceClient {
 
   listAutopays(request: ListAutopayRequest, metadata?: Metadata): Observable<ListAutopayResponse>;
 
+  listAutopaysAdmin(request: ListAutopayAdminRequest, metadata?: Metadata): Observable<ListAutopayAdminResponse>;
+
   listAutopayActivity(
     request: ListAutopayActivityRequest,
     metadata?: Metadata,
@@ -479,6 +503,11 @@ export interface AutopayServiceController {
     metadata?: Metadata,
   ): Promise<ListAutopayResponse> | Observable<ListAutopayResponse> | ListAutopayResponse;
 
+  listAutopaysAdmin(
+    request: ListAutopayAdminRequest,
+    metadata?: Metadata,
+  ): Promise<ListAutopayAdminResponse> | Observable<ListAutopayAdminResponse> | ListAutopayAdminResponse;
+
   listAutopayActivity(
     request: ListAutopayActivityRequest,
     metadata?: Metadata,
@@ -504,6 +533,7 @@ export function AutopayServiceControllerMethods() {
       "deleteAutopay",
       "getAutopay",
       "listAutopays",
+      "listAutopaysAdmin",
       "listAutopayActivity",
       "createFile",
     ];

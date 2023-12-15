@@ -4,6 +4,7 @@ import {
   CreateAutopayCommand,
   DeleteAutopayCommand,
   GetAutopayQuery,
+  GetAutopaysAdminQuery,
   GetAutopaysQuery,
   GetProcessQuery,
   UpdateAutoPayDataCommand,
@@ -20,6 +21,7 @@ import { MessageEnum } from 'infrastructure/enum';
 import {
   CreateAutopayRequest,
   FindAutopayInterface,
+  ListAutopayAdminRequest,
   ListAutopayRequest,
   UpdateAutopayRequest,
 } from 'infrastructure/interfaces';
@@ -167,5 +169,14 @@ export class AutopayUseCase {
       GetAutopaysQuery,
       findAndCountAll<FindAutopayInterface<AutoPayEntity>>
     >(new GetAutopaysQuery(request, me));
+  }
+
+  async getAllAutopaysAdmin(
+    request: ListAutopayAdminRequest,
+  ): Promise<findAndCountAll<AutoPayEntity>> {
+    return this.queryBus.execute<
+      GetAutopaysAdminQuery,
+      findAndCountAll<AutoPayEntity>
+    >(new GetAutopaysAdminQuery(request));
   }
 }

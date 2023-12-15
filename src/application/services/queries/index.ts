@@ -2,6 +2,7 @@ import { AutopayQueueHandler } from './autopay-queue';
 import { GetAutopayHandler } from './get-autopay';
 import { GetAutopayActivitiesHandler } from './get-autopay-activities';
 import { GetAutopaysHandler } from './get-autopays';
+import { GetAutopaysAdminHandler } from './get-autopays-admin';
 import { GetFileHandler } from './get-file';
 import { GetProcessHandler } from './get-process';
 import { GetProcessesHandler } from './get-processes';
@@ -15,6 +16,7 @@ export * from './get-autopays';
 export * from './get-autopay-activities';
 export * from './autopay-queue';
 export * from './get-file';
+export * from './get-autopays-admin';
 
 export const queryHandlers = [
   GetProcessHandler,
@@ -25,4 +27,5 @@ export const queryHandlers = [
   GetAutopayActivitiesHandler,
   AutopayQueueHandler,
   GetFileHandler,
+  GetAutopaysAdminHandler,
 ];

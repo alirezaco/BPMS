@@ -12,6 +12,8 @@ import {
   DeleteAutopayResponse,
   GetAutopayRequest,
   GetAutopayResponse,
+  ListAutopayAdminRequest,
+  ListAutopayAdminResponse,
   ListAutopayRequest,
   ListAutopayResponse,
   Meta,
@@ -26,6 +28,7 @@ export class AutopayController
   implements
     Pick<
       AutopayServiceController,
+      | 'listAutopaysAdmin'
       | 'listAutopays'
       | 'getAutopay'
       | 'deleteAutopay'
@@ -172,6 +175,28 @@ export class AutopayController
             ...x,
             values: x.values.map((y) => new AutoPaySerializer(y)),
           })),
+        },
+      };
+    } catch (error) {
+      return this.GrpcErrorHandler(error);
+    }
+  }
+
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
+  async listAutopaysAdmin(
+    request: ListAutopayAdminRequest,
+    _?: Metadata,
+  ): Promise<ListAutopayAdminResponse> {
+    try {
+      const res = await this.autopayUseCase.getAllAutopaysAdmin(request);
+
+      return {
+        meta: {
+          status: HttpStatus.OK,
+        },
+        data: {
+          count: res.count,
+          rows: res.rows.map((x) => new AutoPaySerializer(x)),
         },
       };
     } catch (error) {

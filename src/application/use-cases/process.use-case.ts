@@ -5,7 +5,7 @@ import {
   CreateProcessCommand,
   DeleteProcessCommand,
   GetProcessQuery,
-  GetProcessesAdminCommand,
+  GetProcessesAdminQuery,
   GetProcessesCommand,
   UpdateProcessAllowedDirectDebitCommand,
   UpdateProcessIsActiveCommand,
@@ -180,9 +180,9 @@ export class ProcessUseCase {
     request: ListProcessesAdminRequest,
   ): Promise<findAndCountAll<ProcessEntity>> {
     return this.queryBus.execute<
-      GetProcessesAdminCommand,
+      GetProcessesAdminQuery,
       findAndCountAll<ProcessEntity>
-    >(new GetProcessesAdminCommand(request));
+    >(new GetProcessesAdminQuery(request));
   }
 
   async createFile(

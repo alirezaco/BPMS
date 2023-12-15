@@ -14,6 +14,7 @@ service AutopayService {
   rpc DeleteAutopay (DeleteAutopayRequest) returns (DeleteAutopayResponse) {}
   rpc GetAutopay (GetAutopayRequest) returns (GetAutopayResponse) {}
   rpc ListAutopays (ListAutopayRequest) returns (ListAutopayResponse) {}
+  rpc ListAutopaysAdmin (ListAutopayAdminRequest) returns (ListAutopayAdminResponse) {}
   rpc ListAutopayActivity (ListAutopayActivityRequest) returns (ListAutopayActivityResponse) {}
   rpc CreateFile (CreateFileRequest) returns (CreateFileResponse) {}
 }
@@ -326,7 +327,7 @@ message GetAutopayResponse {
   optional Autopay data = 2;
 }
 
-message autopays {
+message Autopays {
   string id = 1;
   string title = 2;
   int32 count = 3;
@@ -335,7 +336,7 @@ message autopays {
 
 message ArrayAutopay {
   int32 count = 1;
-  repeated autopays rows = 2;
+  repeated Autopays rows = 2;
 }
 
 message ListAutopayRequest {
@@ -347,6 +348,28 @@ message ListAutopayRequest {
 message ListAutopayResponse {
   Meta meta = 1;
   optional ArrayAutopay data = 2;
+}
+
+message ListAutopayAdminRequest {
+  int32 limit = 1;
+  int32 skip = 2;
+  optional string name = 3;
+  optional string process_id = 4;
+  optional string status = 5;
+  optional string user_id = 6;
+  optional string period = 7;
+  optional bool allowed_direct_debit = 8;
+  optional bool is_active = 9;
+}
+
+message ArrayAutopays {
+  int32 count = 1;
+  repeated Autopay rows = 2;
+}
+
+message ListAutopayAdminResponse {
+  Meta meta = 1;
+  optional ArrayAutopays data = 2;
 }
 
 message AutopayActivity {

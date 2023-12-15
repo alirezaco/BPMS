@@ -156,4 +156,25 @@ describe('AutopayController (e2e)', () => {
 
     expect(response.data).toHaveProperty('id');
   });
+
+  it('list autopay admin', async () => {
+    const metadata = new Metadata();
+    metadata.add('me', '657b139ffc13ae0569fa2121');
+
+    const response = await autopayController.listAutopaysAdmin(
+      {
+        limit: 10,
+        skip: 0,
+        allowed_direct_debit: false,
+        is_active: true,
+        status: 'pending',
+      },
+      metadata,
+    );
+
+    expect(response.meta?.status).toBe(HttpStatus.OK);
+
+    expect(response.data).toHaveProperty('count');
+    expect(response.data).toHaveProperty('rows');
+  });
 });

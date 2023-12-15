@@ -1,18 +1,18 @@
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
-import { GetProcessesAdminCommand } from './get-processes-admin.command';
+import { GetProcessesAdminQuery } from './get-processes-admin.query';
 import { findAndCountAll } from 'infrastructure/database';
 import { ProcessEntity } from 'domain/models';
 import { ProcessRepository } from 'domain/services';
 
-@QueryHandler(GetProcessesAdminCommand)
+@QueryHandler(GetProcessesAdminQuery)
 export class GetProcessesAdminHandler
-  implements IQueryHandler<GetProcessesAdminCommand>
+  implements IQueryHandler<GetProcessesAdminQuery>
 {
   constructor(private readonly processRepository: ProcessRepository) {}
 
   async execute({
     request,
-  }: GetProcessesAdminCommand): Promise<findAndCountAll<ProcessEntity>> {
+  }: GetProcessesAdminQuery): Promise<findAndCountAll<ProcessEntity>> {
     return this.processRepository.findAllAdmin(request);
   }
 }

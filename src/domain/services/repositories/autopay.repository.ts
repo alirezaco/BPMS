@@ -1,10 +1,13 @@
-import { Model, Types } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 import { BaseRepository } from './base.repository';
 import { AutoPayEntity, AutoPaySchema } from 'domain/models';
 import { AutoPayMapper } from '../mappers';
 import { InjectModel } from '@nestjs/mongoose';
 import { findAndCountAll } from 'infrastructure/database';
-import { ListAutopayRequest } from 'infrastructure/interfaces';
+import {
+  ListAutopayAdminRequest,
+  ListAutopayRequest,
+} from 'infrastructure/interfaces';
 import { CronRegexUtil } from 'infrastructure/utils';
 import { PeriodEnum, ProcessingStatusEnum } from 'infrastructure/enum';
 
@@ -47,6 +50,48 @@ export class AutoPayRepository extends BaseRepository<
     });
 
     return autopays;
+  }
+
+  async findAllAdmin(
+    request: ListAutopayAdminRequest,
+  ): Promise<findAndCountAll<AutoPayEntity>> {
+    const where: FilterQuery<AutoPaySchema> = { deleted_at: null };
+
+    if (request?.user_id) {
+      where['user_id'] = new Types.ObjectId(request.user_id);
+    }
+
+    if (request?.process_id) {
+      where['process_id'] = new Types.ObjectId(request.process_id);
+    }
+
+    if (request?.name) {
+      where['name'] = {
+        $regex: request.name,
+      };
+    }
+
+    if (request?.is_active !== undefined) {
+      where['is_active'] = request.is_active;
+    }
+
+    if (request?.status) {
+      where['processing_status'] = request.status;
+    }
+
+    if (request?.allowed_direct_debit !== undefined) {
+      where['allowed_direct_debit'] = request.allowed_direct_debit;
+    }
+
+    if (request?.period) {
+      where['period'] = request.period;
+    }
+
+    return this.findAll({
+      where,
+      limit: request.limit,
+      skip: request.skip,
+    });
   }
 
   async getHourlyQueue(): Promise<AutoPayEntity[]> {

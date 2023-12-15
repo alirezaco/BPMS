@@ -1,5 +1,5 @@
 import { ListProcessesAdminRequest } from 'infrastructure/interfaces';
 
-export class GetProcessesAdminCommand {
+export class GetProcessesAdminQuery {
   constructor(public request: ListProcessesAdminRequest) {}
 }
