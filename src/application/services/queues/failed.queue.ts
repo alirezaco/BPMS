@@ -43,25 +43,6 @@ export class FailedQueue {
     await this.processQueue.execute(job);
   }
 
-  getDeley(delay: FailedDelayEnum, autopayId: string): number {
-    switch (delay) {
-      case FailedDelayEnum.THIRTY_MIN:
-        return FailedDelayEnum.FIFTEEN_MIN;
-      case FailedDelayEnum.ONE_HOUR:
-        return FailedDelayEnum.TWO_HOUR;
-      case FailedDelayEnum.FIVE_MIN:
-        return FailedDelayEnum.TEN_MIN;
-      case FailedDelayEnum.TEN_MIN:
-        return FailedDelayEnum.THIRTY_MIN;
-      case FailedDelayEnum.FIFTEEN_MIN:
-        return FailedDelayEnum.ONE_HOUR;
-      case FailedDelayEnum.TWO_HOUR:
-        throw new Error(
-          RunningMessageEnum.MAX_DELAY_REACHED.replace('%id', autopayId),
-        );
-    }
-  }
-
   async addFailedQueue(autopayId: string, delay: number, activityId: string) {
     const data: FailedJobPayloadInterface = {
       activityId,
@@ -85,6 +66,7 @@ export class FailedQueue {
         autopayId: job.data.autopayId,
         isFailed: true,
         activityId: job.data.activityId,
+        delay: job.opts.delay,
       });
     } else {
       await this.addFailedQueue(

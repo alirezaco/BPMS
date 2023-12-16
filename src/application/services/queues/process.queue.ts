@@ -73,14 +73,39 @@ export class ProcessQueue {
     );
   }
 
-  private async addToFailedQueue(autopayId: string, activityId: string) {
+  getDeley(delay: FailedDelayEnum, autopayId: string): number {
+    switch (delay) {
+      case FailedDelayEnum.THIRTY_MIN:
+        return FailedDelayEnum.FIFTEEN_MIN;
+      case FailedDelayEnum.ONE_HOUR:
+        return FailedDelayEnum.TWO_HOUR;
+      case FailedDelayEnum.FIVE_MIN:
+        return FailedDelayEnum.TEN_MIN;
+      case FailedDelayEnum.TEN_MIN:
+        return FailedDelayEnum.THIRTY_MIN;
+      case FailedDelayEnum.FIFTEEN_MIN:
+        return FailedDelayEnum.ONE_HOUR;
+      case FailedDelayEnum.TWO_HOUR:
+        throw new Error(
+          RunningMessageEnum.MAX_DELAY_REACHED.replace('%id', autopayId),
+        );
+      default:
+        return FailedDelayEnum.FIVE_MIN;
+    }
+  }
+
+  private async addToFailedQueue(
+    autopayId: string,
+    activityId: string,
+    delay: number,
+  ) {
     const data: FailedJobPayloadInterface = {
       activityId,
       autopayId,
     };
 
     await this.failedQueue.add(JOB_FAILED_PROCESS, data, {
-      delay: FailedDelayEnum.FIVE_MIN,
+      delay: this.getDeley(delay, autopayId),
     });
   }
 
@@ -111,7 +136,7 @@ export class ProcessQueue {
       await this.updateAutoPayStatus(autopay, ProcessingStatusEnum.COMPLETED);
     } else {
       if (res.isRetry) {
-        await this.addToFailedQueue(autopay.id, res.activityId);
+        await this.addToFailedQueue(autopay.id, res.activityId, job.data.delay);
       }
 
       await this.updateAutoPayStatus(autopay, ProcessingStatusEnum.FAILED);
