@@ -1,8 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
-import { Test, TestingModule } from '@nestjs/testing';
 import { ProcessQueue } from 'application/services';
-import { AutopayModule } from 'autopay.module';
 import {
   AutoPayActivitySchema,
   AutoPaySchema,
@@ -11,7 +9,7 @@ import {
   StepSchema,
 } from 'domain/models';
 import { Model } from 'mongoose';
-import { dropDbUtil, initialApp } from './utils';
+import { initialApp } from './utils';
 import {
   apiRequestMock,
   apiSteps,
@@ -21,6 +19,7 @@ import {
   comparisonStepsLevel2,
   comparisonStepsLevel3,
   comparisonStepsLevel4,
+  complexSteps,
   grpcRequestMock,
   grpcSteps,
   simpleSteps,
@@ -141,5 +140,26 @@ describe('RunAutopay (e2e)', () => {
     }));
 
     await initTests(apiSteps);
+  });
+
+  it('complex autopay', async () => {
+    grpcRequestMock.mockImplementation(() => ({
+      meta: {
+        status: 200,
+      },
+    }));
+    apiRequestMock.mockImplementation(() => ({
+      data: {
+        status: 200,
+      },
+    }));
+    await fileModel.create({
+      _id: '657b139ffc13ae0569ff211d',
+      value: 'test1234',
+      name: 'test.proto',
+      owner: '657b139ffc13ae0569fa211d',
+    });
+
+    await initTests(complexSteps);
   });
 });

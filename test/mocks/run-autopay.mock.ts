@@ -534,7 +534,7 @@ export const apiSteps: StepSchema[] = [
     is_payment: false,
     api: {
       url: 'http://test.com/:name',
-      method: 'TestMethod',
+      method: 'post',
       headers: [
         {
           source: SourceEnum.AUTO_PAY,
@@ -584,5 +584,144 @@ export const apiSteps: StepSchema[] = [
       },
       children: [],
     },
+  },
+];
+
+export const complexSteps: StepSchema[] = [
+  {
+    _id: new Types.ObjectId(),
+    name: 'step1',
+    type: ProcessStepTypeEnum.API,
+    is_payment: false,
+    api: {
+      url: 'http://test.com/',
+      method: 'post',
+      headers: [],
+      body: [],
+      params: [],
+      query: [],
+    },
+  },
+  {
+    _id: new Types.ObjectId(),
+    name: 'step2',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      left: {
+        source: SourceEnum.BEFORE_STEP,
+        key: 'step1.status',
+        source_key: 'step1.status',
+      },
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'okStatus',
+        source_key: 'okStatus',
+      },
+      children: [],
+    },
+  },
+  {
+    _id: new Types.ObjectId(),
+    name: 'step3',
+    type: ProcessStepTypeEnum.GRPC,
+    is_payment: false,
+    grpc: {
+      url: 'test:3113',
+      method: 'TestMethod',
+      package: 'Test',
+      service: 'TestService',
+      protofile: new Types.ObjectId('657b139ffc13ae0569ff211d'),
+      metadata: [],
+      payload: [],
+    },
+  },
+  {
+    _id: new Types.ObjectId(),
+    name: 'sync1',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      left: {
+        source: SourceEnum.PROCESS,
+        key: 'okStatus',
+        source_key: 'okStatus',
+      },
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'name',
+        source_key: 'name',
+      },
+      children: [],
+    },
+    is_sync: true,
+  },
+  {
+    _id: new Types.ObjectId(),
+    name: 'step4',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      left: {
+        source: SourceEnum.BEFORE_STEP,
+        key: 'step3.meta.status',
+        source_key: 'step3.meta.status',
+      },
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'okStatus',
+        source_key: 'okStatus',
+      },
+      children: [],
+    },
+  },
+  {
+    _id: new Types.ObjectId(),
+    name: 'step5',
+    type: ProcessStepTypeEnum.API,
+    is_payment: true,
+    payment_param: {
+      source: SourceEnum.PROCESS,
+      key: 'amount',
+      source_key: 'amount',
+    },
+    api: {
+      url: 'http://test.com/',
+      method: 'post',
+      headers: [],
+      body: [
+        {
+          source: SourceEnum.PROCESS,
+          key: 'amount',
+          source_key: 'amount',
+        },
+      ],
+      params: [],
+      query: [],
+    },
+  },
+  {
+    _id: new Types.ObjectId(),
+    name: 'step6',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      left: {
+        source: SourceEnum.BEFORE_STEP,
+        key: 'step5.status',
+        source_key: 'step5.status',
+      },
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'okStatus',
+        source_key: 'okStatus',
+      },
+      children: [],
+    },
+    is_final: true,
   },
 ];
