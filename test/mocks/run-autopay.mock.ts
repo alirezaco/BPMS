@@ -1,4 +1,4 @@
-import { ProcessSchema } from 'domain/models';
+import { ProcessSchema, StepSchema } from 'domain/models';
 import {
   ComparisonFunctionEnum,
   PeriodEnum,
@@ -19,12 +19,12 @@ export const baseProcessMock: Omit<ProcessSchema, 'steps'> = {
   period: PeriodEnum.DAY,
   validation_data: { type: 'object', properties: { name: { type: 'string' } } },
   ui_schema: [{ key: 'name', title: 'name', type: 'string' }],
-  data: { amount: 5200 },
+  data: { amount: 5200, defaultTrueBool: true, defaultFalseBool: false },
   max_amount: 5000000,
   is_active: true,
 };
 
-export const simpleSteps = [
+export const simpleSteps: StepSchema[] = [
   {
     _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
     name: 'Y-Solowarm',
@@ -43,6 +43,411 @@ export const simpleSteps = [
         source_key: 'name',
       },
       children: [],
+    },
+  },
+];
+
+export const comparisonStepsLevel1: StepSchema[] = [
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm1',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      left: {
+        source: SourceEnum.AUTO_PAY,
+        key: 'name',
+        source_key: 'name',
+      },
+      children: [],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm2',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      right: {
+        source: SourceEnum.AUTO_PAY,
+        key: 'name',
+        source_key: 'name',
+      },
+      children: [],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm3',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
+    },
+  },
+];
+
+export const comparisonStepsLevel2: StepSchema[] = [
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm1',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      left: {
+        source: SourceEnum.PROCESS,
+        key: 'defaultTrueBool',
+        source_key: 'defaultTrueBool',
+      },
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm2',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'defaultTrueBool',
+        source_key: 'defaultTrueBool',
+      },
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm3',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
+    },
+  },
+];
+
+export const comparisonStepsLevel3: StepSchema[] = [
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm1',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      left: {
+        source: SourceEnum.PROCESS,
+        key: 'defaultTrueBool',
+        source_key: 'defaultTrueBool',
+      },
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm2',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'defaultTrueBool',
+        source_key: 'defaultTrueBool',
+      },
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm3',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm4',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'defaultTrueBool',
+        source_key: 'defaultTrueBool',
+      },
+      left: {
+        source: SourceEnum.PROCESS,
+        key: 'defaultTrueBool',
+        source_key: 'defaultTrueBool',
+      },
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
+    },
+  },
+];
+
+export const comparisonStepsLevel4: StepSchema[] = [
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'Y-Solowarm1',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'defaultTrueBool',
+        source_key: 'defaultTrueBool',
+      },
+      left: {
+        source: SourceEnum.PROCESS,
+        key: 'defaultTrueBool',
+        source_key: 'defaultTrueBool',
+      },
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
     },
   },
 ];

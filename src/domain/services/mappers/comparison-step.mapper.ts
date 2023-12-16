@@ -14,11 +14,15 @@ export class ComparisonStepMapper
   convertEntityToSchema(entity: ComparisonStepEntity): ComparisonStepSchema {
     return {
       func: entity?.func,
-      left: this.dataParamMapper.convertEntityToSchema(entity?.left),
-      right: this.dataParamMapper.convertEntityToSchema(entity?.right),
-      children: entity?.children.map((child) =>
-        this.convertEntityToSchema(child),
-      ),
+      left:
+        entity?.left &&
+        this.dataParamMapper.convertEntityToSchema(entity?.left),
+      right:
+        entity?.right &&
+        this.dataParamMapper.convertEntityToSchema(entity?.right),
+      children:
+        entity?.children?.map((child) => this.convertEntityToSchema(child)) ||
+        [],
     };
   }
 
@@ -27,22 +31,30 @@ export class ComparisonStepMapper
 
     return new ComparisonStepEntity({
       func: schema?.func,
-      left: this.dataParamMapper.convertSchemaToEntity(schema?.left),
-      right: this.dataParamMapper.convertSchemaToEntity(schema?.right),
-      children: schema?.children.map((child) =>
-        this.convertSchemaToEntity(child),
-      ),
+      left:
+        schema?.left &&
+        this.dataParamMapper.convertSchemaToEntity(schema?.left),
+      right:
+        schema?.right &&
+        this.dataParamMapper.convertSchemaToEntity(schema?.right),
+      children:
+        schema?.children?.map((child) => this.convertSchemaToEntity(child)) ||
+        [],
     });
   }
 
   convertRequestToEntity(request: ComparisonStepRequest): ComparisonStepEntity {
     return new ComparisonStepEntity({
       func: convertToComparisonFunc(request?.func),
-      left: this.dataParamMapper.convertRequestToEntity(request?.left),
-      right: this.dataParamMapper.convertRequestToEntity(request?.right),
-      children: request?.children.map((child) =>
-        this.convertRequestToEntity(child),
-      ),
+      left:
+        request?.left &&
+        this.dataParamMapper.convertRequestToEntity(request?.left),
+      right:
+        request?.right &&
+        this.dataParamMapper.convertRequestToEntity(request?.right),
+      children:
+        request?.children?.map((child) => this.convertRequestToEntity(child)) ||
+        [],
     });
   }
 }

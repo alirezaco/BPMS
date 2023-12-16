@@ -11,7 +11,15 @@ import {
 } from 'domain/models';
 import { Model } from 'mongoose';
 import { dropDbUtil } from './utils';
-import { autopayMock, baseProcessMock, simpleSteps } from './mocks';
+import {
+  autopayMock,
+  baseProcessMock,
+  comparisonStepsLevel1,
+  comparisonStepsLevel2,
+  comparisonStepsLevel3,
+  comparisonStepsLevel4,
+  simpleSteps,
+} from './mocks';
 import { ActivityStatusEnum, ProcessingStatusEnum } from 'infrastructure/enum';
 
 describe('RunAutopay (e2e)', () => {
@@ -44,7 +52,7 @@ describe('RunAutopay (e2e)', () => {
   });
 
   afterAll(async () => {
-    await dropDbUtil(app);
+    // await dropDbUtil(app);
   });
 
   beforeEach(async () => {
@@ -54,7 +62,7 @@ describe('RunAutopay (e2e)', () => {
   afterEach(async () => {
     await processModel.deleteMany({ _id: baseProcessMock._id });
     await autopayModel.deleteMany({ _id: autopayMock._id });
-    await activityModel.deleteMany({ autopay_id: autopayMock._id });
+    // await activityModel.deleteMany({ autopay_id: autopayMock._id });
   });
 
   const insertProcess = async (steps: StepSchema[]) => {
@@ -70,8 +78,8 @@ describe('RunAutopay (e2e)', () => {
     expect(activity.status).toBe(status);
   };
 
-  it('simple autopay', async () => {
-    await insertProcess(simpleSteps);
+  const initTests = async (steps: StepSchema[]) => {
+    await insertProcess(steps);
 
     await processQueue.execute({
       data: { autopayId: autopayMock._id.toString() },
@@ -84,5 +92,25 @@ describe('RunAutopay (e2e)', () => {
     expect(autopay.processing_status).toBe(ProcessingStatusEnum.COMPLETED);
 
     await checkExistActivity(ActivityStatusEnum.SUCCESSFUL);
+  };
+
+  it('simple autopay', async () => {
+    await initTests(simpleSteps);
+  });
+
+  it('comparison autopay (level1)', async () => {
+    await initTests(comparisonStepsLevel1);
+  });
+
+  it('comparison autopay (level2)', async () => {
+    await initTests(comparisonStepsLevel2);
+  });
+
+  it('comparison autopay (level3)', async () => {
+    await initTests(comparisonStepsLevel3);
+  });
+
+  it('comparison autopay (level4)', async () => {
+    await initTests(comparisonStepsLevel4);
   });
 });

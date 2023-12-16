@@ -87,7 +87,7 @@ export class RunAutopayProcessor {
     runningTime: number,
     isError: boolean,
   ): Promise<AutoPayActivityEntity> {
-    this.stepsImplemented.push(this.RunningStep);
+    isError || this.stepsImplemented.push(this.RunningStep);
     const activity = new AutoPayActivityEntity({
       autopayId,
       processId: this.process.id,
@@ -386,7 +386,9 @@ export class RunAutopayProcessor {
 
   comparisonStepHandler(step: StepEntity): StepResultInterface {
     const res = this.comparisonStep(step.comparison);
+
     this.responsesSteps.push([step.name, { res }]);
+
     if (res) {
       return {
         success: true,
