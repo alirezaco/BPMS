@@ -725,3 +725,20 @@ export const complexSteps: StepSchema[] = [
     is_final: true,
   },
 ];
+
+export const invalidAutopayWithRetry: StepSchema[] = [
+  {
+    _id: new Types.ObjectId(),
+    name: 'step1',
+    type: ProcessStepTypeEnum.API,
+    is_payment: false,
+    api: {
+      url: 'http://test.com/',
+      method: 'post',
+      headers: [],
+      body: [],
+      params: [],
+      query: [],
+    },
+  },
+];

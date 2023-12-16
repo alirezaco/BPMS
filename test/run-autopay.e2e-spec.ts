@@ -22,9 +22,13 @@ import {
   complexSteps,
   grpcRequestMock,
   grpcSteps,
+  invalidAutopayWithRetry,
   simpleSteps,
 } from './mocks';
 import { ActivityStatusEnum, ProcessingStatusEnum } from 'infrastructure/enum';
+import { Queue } from 'bull';
+import { getQueueToken } from '@nestjs/bull';
+import { FAILED_QUEUE } from 'infrastructure/constants';
 
 describe('RunAutopay (e2e)', () => {
   let app: INestApplication;
@@ -33,6 +37,7 @@ describe('RunAutopay (e2e)', () => {
   let autopayModel: Model<AutoPaySchema>;
   let activityModel: Model<AutoPayActivitySchema>;
   let fileModel: Model<FileSchema>;
+  let failedQueue: Queue;
 
   beforeAll(async () => {
     process.env['MONGO_DB'] = 'autopay-run-test';
@@ -50,6 +55,7 @@ describe('RunAutopay (e2e)', () => {
       getModelToken(AutoPayActivitySchema.name),
     );
     fileModel = app.get<Model<FileSchema>>(getModelToken(FileSchema.name));
+    failedQueue = app.get<Queue>(getQueueToken(FAILED_QUEUE));
   });
 
   afterAll(async () => {
@@ -161,5 +167,27 @@ describe('RunAutopay (e2e)', () => {
     });
 
     await initTests(complexSteps);
+  });
+
+  it('invalid autopay', async () => {
+    apiRequestMock.mockRejectedValue(() => ({
+      message: '',
+    }));
+
+    await insertProcess(invalidAutopayWithRetry);
+
+    await processQueue.execute({
+      data: { autopayId: autopayMock._id.toString() },
+    } as any);
+
+    const autopay = await autopayModel.findOne({ _id: autopayMock._id });
+
+    expect(autopay).toBeDefined();
+    expect(autopay.last_run_at).not.toBe(null);
+    expect(autopay.processing_status).toBe(ProcessingStatusEnum.FAILED);
+
+    await checkExistActivity(ActivityStatusEnum.FAILED);
+
+    console.log(await failedQueue.count());
   });
 });
