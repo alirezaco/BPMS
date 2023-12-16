@@ -19,7 +19,12 @@ export const baseProcessMock: Omit<ProcessSchema, 'steps'> = {
   period: PeriodEnum.DAY,
   validation_data: { type: 'object', properties: { name: { type: 'string' } } },
   ui_schema: [{ key: 'name', title: 'name', type: 'string' }],
-  data: { amount: 5200, defaultTrueBool: true, defaultFalseBool: false },
+  data: {
+    amount: 5200,
+    defaultTrueBool: true,
+    defaultFalseBool: false,
+    okStatus: 200,
+  },
   max_amount: 5000000,
   is_active: true,
 };
@@ -470,3 +475,114 @@ export const autopayMock = {
   max_amount: 10000,
   allowed_direct_debit: false,
 };
+
+export const grpcSteps: StepSchema[] = [
+  {
+    _id: new Types.ObjectId('657b139ffc13ae0569fa211d'),
+    name: 'test',
+    type: ProcessStepTypeEnum.GRPC,
+    is_payment: false,
+    grpc: {
+      url: 'example.com:3113',
+      method: 'TestMethod',
+      package: 'Test',
+      service: 'TestService',
+      protofile: new Types.ObjectId('657b139ffc13ae0569ff211d'),
+      metadata: [
+        {
+          source: SourceEnum.AUTO_PAY,
+          key: 'name',
+          source_key: 'name',
+        },
+      ],
+      payload: [
+        {
+          source: SourceEnum.AUTO_PAY,
+          key: 'name',
+          source_key: 'name',
+        },
+      ],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657b139ffc13ae0569fa211d'),
+    name: 'check',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      left: {
+        source: SourceEnum.BEFORE_STEP,
+        key: 'test.meta.status',
+        source_key: 'test.meta.status',
+      },
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'okStatus',
+        source_key: 'okStatus',
+      },
+      children: [],
+    },
+  },
+];
+
+export const apiSteps: StepSchema[] = [
+  {
+    _id: new Types.ObjectId('657b139ffc13ae0569fa211d'),
+    name: 'test',
+    type: ProcessStepTypeEnum.API,
+    is_payment: false,
+    api: {
+      url: 'http://test.com/:name',
+      method: 'TestMethod',
+      headers: [
+        {
+          source: SourceEnum.AUTO_PAY,
+          key: 'name',
+          source_key: 'name',
+        },
+      ],
+      body: [
+        {
+          source: SourceEnum.AUTO_PAY,
+          key: 'name',
+          source_key: 'name',
+        },
+      ],
+      params: [
+        {
+          source: SourceEnum.AUTO_PAY,
+          key: 'name',
+          source_key: 'name',
+        },
+      ],
+      query: [
+        {
+          source: SourceEnum.AUTO_PAY,
+          key: 'name',
+          source_key: 'name',
+        },
+      ],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657b139ffc13ae0569fa211d'),
+    name: 'check',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      left: {
+        source: SourceEnum.BEFORE_STEP,
+        key: 'test.status',
+        source_key: 'test.status',
+      },
+      right: {
+        source: SourceEnum.PROCESS,
+        key: 'okStatus',
+        source_key: 'okStatus',
+      },
+      children: [],
+    },
+  },
+];

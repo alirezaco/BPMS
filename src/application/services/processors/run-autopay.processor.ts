@@ -300,7 +300,7 @@ export class RunAutopayProcessor {
 
     const file = await this.getGrpcProtofile(step.grpc.protofile);
 
-    const { data } = await this.grpcProxy.request(
+    const data = await this.grpcProxy.request(
       step.grpc,
       payload,
       metadata,
@@ -313,6 +313,10 @@ export class RunAutopayProcessor {
   async GrpcStepHandler(step: StepEntity): Promise<StepResultInterface> {
     try {
       await this.runGrpcStep(step);
+
+      return {
+        success: true,
+      };
     } catch (error) {
       let isRetry = true;
       let isHandledError = false;

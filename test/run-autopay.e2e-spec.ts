@@ -6,18 +6,23 @@ import { AutopayModule } from 'autopay.module';
 import {
   AutoPayActivitySchema,
   AutoPaySchema,
+  FileSchema,
   ProcessSchema,
   StepSchema,
 } from 'domain/models';
 import { Model } from 'mongoose';
-import { dropDbUtil } from './utils';
+import { dropDbUtil, initialApp } from './utils';
 import {
+  apiRequestMock,
+  apiSteps,
   autopayMock,
   baseProcessMock,
   comparisonStepsLevel1,
   comparisonStepsLevel2,
   comparisonStepsLevel3,
   comparisonStepsLevel4,
+  grpcRequestMock,
+  grpcSteps,
   simpleSteps,
 } from './mocks';
 import { ActivityStatusEnum, ProcessingStatusEnum } from 'infrastructure/enum';
@@ -28,16 +33,12 @@ describe('RunAutopay (e2e)', () => {
   let processModel: Model<ProcessSchema>;
   let autopayModel: Model<AutoPaySchema>;
   let activityModel: Model<AutoPayActivitySchema>;
+  let fileModel: Model<FileSchema>;
 
   beforeAll(async () => {
     process.env['MONGO_DB'] = 'autopay-run-test';
 
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AutopayModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = await initialApp();
 
     processQueue = app.get<ProcessQueue>(ProcessQueue);
     processModel = app.get<Model<ProcessSchema>>(
@@ -49,6 +50,7 @@ describe('RunAutopay (e2e)', () => {
     activityModel = app.get<Model<AutoPayActivitySchema>>(
       getModelToken(AutoPayActivitySchema.name),
     );
+    fileModel = app.get<Model<FileSchema>>(getModelToken(FileSchema.name));
   });
 
   afterAll(async () => {
@@ -62,6 +64,7 @@ describe('RunAutopay (e2e)', () => {
   afterEach(async () => {
     await processModel.deleteMany({ _id: baseProcessMock._id });
     await autopayModel.deleteMany({ _id: autopayMock._id });
+    await fileModel.deleteMany({});
     // await activityModel.deleteMany({ autopay_id: autopayMock._id });
   });
 
@@ -112,5 +115,31 @@ describe('RunAutopay (e2e)', () => {
 
   it('comparison autopay (level4)', async () => {
     await initTests(comparisonStepsLevel4);
+  });
+
+  it('grpc autopay', async () => {
+    grpcRequestMock.mockImplementation(() => ({
+      meta: {
+        status: 200,
+      },
+    }));
+    await fileModel.create({
+      _id: '657b139ffc13ae0569ff211d',
+      value: 'test1234',
+      name: 'test.proto',
+      owner: '657b139ffc13ae0569fa211d',
+    });
+
+    await initTests(grpcSteps);
+  });
+
+  it('api autopay', async () => {
+    apiRequestMock.mockImplementation(() => ({
+      data: {
+        status: 200,
+      },
+    }));
+
+    await initTests(apiSteps);
   });
 });
