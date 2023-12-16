@@ -44,7 +44,7 @@ describe('RunAutopay (e2e)', () => {
   });
 
   afterAll(async () => {
-    // await dropDbUtil(app);
+    await dropDbUtil(app);
   });
 
   beforeEach(async () => {
@@ -54,7 +54,7 @@ describe('RunAutopay (e2e)', () => {
   afterEach(async () => {
     await processModel.deleteMany({ _id: baseProcessMock._id });
     await autopayModel.deleteMany({ _id: autopayMock._id });
-    // await activityModel.deleteMany({ autopay_id: autopayMock._id });
+    await activityModel.deleteMany({ autopay_id: autopayMock._id });
   });
 
   const insertProcess = async (steps: StepSchema[]) => {
