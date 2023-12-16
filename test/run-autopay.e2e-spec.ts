@@ -1,104 +1,88 @@
 import { INestApplication } from '@nestjs/common';
-import { dropDbUtil, initialApp, loadDbUtil } from './utils';
-import { InitialJobsCron } from 'application/services';
-import { Queue } from 'bull';
-import { getQueueToken } from '@nestjs/bull';
-import { JOBS_QUEUE } from 'infrastructure/constants';
+import { getModelToken } from '@nestjs/mongoose';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ProcessQueue } from 'application/services';
+import { AutopayModule } from 'autopay.module';
+import {
+  AutoPayActivitySchema,
+  AutoPaySchema,
+  ProcessSchema,
+  StepSchema,
+} from 'domain/models';
+import { Model } from 'mongoose';
+import { dropDbUtil } from './utils';
+import { autopayMock, baseProcessMock, simpleSteps } from './mocks';
+import { ActivityStatusEnum, ProcessingStatusEnum } from 'infrastructure/enum';
 
 describe('RunAutopay (e2e)', () => {
   let app: INestApplication;
-  let initialJobCron: InitialJobsCron;
-  let jobsQueue: Queue;
+  let processQueue: ProcessQueue;
+  let processModel: Model<ProcessSchema>;
+  let autopayModel: Model<AutoPaySchema>;
+  let activityModel: Model<AutoPayActivitySchema>;
 
   beforeAll(async () => {
-    process.env['MONGO_DB'] = 'autopay-run-autopay-test';
-    app = await initialApp();
-    await loadDbUtil(app);
-    initialJobCron = app.get<InitialJobsCron>(InitialJobsCron);
-    jobsQueue = app.get<Queue>(getQueueToken(JOBS_QUEUE));
+    process.env['MONGO_DB'] = 'autopay-run-test';
+
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AutopayModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+
+    processQueue = app.get<ProcessQueue>(ProcessQueue);
+    processModel = app.get<Model<ProcessSchema>>(
+      getModelToken(ProcessSchema.name),
+    );
+    autopayModel = app.get<Model<AutoPaySchema>>(
+      getModelToken(AutoPaySchema.name),
+    );
+    activityModel = app.get<Model<AutoPayActivitySchema>>(
+      getModelToken(AutoPayActivitySchema.name),
+    );
   });
 
   afterAll(async () => {
-    await dropDbUtil(app);
+    // await dropDbUtil(app);
   });
 
-  it('initial hourly queue', async () => {
-    await initialJobCron.executeHourly();
-
-    const jobCount = await jobsQueue.getJobCounts();
-
-    expect(
-      jobCount.active +
-        jobCount.completed +
-        jobCount.failed +
-        jobCount.delayed +
-        jobCount.waiting,
-    ).toBeGreaterThanOrEqual(2);
-
-    const job = (await jobsQueue.getActive()).pop();
-
-    expect(job.data).toHaveProperty('autopayId');
-
-    expect(job.data.autopayId).toBe(job.id);
+  beforeEach(async () => {
+    await autopayModel.create(autopayMock);
   });
 
-  it('initial daily queue', async () => {
-    await initialJobCron.executeDaily();
-
-    const jobCount = await jobsQueue.getJobCounts();
-
-    expect(
-      jobCount.active +
-        jobCount.completed +
-        jobCount.failed +
-        jobCount.delayed +
-        jobCount.waiting,
-    ).toBeGreaterThanOrEqual(2);
-
-    const job = (await jobsQueue.getActive()).pop();
-
-    expect(job.data).toHaveProperty('autopayId');
-
-    expect(job.data.autopayId).toBe(job.id);
+  afterEach(async () => {
+    await processModel.deleteMany({ _id: baseProcessMock._id });
+    await autopayModel.deleteMany({ _id: autopayMock._id });
+    // await activityModel.deleteMany({ autopay_id: autopayMock._id });
   });
 
-  it('initial weekly queue', async () => {
-    await initialJobCron.executeWeekly();
+  const insertProcess = async (steps: StepSchema[]) => {
+    await processModel.create({ ...baseProcessMock, steps });
+  };
 
-    const jobCount = await jobsQueue.getJobCounts();
+  const checkExistActivity = async (status: ActivityStatusEnum) => {
+    const activity = await activityModel.findOne({
+      autopay_id: autopayMock._id,
+    });
 
-    expect(
-      jobCount.active +
-        jobCount.completed +
-        jobCount.failed +
-        jobCount.delayed +
-        jobCount.waiting,
-    ).toBeGreaterThanOrEqual(2);
+    expect(activity).toBeDefined();
+    expect(activity.status).toBe(status);
+  };
 
-    const job = (await jobsQueue.getActive()).pop();
+  it('simple autopay', async () => {
+    await insertProcess(simpleSteps);
 
-    expect(job.data).toHaveProperty('autopayId');
+    await processQueue.execute({
+      data: { autopayId: autopayMock._id.toString() },
+    } as any);
 
-    expect(job.data.autopayId).toBe(job.id);
-  });
+    const autopay = await autopayModel.findOne({ _id: autopayMock._id });
 
-  it('initial monthly queue', async () => {
-    await initialJobCron.executeMonthly();
+    expect(autopay).toBeDefined();
+    expect(autopay.last_run_at).not.toBe(null);
+    expect(autopay.processing_status).toBe(ProcessingStatusEnum.COMPLETED);
 
-    const jobCount = await jobsQueue.getJobCounts();
-
-    expect(
-      jobCount.active +
-        jobCount.completed +
-        jobCount.failed +
-        jobCount.delayed +
-        jobCount.waiting,
-    ).toBeGreaterThanOrEqual(2);
-
-    const job = (await jobsQueue.getActive()).pop();
-
-    expect(job.data).toHaveProperty('autopayId');
-
-    expect(job.data.autopayId).toBe(job.id);
+    await checkExistActivity(ActivityStatusEnum.SUCCESSFUL);
   });
 });

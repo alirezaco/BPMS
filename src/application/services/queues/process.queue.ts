@@ -128,7 +128,7 @@ export class ProcessQueue {
     //start autopay
     this.logger.info(RunningMessageEnum.START.replace('%id', autopay.id));
     await this.updateAutoPayStatus(autopay, ProcessingStatusEnum.IN_PROGRESS);
-    const process = await this.getProcess(autopay.id);
+    const process = await this.getProcess(autopay.processId);
     const res = await this.runAutopayProcessor.run(autopay, process, activity);
 
     //update autopay status

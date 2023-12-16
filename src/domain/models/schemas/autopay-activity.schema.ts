@@ -1,6 +1,6 @@
 import { Prop, Schema } from '@nestjs/mongoose';
 import { BaseSchema } from './base.schema';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { ActivityStatusEnum } from 'infrastructure/enum';
 import { ResultStep, RunningStepType } from 'infrastructure/types';
 
@@ -18,10 +18,10 @@ export class AutoPayActivitySchema extends BaseSchema {
   @Prop({ type: Number, required: true })
   running_time: number;
 
-  @Prop({ type: [[Number, String]], required: false, default: [] })
+  @Prop({ type: [[String, Number]], required: false, default: [] })
   successful_steps: RunningStepType[];
 
-  @Prop({ type: [[Number, String]], required: false, default: [] })
+  @Prop({ type: [[String, Number]], required: false, default: [] })
   failed_steps: RunningStepType[];
 
   @Prop({ type: Boolean, required: false, default: false })
@@ -30,9 +30,9 @@ export class AutoPayActivitySchema extends BaseSchema {
   @Prop({ type: Number, required: false, default: 0 })
   payment_amount: number;
 
-  @Prop({ type: [Number, String], required: false, default: [] })
+  @Prop({ type: [String, Number], required: false, default: [] })
   RunningStep?: RunningStepType;
 
-  @Prop({ type: [[Number, Object]], required: false, default: [] })
+  @Prop({ type: mongoose.Schema.Types.Mixed, required: false, default: [] })
   responsesSteps?: ResultStep[];
 }

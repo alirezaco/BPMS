@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EventBus, QueryBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   AutoPayActivityEntity,
   AutoPayEntity,
@@ -23,8 +23,8 @@ import {
 import { ResultStep, RunningStepType } from 'infrastructure/types';
 import { ComparisonUtil } from 'infrastructure/utils';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { CreateAutopayActivityEvent } from '../events';
 import { GetFileQuery } from '../queries';
+import { CreateAutopayActivityCommand } from '../commands';
 
 @Injectable()
 export class RunAutopayProcessor {
@@ -45,7 +45,7 @@ export class RunAutopayProcessor {
     private readonly logger: PinoLogger,
     private readonly apiProxy: ApiProxy,
     private readonly grpcProxy: GrpcProxy,
-    private readonly eventBus: EventBus,
+    private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
 
@@ -81,12 +81,13 @@ export class RunAutopayProcessor {
     RunAutopayProcessor.is_busy = false;
   }
 
-  createActivity(
+  async createActivity(
     autopayId: string,
     status: ActivityStatusEnum,
     runningTime: number,
     isError: boolean,
-  ) {
+  ): Promise<AutoPayActivityEntity> {
+    this.stepsImplemented.push(this.RunningStep);
     const activity = new AutoPayActivityEntity({
       autopayId,
       processId: this.process.id,
@@ -101,9 +102,12 @@ export class RunAutopayProcessor {
       owner: '6292157072f600c87fe77720',
     });
 
-    this.eventBus.publish(new CreateAutopayActivityEvent(activity));
+    const result = await this.commandBus.execute<
+      CreateAutopayActivityCommand,
+      AutoPayActivityEntity
+    >(new CreateAutopayActivityCommand(activity));
 
-    return activity;
+    return result;
   }
 
   async handleProcessError(
@@ -130,10 +134,14 @@ export class RunAutopayProcessor {
   }
 
   async runSteps(): Promise<ProcessResultInterface> {
-    for (let i = this.RunningStep[1] || 0; i < this.process.steps.length; i++) {
+    for (
+      let i = this.RunningStep ? this.RunningStep[1] : 0;
+      i < this.process.steps.length;
+      i++
+    ) {
       const step = this.process.steps[i];
 
-      if (!this.stepsImplemented.find((x) => x[0] === step.name)) {
+      if (this.stepsImplemented.find((x) => x[0] === step.name)) {
         continue;
       }
 
@@ -359,17 +367,13 @@ export class RunAutopayProcessor {
         result = ComparisonUtil.compare(comparison.func, result, left);
         result = ComparisonUtil.compare(comparison.func, result, right);
       }
-    }
-
-    if (left) {
+    } else if (left) {
       if (!comparison.children.length) {
         result = left;
       } else {
         result = ComparisonUtil.compare(comparison.func, result, left);
       }
-    }
-
-    if (right) {
+    } else if (right) {
       if (!comparison.children.length) {
         result = right;
       } else {
@@ -382,7 +386,7 @@ export class RunAutopayProcessor {
 
   comparisonStepHandler(step: StepEntity): StepResultInterface {
     const res = this.comparisonStep(step.comparison);
-
+    this.responsesSteps.push([step.name, { res }]);
     if (res) {
       return {
         success: true,
@@ -450,14 +454,14 @@ export class RunAutopayProcessor {
     let result = await this.runSteps();
 
     if (result.success) {
-      activity = this.createActivity(
+      activity = await this.createActivity(
         autopay.id,
         ActivityStatusEnum.SUCCESSFUL,
         Date.now() - time,
         false,
       );
     } else {
-      activity = this.createActivity(
+      activity = await this.createActivity(
         autopay.id,
         ActivityStatusEnum.FAILED,
         Date.now() - time,

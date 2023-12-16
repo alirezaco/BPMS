@@ -1,5 +1,5 @@
 import { AutoPayActivityEntity } from 'domain/models';
 
-export class CreateAutopayActivityEvent {
+export class CreateAutopayActivityCommand {
   constructor(public autopayActivityEntity: AutoPayActivityEntity) {}
 }
