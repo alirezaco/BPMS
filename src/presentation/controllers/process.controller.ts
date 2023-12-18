@@ -23,8 +23,6 @@ import {
 import { HttpStatus } from '@nestjs/common';
 import { MessageEnum } from 'infrastructure/enum';
 import { ProcessUseCase } from 'application/use-cases';
-import { FileSerializer, ProcessSerializer } from 'presentation/serializers';
-import { ProcessesSerializer } from 'presentation/serializers/processes.serializer';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
 export class ProcessController
@@ -74,7 +72,7 @@ export class ProcessController
         meta: {
           status: HttpStatus.CREATED,
         },
-        data: new ProcessSerializer(process),
+        data: process,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -95,7 +93,7 @@ export class ProcessController
         meta: {
           status: HttpStatus.OK,
         },
-        data: new ProcessSerializer(process),
+        data: process,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -114,7 +112,7 @@ export class ProcessController
         meta: {
           status: HttpStatus.OK,
         },
-        data: new ProcessSerializer(process),
+        data: process,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -133,7 +131,7 @@ export class ProcessController
         meta: {
           status: HttpStatus.OK,
         },
-        data: new ProcessSerializer(process),
+        data: process,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -157,13 +155,13 @@ export class ProcessController
         meta: {
           status: HttpStatus.OK,
         },
-        data: {
-          count: processes.count,
-          rows: processes.rows.map((x) => new ProcessesSerializer(x)),
-        },
+        data: processes.rows.map((x) => ({
+          id: x.id,
+          name: x.name,
+        })),
       };
     } catch (error) {
-      return this.GrpcErrorHandler(error);
+      return this.GrpcErrorHandler(error) as any;
     }
   }
 
@@ -179,10 +177,7 @@ export class ProcessController
         meta: {
           status: HttpStatus.OK,
         },
-        data: {
-          count: processes.count,
-          rows: processes.rows.map((x) => new ProcessesSerializer(x)),
-        },
+        data: processes,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -203,7 +198,7 @@ export class ProcessController
         meta: {
           status: HttpStatus.CREATED,
         },
-        data: new FileSerializer(file),
+        data: file,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);

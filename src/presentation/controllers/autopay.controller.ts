@@ -21,7 +21,6 @@ import {
   UpdateAutopayResponse,
 } from 'infrastructure/interfaces';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { AutoPaySerializer } from 'presentation/serializers';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
 export class AutopayController
@@ -73,7 +72,7 @@ export class AutopayController
         meta: {
           status: HttpStatus.CREATED,
         },
-        data: new AutoPaySerializer(autopay),
+        data: autopay,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -97,7 +96,7 @@ export class AutopayController
         meta: {
           status: HttpStatus.OK,
         },
-        data: new AutoPaySerializer(autopay),
+        data: autopay,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -121,7 +120,7 @@ export class AutopayController
         meta: {
           status: HttpStatus.OK,
         },
-        data: new AutoPaySerializer(autopay),
+        data: autopay,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -145,7 +144,7 @@ export class AutopayController
         meta: {
           status: HttpStatus.OK,
         },
-        data: new AutoPaySerializer(autopay),
+        data: autopay,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -169,13 +168,7 @@ export class AutopayController
         meta: {
           status: HttpStatus.OK,
         },
-        data: {
-          count: res.count,
-          rows: res.rows.map((x) => ({
-            ...x,
-            values: x.values.map((y) => new AutoPaySerializer(y)),
-          })),
-        },
+        data: res,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
@@ -194,10 +187,7 @@ export class AutopayController
         meta: {
           status: HttpStatus.OK,
         },
-        data: {
-          count: res.count,
-          rows: res.rows.map((x) => new AutoPaySerializer(x)),
-        },
+        data: res,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);

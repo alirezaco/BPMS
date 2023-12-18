@@ -251,4 +251,15 @@ export class AutoPayRepository extends BaseRepository<
 
     return autopays.rows;
   }
+
+  async updateActiveByProcessId(processId: string, isActive: boolean) {
+    await this.autopayModel.updateOne(
+      {
+        process_id: new Types.ObjectId(processId),
+      },
+      {
+        is_active: isActive,
+      },
+    );
+  }
 }

@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { AutoPaySerializer } from 'application/serializers';
 import {
   CreateAutopayCommand,
   DeleteAutopayCommand,
@@ -38,18 +39,23 @@ export class AutopayUseCase {
   async createAutopay(
     createAutopayRequest: CreateAutopayRequest,
     me: string,
-  ): Promise<AutoPayEntity> {
-    return this.commandBus.execute<CreateAutopayCommand, AutoPayEntity>(
+  ): Promise<AutoPaySerializer> {
+    const res = await this.commandBus.execute<
+      CreateAutopayCommand,
+      AutoPayEntity
+    >(
       new CreateAutopayCommand(
         this.autoPayMapper.convertRequestToEntity(createAutopayRequest, me),
       ),
     );
+
+    return new AutoPaySerializer(res);
   }
 
   async updateAutopay(
     updateAutopayRequest: UpdateAutopayRequest,
     me: string,
-  ): Promise<AutoPayEntity> {
+  ): Promise<AutoPaySerializer> {
     let autopay = await this.queryBus.execute<GetAutopayQuery, AutoPayEntity>(
       new GetAutopayQuery(updateAutopayRequest.id),
     );
@@ -126,10 +132,10 @@ export class AutopayUseCase {
       );
     }
 
-    return autopay;
+    return new AutoPaySerializer(autopay);
   }
 
-  async deleteAutopay(id: string, me: string): Promise<AutoPayEntity> {
+  async deleteAutopay(id: string, me: string): Promise<AutoPaySerializer> {
     let autopay = await this.queryBus.execute<GetAutopayQuery, AutoPayEntity>(
       new GetAutopayQuery(id),
     );
@@ -138,12 +144,15 @@ export class AutopayUseCase {
       throw new ForbiddenException(MessageEnum.FORBIDDEN);
     }
 
-    return this.commandBus.execute<DeleteAutopayCommand, AutoPayEntity>(
-      new DeleteAutopayCommand(id),
-    );
+    const res = await this.commandBus.execute<
+      DeleteAutopayCommand,
+      AutoPayEntity
+    >(new DeleteAutopayCommand(id));
+
+    return new AutoPaySerializer(res);
   }
 
-  async getAutopay(id: string, me: string): Promise<AutoPayEntity> {
+  async getAutopay(id: string, me: string): Promise<AutoPaySerializer> {
     const autopay = await this.queryBus.execute<GetAutopayQuery, AutoPayEntity>(
       new GetAutopayQuery(id),
     );
@@ -158,25 +167,40 @@ export class AutopayUseCase {
 
     autopay.setUISchema(process.UISchema);
 
-    return autopay;
+    return new AutoPaySerializer(autopay);
   }
 
   async getAllAutopays(
     request: ListAutopayRequest,
     me: string,
-  ): Promise<findAndCountAll<FindAutopayInterface<AutoPayEntity>>> {
-    return this.queryBus.execute<
+  ): Promise<findAndCountAll<FindAutopayInterface<AutoPaySerializer>>> {
+    const res = await this.queryBus.execute<
       GetAutopaysQuery,
       findAndCountAll<FindAutopayInterface<AutoPayEntity>>
     >(new GetAutopaysQuery(request, me));
+
+    return {
+      count: res.count,
+      rows: res.rows.map((x) => ({
+        count: x.count,
+        id: x.id,
+        title: x.title,
+        values: x.values.map((y) => new AutoPaySerializer(y)),
+      })),
+    };
   }
 
   async getAllAutopaysAdmin(
     request: ListAutopayAdminRequest,
-  ): Promise<findAndCountAll<AutoPayEntity>> {
-    return this.queryBus.execute<
+  ): Promise<findAndCountAll<AutoPaySerializer>> {
+    const res = await this.queryBus.execute<
       GetAutopaysAdminQuery,
       findAndCountAll<AutoPayEntity>
     >(new GetAutopaysAdminQuery(request));
+
+    return {
+      count: res.count,
+      rows: res.rows.map((x) => new AutoPaySerializer(x)),
+    };
   }
 }

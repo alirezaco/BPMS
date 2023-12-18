@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { FileSerializer, ProcessSerializer } from 'application/serializers';
 import {
   CreateFileCommand,
   CreateProcessCommand,
@@ -42,18 +43,23 @@ export class ProcessUseCase {
   async create(
     request: CreateProcessRequest,
     me: string,
-  ): Promise<ProcessEntity> {
-    return this.commandBus.execute<CreateProcessCommand, ProcessEntity>(
+  ): Promise<ProcessSerializer> {
+    const res = await this.commandBus.execute<
+      CreateProcessCommand,
+      ProcessEntity
+    >(
       new CreateProcessCommand(
         this.processMapper.convertRequestToEntity(request, me),
       ),
     );
+
+    return new ProcessSerializer(res);
   }
 
   async update(
     request: UpdateProcessRequest,
     _: string, //user id
-  ): Promise<ProcessEntity> {
+  ): Promise<ProcessSerializer> {
     let process = await this.queryBus.execute<GetProcessQuery, ProcessEntity>(
       new GetProcessQuery(request.id),
     );
@@ -151,48 +157,65 @@ export class ProcessUseCase {
       );
     }
 
-    return process;
+    return new ProcessSerializer(process);
   }
 
-  async delete(id: string): Promise<ProcessEntity> {
-    return this.commandBus.execute<DeleteProcessCommand, ProcessEntity>(
-      new DeleteProcessCommand(id),
-    );
+  async delete(id: string): Promise<ProcessSerializer> {
+    const res = await this.commandBus.execute<
+      DeleteProcessCommand,
+      ProcessEntity
+    >(new DeleteProcessCommand(id));
+
+    return new ProcessSerializer(res);
   }
 
-  async getProcess(id: string): Promise<ProcessEntity> {
-    return this.queryBus.execute<GetProcessQuery, ProcessEntity>(
+  async getProcess(id: string): Promise<ProcessSerializer> {
+    const res = await this.queryBus.execute<GetProcessQuery, ProcessEntity>(
       new GetProcessQuery(id),
     );
+
+    return new ProcessSerializer(res);
   }
 
   async getProcesses(
     request: ListProcessesRequest,
     roles: string[],
-  ): Promise<findAndCountAll<ProcessEntity>> {
-    return this.queryBus.execute<
+  ): Promise<findAndCountAll<ProcessSerializer>> {
+    const res = await this.queryBus.execute<
       GetProcessesCommand,
       findAndCountAll<ProcessEntity>
     >(new GetProcessesCommand(request, roles));
+
+    return {
+      count: res.count,
+      rows: res.rows.map((x) => new ProcessSerializer(x)),
+    };
   }
 
   async getProcessesAdmin(
     request: ListProcessesAdminRequest,
-  ): Promise<findAndCountAll<ProcessEntity>> {
-    return this.queryBus.execute<
+  ): Promise<findAndCountAll<ProcessSerializer>> {
+    const res = await this.queryBus.execute<
       GetProcessesAdminQuery,
       findAndCountAll<ProcessEntity>
     >(new GetProcessesAdminQuery(request));
+
+    return {
+      count: res.count,
+      rows: res.rows.map((x) => new ProcessSerializer(x)),
+    };
   }
 
   async createFile(
     request: CreateFileRequest,
     me: string,
-  ): Promise<FileEntity> {
-    return this.commandBus.execute<CreateFileCommand, FileEntity>(
+  ): Promise<FileSerializer> {
+    const res = await this.commandBus.execute<CreateFileCommand, FileEntity>(
       new CreateFileCommand(
         this.fileMapper.convertRequestToEntity(request, me),
       ),
     );
+
+    return new FileSerializer(res);
   }
 }

@@ -231,6 +231,11 @@ message ArrayProcess {
   repeated Processes rows = 2;
 }
 
+message ActiveProcess {
+  string id = 1;
+  string name = 2;
+}
+
 message ListProcessesRequest {
   int32 limit = 1;
   int32 skip = 2;
@@ -238,7 +243,7 @@ message ListProcessesRequest {
 
 message ListProcessesResponse {
   Meta meta = 1;
-  optional ArrayProcess data = 2;
+  repeated ActiveProcess data = 2;
 }
 
 message ListProcessesAdminRequest {

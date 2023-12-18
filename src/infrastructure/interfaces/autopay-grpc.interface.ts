@@ -211,6 +211,11 @@ export interface ArrayProcess {
   rows: Processes[];
 }
 
+export interface ActiveProcess {
+  id: string;
+  name: string;
+}
+
 export interface ListProcessesRequest {
   limit: number;
   skip: number;
@@ -218,7 +223,7 @@ export interface ListProcessesRequest {
 
 export interface ListProcessesResponse {
   meta: Meta | undefined;
-  data?: ArrayProcess | undefined;
+  data: ActiveProcess[];
 }
 
 export interface ListProcessesAdminRequest {

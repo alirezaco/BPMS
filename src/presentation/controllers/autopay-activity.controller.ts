@@ -11,7 +11,6 @@ import {
   Meta,
 } from 'infrastructure/interfaces';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { AutoPayActivitySerializer } from 'presentation/serializers';
 
 @GrpcService(AUTOPAY_SERVICE_NAME)
 export class AutopayActivityController
@@ -50,10 +49,7 @@ export class AutopayActivityController
         meta: {
           status: HttpStatus.OK,
         },
-        data: {
-          count: data.count,
-          rows: data.rows.map((x) => new AutoPayActivitySerializer(x)),
-        },
+        data,
       };
     } catch (error) {
       return this.GrpcErrorHandler(error);
