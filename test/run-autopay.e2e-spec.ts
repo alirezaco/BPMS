@@ -9,7 +9,7 @@ import {
   StepSchema,
 } from 'domain/models';
 import { Model } from 'mongoose';
-import { initialApp } from './utils';
+import { dropDbUtil, initialApp } from './utils';
 import {
   apiRequestMock,
   apiSteps,
@@ -60,7 +60,7 @@ describe('RunAutopay (e2e)', () => {
   });
 
   afterAll(async () => {
-    // await dropDbUtil(app);
+    await dropDbUtil(app);
   });
 
   beforeEach(async () => {
