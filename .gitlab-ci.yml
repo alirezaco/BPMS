@@ -1,0 +1,406 @@
+variables:
+  IMAGE_NAME: reg.ariaco.org/wide/wide-backend-autopay-service
+  IMAGE_DEV_TAG: dev
+  IMAGE_QA_TAG: qa
+  IMAGE_PROD_TAG: latest
+  SUCCESS_COLOR: "#198754"
+  FAIELD_COLOR: "#FF0000"
+
+stages:
+  - build
+  - deploy
+
+build-dev-job:
+  stage: build
+  image: docker:24.0
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:24.0-dind
+  tags:
+    - ci
+  only:
+    - develop
+  before_script:
+    - apk add curl
+    - echo "$REGISTRY_PASS" | docker login $REGISTRY_HOST --username $REGISTRY_USER --password-stdin
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_DEV_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_DEV_TAG
+  after_script:
+    - if [ ${CI_JOB_STATUS} == "success" ]; then color=$SUCCESS_COLOR; status="✅ SUCCESS ✅"; state="Successfully publish image in container registery."; else color=$FAIELD_COLOR; status="⛔️ FAIELD ⛔️"; state="Failed publish image in container registery."; fi
+    - |
+      curl --request POST \
+      --url ${HOOK_URL} \
+      --header 'Content-Type: application/json' \
+      --data '{"attachments": [
+      		{
+      			"color": "'"$color"'",
+                "fields": [
+                {
+                    "short":true,
+                    "title":"Status",
+                    "value":"'"$status"'"
+                },
+                {
+                    "short":true,
+                    "title":"State",
+                    "value":"'"$state"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit message",
+                    "value":"'"$CI_COMMIT_MESSAGE"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit link",
+                    "value":"'"$CI_REPOSITORY_URL"'"
+                },
+                {
+                    "short":true,
+                    "title":"Repository",
+                    "value":"'"$CI_PROJECT_NAME"'"
+                },
+                {
+                    "short":true,
+                    "title":"Author",
+                    "value":"'"$CI_COMMIT_AUTHOR"'"
+                },
+                {
+                    "short":true,
+                    "title":"Branch",
+                    "value":"'"$CI_COMMIT_BRANCH"'"
+                },
+                {
+                    "short":true,
+                    "title":"Stage",
+                    "value":"'"$CI_JOB_STAGE"'"
+                }
+            ]}], "text": "'"$status"'"}'
+
+build-qa-job:
+  stage: build
+  image: docker:24.0
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:24.0-dind
+  tags:
+    - ci
+  only:
+    - qa
+  before_script:
+    - apk add curl
+    - echo "$REGISTRY_PASS" | docker login $REGISTRY_HOST --username $REGISTRY_USER --password-stdin
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_QA_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_QA_TAG
+  after_script:
+    - if [ ${CI_JOB_STATUS} == "success" ]; then color=$SUCCESS_COLOR; status="✅ SUCCESS ✅"; state="Successfully publish image in container registery."; else color=$FAIELD_COLOR; status="⛔️ FAIELD ⛔️"; state="Failed publish image in container registery."; fi
+    - |
+      curl --request POST \
+      --url ${HOOK_URL} \
+      --header 'Content-Type: application/json' \
+      --data '{"attachments": [
+      		{
+      			"color": "'"$color"'",
+                "fields": [
+                {
+                    "short":true,
+                    "title":"Status",
+                    "value":"'"$status"'"
+                },
+                {
+                    "short":true,
+                    "title":"State",
+                    "value":"'"$state"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit message",
+                    "value":"'"$CI_COMMIT_MESSAGE"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit link",
+                    "value":"'"$CI_REPOSITORY_URL"'"
+                },
+                {
+                    "short":true,
+                    "title":"Repository",
+                    "value":"'"$CI_PROJECT_NAME"'"
+                },
+                {
+                    "short":true,
+                    "title":"Author",
+                    "value":"'"$CI_COMMIT_AUTHOR"'"
+                },
+                {
+                    "short":true,
+                    "title":"Branch",
+                    "value":"'"$CI_COMMIT_BRANCH"'"
+                },
+                {
+                    "short":true,
+                    "title":"Stage",
+                    "value":"'"$CI_JOB_STAGE"'"
+                }
+            ]}], "text": "'"$status"'"}'
+
+build-prod-job:
+  stage: build
+  image: docker:24.0
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:24.0-dind
+  tags:
+    - ci
+  only:
+    - main
+  before_script:
+    - apk add curl
+    - echo "$REGISTRY_PASS" | docker login $REGISTRY_HOST --username $REGISTRY_USER --password-stdin
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_PROD_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_PROD_TAG
+  after_script:
+    - if [ ${CI_JOB_STATUS} == "success" ]; then color=$SUCCESS_COLOR; status="✅ SUCCESS ✅"; state="Successfully publish image in container registery."; else color=$FAIELD_COLOR; status="⛔️ FAIELD ⛔️"; state="Failed publish image in container registery."; fi
+    - |
+      curl --request POST \
+      --url ${HOOK_URL} \
+      --header 'Content-Type: application/json' \
+      --data '{"attachments": [
+      		{
+      			"color": "'"$color"'",
+                "fields": [
+                {
+                    "short":true,
+                    "title":"Status",
+                    "value":"'"$status"'"
+                },
+                {
+                    "short":true,
+                    "title":"State",
+                    "value":"'"$state"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit message",
+                    "value":"'"$CI_COMMIT_MESSAGE"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit link",
+                    "value":"'"$CI_REPOSITORY_URL"'"
+                },
+                {
+                    "short":true,
+                    "title":"Repository",
+                    "value":"'"$CI_PROJECT_NAME"'"
+                },
+                {
+                    "short":true,
+                    "title":"Author",
+                    "value":"'"$CI_COMMIT_AUTHOR"'"
+                },
+                {
+                    "short":true,
+                    "title":"Branch",
+                    "value":"'"$CI_COMMIT_BRANCH"'"
+                },
+                {
+                    "short":true,
+                    "title":"Stage",
+                    "value":"'"$CI_JOB_STAGE"'"
+                }
+            ]}], "text": "'"$status"'"}'
+
+
+deploy-dev-job:
+  stage: deploy
+  tags:
+    - cd
+  only:
+    - develop
+  script:
+     - sshpass -p "$SERVER_DEV_PASS" ssh -o "StrictHostKeyChecking=no" $SERVER_DEV_USER@$SERVER_DEV_HOST "docker pull $IMAGE_NAME:$IMAGE_DEV_TAG && docker service update $SERVER_DEV_SERVICE --image $IMAGE_NAME:$IMAGE_DEV_TAG --force && yes | docker system prune -a"
+  after_script:
+    - if [ ${CI_JOB_STATUS} == "success" ]; then color=$SUCCESS_COLOR; status="✌🏻 DEPLOY ✌🏻"; state="New code deploy on Development server."; else color=$FAIELD_COLOR; status="🔥 FIRE! 🔥"; state="Unfortunately your image not updated on Development server"; fi
+    - |
+      curl --request POST \
+      --url ${HOOK_URL} \
+      --header 'Content-Type: application/json' \
+      --data '{"attachments": [
+      		{
+      			"color": "'"$color"'",
+                "fields": [
+                {
+                    "short":true,
+                    "title":"Status",
+                    "value":"'"$status"'"
+                },
+                {
+                    "short":true,
+                    "title":"State",
+                    "value":"'"$state"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit message",
+                    "value":"'"$CI_COMMIT_MESSAGE"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit link",
+                    "value":"'"$CI_REPOSITORY_URL"'"
+                },
+                {
+                    "short":true,
+                    "title":"Repository",
+                    "value":"'"$CI_PROJECT_NAME"'"
+                },
+                {
+                    "short":true,
+                    "title":"Author",
+                    "value":"'"$CI_COMMIT_AUTHOR"'"
+                },
+                {
+                    "short":true,
+                    "title":"Branch",
+                    "value":"'"$CI_COMMIT_BRANCH"'"
+                },
+                {
+                    "short":true,
+                    "title":"Stage",
+                    "value":"'"$CI_JOB_STAGE"'"
+                }
+            ]}], "text": "'"$status"'"}'
+
+deploy-qa-job:
+  stage: deploy
+  tags:
+    - cd
+  only:
+    - qa
+  script:
+    - sshpass -p "$SERVER_QA_PASS" ssh -o "StrictHostKeyChecking=no" $SERVER_QA_USER@$SERVER_QA_HOST "kubectl rollout restart --namespace $SERVER_QA_NAMESPACE deployment $SERVER_QA_SERVICE"
+  after_script:
+    - if [ ${CI_JOB_STATUS} == "success" ]; then color=$SUCCESS_COLOR; status="✌🏻 DEPLOY ✌🏻"; state="New code deploy on Production server."; else color=$FAIELD_COLOR; status="🔥 FIRE! 🔥"; state="Unfortunately your image not updated on Production server."; fi
+    - |
+      curl --request POST \
+      --url ${HOOK_URL} \
+      --header 'Content-Type: application/json' \
+      --data '{"attachments": [
+      		{
+      			"color": "'"$color"'",
+                "fields": [
+                {
+                    "short":true,
+                    "title":"Status",
+                    "value":"'"$status"'"
+                },
+                {
+                    "short":true,
+                    "title":"State",
+                    "value":"'"$state"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit message",
+                    "value":"'"$CI_COMMIT_MESSAGE"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit link",
+                    "value":"'"$CI_REPOSITORY_URL"'"
+                },
+                {
+                    "short":true,
+                    "title":"Repository",
+                    "value":"'"$CI_PROJECT_NAME"'"
+                },
+                {
+                    "short":true,
+                    "title":"Author",
+                    "value":"'"$CI_COMMIT_AUTHOR"'"
+                },
+                {
+                    "short":true,
+                    "title":"Branch",
+                    "value":"'"$CI_COMMIT_BRANCH"'"
+                },
+                {
+                    "short":true,
+                    "title":"Stage",
+                    "value":"'"$CI_JOB_STAGE"'"
+                }
+            ]}], "text": "'"$status"'"}'
+
+
+deploy-prod-job:
+  stage: deploy
+  tags:
+    - cd
+  only:
+    - main
+  script:
+    - sshpass -p "$SERVER_PROD_PASS" ssh -o "StrictHostKeyChecking=no" $SERVER_PROD_USER@$SERVER_PROD_HOST "kubectl rollout restart --namespace $SERVER_PROD_NAMESPACE deployment $SERVER_PROD_SERVICE"
+  after_script:
+    - if [ ${CI_JOB_STATUS} == "success" ]; then color=$SUCCESS_COLOR; status="✌🏻 DEPLOY ✌🏻"; state="New code deploy on Production server."; else color=$FAIELD_COLOR; status="🔥 FIRE! 🔥"; state="Unfortunately your image not updated on Production server."; fi
+    - |
+      curl --request POST \
+      --url ${HOOK_URL} \
+      --header 'Content-Type: application/json' \
+      --data '{"attachments": [
+      		{
+      			"color": "'"$color"'",
+                "fields": [
+                {
+                    "short":true,
+                    "title":"Status",
+                    "value":"'"$status"'"
+                },
+                {
+                    "short":true,
+                    "title":"State",
+                    "value":"'"$state"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit message",
+                    "value":"'"$CI_COMMIT_MESSAGE"'"
+                },
+                {
+                    "short":true,
+                    "title":"Commit link",
+                    "value":"'"$CI_REPOSITORY_URL"'"
+                },
+                {
+                    "short":true,
+                    "title":"Repository",
+                    "value":"'"$CI_PROJECT_NAME"'"
+                },
+                {
+                    "short":true,
+                    "title":"Author",
+                    "value":"'"$CI_COMMIT_AUTHOR"'"
+                },
+                {
+                    "short":true,
+                    "title":"Branch",
+                    "value":"'"$CI_COMMIT_BRANCH"'"
+                },
+                {
+                    "short":true,
+                    "title":"Stage",
+                    "value":"'"$CI_JOB_STAGE"'"
+                }
+            ]}], "text": "'"$status"'"}'
