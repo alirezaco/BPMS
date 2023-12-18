@@ -28,6 +28,6 @@ COPY --from=builder /home/node/app/node_modules ./node_modules
 COPY --from=builder /home/node/app/dist ./dist
 COPY --from=builder /home/node/app/package.json ./package.json
 
-EXPOSE 3020
+EXPOSE 3113
 
 CMD [ "npm", "run", "start:prod" ]
