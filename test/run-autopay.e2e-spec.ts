@@ -23,6 +23,7 @@ import {
   grpcRequestMock,
   grpcSteps,
   invalidAutopayWithRetry,
+  invalidAutopayWithoutRetry,
   simpleSteps,
 } from './mocks';
 import { ActivityStatusEnum, ProcessingStatusEnum } from 'infrastructure/enum';
@@ -70,7 +71,7 @@ describe('RunAutopay (e2e)', () => {
     await processModel.deleteMany({ _id: baseProcessMock._id });
     await autopayModel.deleteMany({ _id: autopayMock._id });
     await fileModel.deleteMany({});
-    // await activityModel.deleteMany({ autopay_id: autopayMock._id });
+    await activityModel.deleteMany({ autopay_id: autopayMock._id });
   });
 
   const insertProcess = async (steps: StepSchema[]) => {
@@ -169,7 +170,7 @@ describe('RunAutopay (e2e)', () => {
     await initTests(complexSteps);
   });
 
-  it('invalid autopay', async () => {
+  it('invalid autopay with retry', async () => {
     apiRequestMock.mockRejectedValue(() => ({
       message: '',
     }));
@@ -188,6 +189,34 @@ describe('RunAutopay (e2e)', () => {
 
     await checkExistActivity(ActivityStatusEnum.FAILED);
 
-    console.log(await failedQueue.count());
+    const failedCount = await failedQueue.count();
+
+    expect(failedCount).toBeGreaterThanOrEqual(1);
+  });
+
+  it('invalid autopay without retry', async () => {
+    apiRequestMock.mockRejectedValue(() => ({
+      message: '',
+    }));
+
+    await insertProcess(invalidAutopayWithoutRetry);
+
+    const beforeCount = await failedQueue.count();
+
+    await processQueue.execute({
+      data: { autopayId: autopayMock._id.toString() },
+    } as any);
+
+    const afterCount = await failedQueue.count();
+
+    const autopay = await autopayModel.findOne({ _id: autopayMock._id });
+
+    expect(autopay).toBeDefined();
+    expect(autopay.last_run_at).not.toBe(null);
+    expect(autopay.processing_status).toBe(ProcessingStatusEnum.FAILED);
+
+    await checkExistActivity(ActivityStatusEnum.FAILED);
+
+    expect(beforeCount).toBeGreaterThanOrEqual(afterCount);
   });
 });

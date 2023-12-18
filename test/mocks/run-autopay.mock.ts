@@ -742,3 +742,47 @@ export const invalidAutopayWithRetry: StepSchema[] = [
     },
   },
 ];
+
+export const invalidAutopayWithoutRetry: StepSchema[] = [
+  {
+    _id: new Types.ObjectId(),
+    name: 'step1',
+    type: ProcessStepTypeEnum.API,
+    is_payment: false,
+    fail_step: 'failed',
+    api: {
+      url: 'http://test.com/',
+      method: 'post',
+      headers: [],
+      body: [],
+      params: [],
+      query: [],
+    },
+  },
+  {
+    _id: new Types.ObjectId('657ac17efc13ae364bfa20e3'),
+    name: 'failed',
+    type: ProcessStepTypeEnum.COMPARISON,
+    is_payment: false,
+    is_final: true,
+    comparison: {
+      func: ComparisonFunctionEnum.Eq,
+      children: [
+        {
+          func: ComparisonFunctionEnum.Eq,
+          left: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          right: {
+            source: SourceEnum.AUTO_PAY,
+            key: 'name',
+            source_key: 'name',
+          },
+          children: [],
+        },
+      ],
+    },
+  },
+];
