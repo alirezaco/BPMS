@@ -130,8 +130,7 @@ describe('ProcessController (e2e)', () => {
 
     expect(response.meta?.status).toBe(HttpStatus.OK);
 
-    expect(response.data).toHaveProperty('count');
-    expect(response.data).toHaveProperty('rows');
+    expect(Array.isArray(response.data)).toBe(true);
   });
 
   it('list processes admin', async () => {

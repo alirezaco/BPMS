@@ -148,7 +148,7 @@ export class ProcessController
 
       const processes = await this.processUseCase.getProcesses(
         request,
-        roles.map((x) => x.toString()),
+        roles[0].toString().split(','),
       );
 
       return {
