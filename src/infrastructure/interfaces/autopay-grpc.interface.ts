@@ -240,6 +240,18 @@ export interface ListProcessesAdminResponse {
   data?: ArrayProcess | undefined;
 }
 
+export interface AutopayProcess {
+  id: string;
+  name: string;
+}
+
+export interface UserAutopay {
+  id: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+}
+
 export interface Autopay {
   id: string;
   owner: string;
@@ -260,6 +272,8 @@ export interface Autopay {
   last_run_at: string;
   processing_status: string;
   ui_schema: UISchema[];
+  process?: AutopayProcess | undefined;
+  user?: UserAutopay | undefined;
 }
 
 export interface CreateAutopayRequest {

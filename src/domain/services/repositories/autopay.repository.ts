@@ -1,6 +1,6 @@
 import { FilterQuery, Model, Types } from 'mongoose';
 import { BaseRepository } from './base.repository';
-import { AutoPayEntity, AutoPaySchema } from 'domain/models';
+import { AutoPayEntity, AutoPaySchema, ProcessSchema } from 'domain/models';
 import { AutoPayMapper } from '../mappers';
 import { InjectModel } from '@nestjs/mongoose';
 import { findAndCountAll } from 'infrastructure/database';
@@ -91,6 +91,15 @@ export class AutoPayRepository extends BaseRepository<
       where,
       limit: request.limit,
       skip: request.skip,
+      populate: [
+        {
+          path: 'process',
+          select: 'name id',
+          localField: 'process_id',
+          foreignField: '_id',
+          model: ProcessSchema.name,
+        },
+      ],
     });
   }
 

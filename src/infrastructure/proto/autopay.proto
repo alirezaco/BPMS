@@ -260,6 +260,18 @@ message ListProcessesAdminResponse {
   optional ArrayProcess data = 2;
 }
 
+message AutopayProcess {
+  string id = 1;
+  string name = 2;
+}
+
+message UserAutopay {
+  string id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string phone = 4;
+}
+
 message Autopay {
   string id = 1;
   string owner = 2;
@@ -281,6 +293,8 @@ message Autopay {
   string last_run_at = 16;
   string processing_status = 17;
   repeated UISchema ui_schema = 19;
+  optional AutopayProcess process = 20;
+  optional UserAutopay user = 21;
 }
 
 message CreateAutopayRequest {

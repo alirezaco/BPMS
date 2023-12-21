@@ -60,7 +60,8 @@ export abstract class BaseRepository<
       .find(filter.where, filter.include)
       .sort(filter.order)
       .skip(filter.skip)
-      .limit(filter.limit);
+      .limit(filter.limit)
+      .populate(filter.populate || []);
     const count = await this.model.countDocuments(filter.where);
 
     return {

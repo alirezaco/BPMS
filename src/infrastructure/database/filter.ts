@@ -1,4 +1,9 @@
-import { ProjectionType, FilterQuery, SortOrder } from 'mongoose';
+import {
+  ProjectionType,
+  FilterQuery,
+  SortOrder,
+  PopulateOptions,
+} from 'mongoose';
 
 export interface FilterType<Model> {
   /**
@@ -32,4 +37,9 @@ export interface FilterType<Model> {
    * Skip the results;
    */
   skip?: number;
+
+  /**
+   *  populate
+   */
+  populate?: PopulateOptions[];
 }
