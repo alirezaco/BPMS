@@ -98,6 +98,7 @@ export class AutoPayRepository extends BaseRepository<
           localField: 'process_id',
           foreignField: '_id',
           model: ProcessSchema.name,
+          strictPopulate: false,
         },
       ],
     });
