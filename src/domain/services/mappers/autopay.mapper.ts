@@ -52,6 +52,10 @@ export class AutoPayMapper implements BaseMapper<AutoPaySchema, AutoPayEntity> {
       lastRunAt: schema?.last_run_at,
       processingStatus: schema?.processing_status,
       data: schema?.data,
+      process: schema?.process && {
+        id: schema?.process?._id?.toString(),
+        name: schema?.process?.name,
+      },
     });
   }
 

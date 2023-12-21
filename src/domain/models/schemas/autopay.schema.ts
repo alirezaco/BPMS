@@ -44,4 +44,6 @@ export class AutoPaySchema extends BaseSchema {
 
   @Prop({ type: mongoose.Schema.Types.Mixed, default: {} })
   data: Record<string, any>;
+
+  process?: Pick<ProcessSchema, '_id' | 'name'>;
 }
