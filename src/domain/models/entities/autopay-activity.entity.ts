@@ -1,6 +1,8 @@
 import { ActivityStatusEnum } from 'infrastructure/enum';
 import { BaseEntity } from './base.entity';
 import { ResultStep, RunningStepType } from 'infrastructure/types';
+import { AutoPayEntity } from './autopay.entity';
+import { ProcessEntity } from './process.entity';
 
 export class AutoPayActivityEntity extends BaseEntity {
   autopayId: string;
@@ -13,6 +15,8 @@ export class AutoPayActivityEntity extends BaseEntity {
   paymentAmount?: number;
   RunningStep?: RunningStepType;
   responsesSteps?: ResultStep[];
+  autopay?: Pick<AutoPayEntity, 'id' | 'name'>;
+  process?: Pick<ProcessEntity, 'id' | 'name'>;
 
   constructor(initial: Partial<AutoPayActivityEntity>) {
     super(initial);
@@ -27,5 +31,7 @@ export class AutoPayActivityEntity extends BaseEntity {
     this.paymentAmount = initial?.paymentAmount || 0;
     this.RunningStep = initial?.RunningStep;
     this.responsesSteps = initial?.responsesSteps || [];
+    this.process = initial?.process;
+    this.autopay = initial?.autopay;
   }
 }

@@ -52,6 +52,14 @@ export class AutoPayActivityMapper
       paymentAmount: schema?.payment_amount,
       RunningStep: schema?.RunningStep,
       responsesSteps: schema?.responsesSteps,
+      autopay: schema?.autopay && {
+        id: schema?.autopay?._id?.toString(),
+        name: schema?.autopay?.name,
+      },
+      process: schema?.process && {
+        id: schema?.process?._id?.toString(),
+        name: schema?.process?.name,
+      },
     });
   }
 }

@@ -1,4 +1,6 @@
 import { AutoPayActivityEntity } from 'domain/models';
+import { ProcessSerializer } from './process.serializer';
+import { AutoPaySerializer } from './autopay.serializer';
 
 export class AutoPayActivitySerializer {
   id: string;
@@ -16,6 +18,8 @@ export class AutoPayActivitySerializer {
   failed_steps: string[];
   has_payment: boolean;
   payment_amount: number;
+  process?: Pick<ProcessSerializer, 'id' | 'name'>;
+  autopay?: Pick<AutoPaySerializer, 'id' | 'name'>;
 
   constructor(initial: AutoPayActivityEntity) {
     this.id = initial?.id;
@@ -33,5 +37,13 @@ export class AutoPayActivitySerializer {
     this.has_payment = initial?.hasPayment;
     this.payment_amount = initial?.paymentAmount;
     this.owner = initial?.owner;
+    this.process = initial?.process && {
+      id: initial?.process?.id,
+      name: initial?.process?.name,
+    };
+    this.autopay = initial?.autopay && {
+      id: initial?.autopay?.id,
+      name: initial?.autopay?.name,
+    };
   }
 }

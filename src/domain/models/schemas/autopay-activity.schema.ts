@@ -4,6 +4,7 @@ import mongoose, { Types } from 'mongoose';
 import { ActivityStatusEnum } from 'infrastructure/enum';
 import { ResultStep, RunningStepType } from 'infrastructure/types';
 import { AutoPaySchema } from './autopay.schema';
+import { ProcessSchema } from './process.schema';
 
 @Schema({ id: true })
 export class AutoPayActivitySchema extends BaseSchema {
@@ -37,6 +38,10 @@ export class AutoPayActivitySchema extends BaseSchema {
   @Prop({ type: mongoose.Schema.Types.Mixed, required: false, default: [] })
   responsesSteps?: ResultStep[];
 
+  autopay?: Pick<AutoPaySchema, '_id' | 'name'>;
+
+  process?: Pick<ProcessSchema, '_id' | 'name'>;
+
   static getSchema() {
     const schema = SchemaFactory.createForClass(this);
     schema.virtual('autopay', {
@@ -46,7 +51,7 @@ export class AutoPayActivitySchema extends BaseSchema {
       justOne: true,
     });
     schema.virtual('process', {
-      ref: AutoPaySchema.name,
+      ref: ProcessSchema.name,
       localField: 'process_id',
       foreignField: '_id',
       justOne: true,

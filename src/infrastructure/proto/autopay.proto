@@ -391,6 +391,16 @@ message ListAutopayAdminResponse {
   optional ArrayAutopays data = 2;
 }
 
+message ActivityAutopay {
+  string id = 1;
+  string name = 2;
+}
+
+message ActivityProcess {
+  string id = 1;
+  string name = 2;
+}
+
 message AutopayActivity {
   string id = 11;
   string owner = 12;
@@ -408,6 +418,8 @@ message AutopayActivity {
   repeated string failed_steps = 9;
   optional bool has_payment = 10;
   optional uint64 payment_amount = 19;
+  optional ActivityProcess process = 20;
+  optional ActivityAutopay autopay = 21;
 }
 
 message ArrayAutopayActivity {

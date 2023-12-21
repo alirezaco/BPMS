@@ -31,8 +31,6 @@ export class AutoPaySerializer {
   };
 
   constructor(initial: AutoPayEntity) {
-    console.log(initial);
-
     this.id = initial?.id;
     this.created_at = initial?.createdAt.toISOString();
     this.updated_at = initial?.updatedAt?.toISOString();

@@ -370,6 +370,16 @@ export interface ListAutopayAdminResponse {
   data?: ArrayAutopays | undefined;
 }
 
+export interface ActivityAutopay {
+  id: string;
+  name: string;
+}
+
+export interface ActivityProcess {
+  id: string;
+  name: string;
+}
+
 export interface AutopayActivity {
   id: string;
   owner: string;
@@ -386,6 +396,8 @@ export interface AutopayActivity {
   failed_steps: string[];
   has_payment?: boolean | undefined;
   payment_amount?: number | undefined;
+  process?: ActivityProcess | undefined;
+  autopay?: ActivityAutopay | undefined;
 }
 
 export interface ArrayAutopayActivity {
