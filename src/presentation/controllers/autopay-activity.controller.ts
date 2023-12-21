@@ -36,6 +36,7 @@ export class AutopayActivityController
     };
   }
 
+  @GrpcMethod(AUTOPAY_SERVICE_NAME)
   async listAutopayActivity(
     request: ListAutopayActivityRequest,
     _?: Metadata,
