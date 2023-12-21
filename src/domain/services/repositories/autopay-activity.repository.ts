@@ -50,6 +50,16 @@ export class AutoPayActivityRepository extends BaseRepository<
       skip: request.skip,
       limit: request.limit,
       where,
+      populate: [
+        {
+          path: 'autopay',
+          select: 'name user_id id',
+        },
+        {
+          path: 'process',
+          select: 'name id',
+        },
+      ],
     });
   }
 }

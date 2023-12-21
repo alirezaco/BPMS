@@ -20,6 +20,12 @@ export class AutoPayActivitySerializer {
   payment_amount: number;
   process?: Pick<ProcessSerializer, 'id' | 'name'>;
   autopay?: Pick<AutoPaySerializer, 'id' | 'name'>;
+  user?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    phone: string;
+  };
 
   constructor(initial: AutoPayActivityEntity) {
     this.id = initial?.id;
@@ -44,6 +50,12 @@ export class AutoPayActivitySerializer {
     this.autopay = initial?.autopay && {
       id: initial?.autopay?.id,
       name: initial?.autopay?.name,
+    };
+    this.user = initial?.user && {
+      id: initial?.user?.id,
+      first_name: initial?.user?.firstName,
+      last_name: initial?.user?.lastName,
+      phone: initial?.user?.phone,
     };
   }
 }

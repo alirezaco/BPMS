@@ -398,6 +398,7 @@ export interface AutopayActivity {
   payment_amount?: number | undefined;
   process?: ActivityProcess | undefined;
   autopay?: ActivityAutopay | undefined;
+  user?: UserAutopay | undefined;
 }
 
 export interface ArrayAutopayActivity {

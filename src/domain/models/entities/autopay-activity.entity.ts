@@ -17,6 +17,12 @@ export class AutoPayActivityEntity extends BaseEntity {
   responsesSteps?: ResultStep[];
   autopay?: Pick<AutoPayEntity, 'id' | 'name'>;
   process?: Pick<ProcessEntity, 'id' | 'name'>;
+  public user?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+  };
 
   constructor(initial: Partial<AutoPayActivityEntity>) {
     super(initial);
@@ -33,5 +39,15 @@ export class AutoPayActivityEntity extends BaseEntity {
     this.responsesSteps = initial?.responsesSteps || [];
     this.process = initial?.process;
     this.autopay = initial?.autopay;
+    this.user = initial?.user;
+  }
+
+  public setUser(user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+  }) {
+    this.user = user;
   }
 }

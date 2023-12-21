@@ -420,6 +420,7 @@ message AutopayActivity {
   optional uint64 payment_amount = 19;
   optional ActivityProcess process = 20;
   optional ActivityAutopay autopay = 21;
+  optional UserAutopay user = 22;
 }
 
 message ArrayAutopayActivity {
