@@ -52,4 +52,9 @@ export class ProcessSchema extends BaseSchema {
 
   @Prop({ type: Boolean, default: false })
   is_active: boolean;
+
+  static getSchema() {
+    const schema = SchemaFactory.createForClass(this);
+    return schema;
+  }
 }

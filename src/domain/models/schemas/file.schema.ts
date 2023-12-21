@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from './base.schema';
 
 @Schema({
@@ -10,4 +10,9 @@ export class FileSchema extends BaseSchema {
 
   @Prop({ required: true, type: String })
   value: string;
+
+  static getSchema() {
+    const schema = SchemaFactory.createForClass(this);
+    return schema;
+  }
 }

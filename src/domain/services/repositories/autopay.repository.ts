@@ -91,14 +91,11 @@ export class AutoPayRepository extends BaseRepository<
       where,
       limit: request.limit,
       skip: request.skip,
+      include: { data: 0 },
       populate: [
         {
           path: 'process',
           select: 'name id',
-          localField: 'process_id',
-          foreignField: '_id',
-          model: ProcessSchema.name,
-          strictPopulate: false,
         },
       ],
     });

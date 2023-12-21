@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from './base.schema';
 import { PeriodEnum, ProcessingStatusEnum } from 'infrastructure/enum';
 import mongoose, { Types } from 'mongoose';
@@ -46,4 +46,15 @@ export class AutoPaySchema extends BaseSchema {
   data: Record<string, any>;
 
   process?: Pick<ProcessSchema, '_id' | 'name'>;
+
+  static getScehma() {
+    const schema = SchemaFactory.createForClass(this);
+    schema.virtual('process', {
+      ref: ProcessSchema.name,
+      localField: 'process_id',
+      foreignField: '_id',
+      justOne: true,
+    });
+    return schema;
+  }
 }

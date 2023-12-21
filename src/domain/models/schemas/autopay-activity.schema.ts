@@ -1,8 +1,9 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { BaseSchema } from './base.schema';
 import mongoose, { Types } from 'mongoose';
 import { ActivityStatusEnum } from 'infrastructure/enum';
 import { ResultStep, RunningStepType } from 'infrastructure/types';
+import { AutoPaySchema } from './autopay.schema';
 
 @Schema({ id: true })
 export class AutoPayActivitySchema extends BaseSchema {
@@ -35,4 +36,21 @@ export class AutoPayActivitySchema extends BaseSchema {
 
   @Prop({ type: mongoose.Schema.Types.Mixed, required: false, default: [] })
   responsesSteps?: ResultStep[];
+
+  static getSchema() {
+    const schema = SchemaFactory.createForClass(this);
+    schema.virtual('autopay', {
+      ref: AutoPaySchema.name,
+      localField: 'autopay_id',
+      foreignField: '_id',
+      justOne: true,
+    });
+    schema.virtual('process', {
+      ref: AutoPaySchema.name,
+      localField: 'process_id',
+      foreignField: '_id',
+      justOne: true,
+    });
+    return schema;
+  }
 }

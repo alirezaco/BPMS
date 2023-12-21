@@ -19,22 +19,22 @@ export * from './file.schema';
 export const schemas: ModelDefinition[] = [
   {
     name: ProcessSchema.name,
-    schema: SchemaFactory.createForClass(ProcessSchema),
+    schema: ProcessSchema.getSchema(),
     collection: 'processes',
   },
   {
     name: AutoPaySchema.name,
-    schema: SchemaFactory.createForClass(AutoPaySchema),
+    schema: AutoPaySchema.getScehma(),
     collection: 'autopay',
   },
   {
     name: AutoPayActivitySchema.name,
-    schema: SchemaFactory.createForClass(AutoPayActivitySchema),
+    schema: AutoPayActivitySchema.getSchema(),
     collection: 'activities',
   },
   {
     name: FileSchema.name,
-    schema: SchemaFactory.createForClass(FileSchema),
+    schema: FileSchema.getSchema(),
     collection: 'files',
   },
 ];

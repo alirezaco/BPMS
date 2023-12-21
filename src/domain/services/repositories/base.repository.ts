@@ -63,6 +63,7 @@ export abstract class BaseRepository<
       .limit(filter.limit)
       .populate(filter.populate || []);
     const count = await this.model.countDocuments(filter.where);
+    console.log(result);
 
     return {
       rows: result.map((x) =>
