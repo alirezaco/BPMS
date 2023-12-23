@@ -6,3 +6,4 @@ export * from './step-result.interface';
 export * from './process-result.interface';
 export * from './job-payload.interface';
 export * from './failed-job-paylad.interface';
+export * from './user-grpc.interface';

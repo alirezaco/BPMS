@@ -1,0 +1,177 @@
+syntax = "proto3";
+
+package user;
+
+import "google/protobuf/struct.proto";
+
+service UserService {
+  rpc Create (CreateUserPayload) returns (UserCreateResponse) {}
+  rpc Find (UserFilterPayloadRequest) returns (UserFindResponse) {}
+  rpc FindById (FindUserByIdPayloadRequest) returns (UserCreateResponse) {}
+  rpc UpdateById (UpdateUserPayload) returns (UserCreateResponse) {}
+  rpc Count (UserFilterPayloadRequest) returns (UserCountResponse) {}
+  rpc FindMe (FindMeRequest) returns (FindMeResponse) {}
+}
+
+// Common
+message Meta {
+  int32 status = 1;
+  optional string message = 2;
+}
+
+message FindMeRequest {
+    string id = 1;
+}
+
+message Profile {
+    optional string national_code = 1;
+    optional string birthdate = 2;
+    optional string state = 3;
+    optional string gender = 4;
+    optional string first_name = 5;
+    optional string last_name = 6;
+    optional string email = 7;
+    optional string avatar = 8;
+    optional bool is_avatar_approved = 9;
+    optional int32 book_no = 10;
+    optional int32 book_row = 11;
+    optional bool death_status = 12;
+    optional string father_name = 13;
+    optional int32 office_code = 14;
+    optional string office_name = 15;
+    optional int32 shenasname_no = 16;
+    optional string shenasname_seri = 17;
+    optional string shenasname_serial = 18;
+    optional string death_date = 19;
+    optional string zipcode = 20;
+    optional string zipcode_desc = 21;
+    optional bool identity_verified = 22;
+  
+
+    //common
+    optional string owner = 23;
+    repeated string groups = 24;
+    repeated string partners = 25;
+    repeated string tags = 26;
+    optional string created_at = 27;
+    optional string updated_at = 28;
+    optional string updated_by = 29;
+    optional string deleted_at = 30;
+    optional string deleted_by = 31;
+    optional string restored_at = 32; 
+    optional string version = 33;
+}
+
+message Me {
+    string id = 1;
+    string phone = 2;
+    optional string status = 3;
+    optional string invited_by = 4;
+    repeated string roles = 5;
+    optional string last_login_by = 6;
+    optional Profile profile = 7;
+}
+
+message FindMeResponse {
+    Meta meta = 1;
+    optional Me data = 2;
+}
+
+message RoleGroup {
+    string client_id = 1;
+    repeated string roles = 2;
+}
+
+message FindUserByIdPayloadRequest {
+    string id = 1;
+}
+
+message UserSchemaPayload {
+    optional string status = 1;
+    string phone = 2;
+    optional string created_by_voucher = 3;
+    optional string iban = 4;
+    optional string invited_by = 5;
+    repeated string roles = 6;
+    repeated RoleGroup role_groups = 7;
+    optional string last_login_at = 8;
+    optional string last_login_by = 9;
+  
+
+    //common
+    optional string owner =10;
+    repeated string groups = 11;
+    repeated string partners = 12;
+    repeated string tags = 13;
+    optional string created_at = 14;
+    optional string updated_at = 15;
+    optional string updated_by = 16;
+    optional string deleted_at = 17;
+    optional string deleted_by = 18;
+    optional string restored_at = 19; 
+    optional string version = 20;
+}
+
+message BaseQueryRequest {
+    optional int32 skip = 1;
+    optional int32 limit = 2;
+    optional string scope = 3;
+    optional google.protobuf.Value  sort = 4;
+    map<string,string>  query = 5;
+    optional google.protobuf.Value update = 6;
+    optional google.protobuf.Value options = 7;
+    optional google.protobuf.Value  projection = 8;
+}
+
+message UserFilterPayloadRequest {
+    string filter = 1;
+}
+
+message CreateUserPayload {
+    optional string status = 1;
+    string phone = 2;
+    optional string created_by_voucher = 3;
+    optional string iban = 4;
+    optional string invited_by = 5;
+    repeated string roles = 6;
+    repeated RoleGroup role_groups = 7;
+    optional string last_login_at = 8;
+    optional string last_login_by = 9;
+
+    // common
+    repeated string tags = 10;
+    map<string, string> other_data = 11;
+}
+
+message UpdateUserPayload {
+    optional string status = 1;
+    string phone = 2;
+    optional string created_by_voucher = 3;
+    optional string iban = 4;
+    optional string invited_by = 5;
+    repeated string roles = 6;
+    repeated RoleGroup role_groups = 7;
+    optional string last_login_at = 8;
+    optional string last_login_by = 9;
+
+    // common
+    repeated string tags = 10;
+    map<string, string> other_data = 11;
+    BaseQueryRequest query = 12;
+    map<string, string> request_param = 13;
+}
+
+message UserFindResponse {
+    Meta meta = 1;
+    repeated UserSchemaPayload data = 2;
+}
+
+message UserCreateResponse {
+    Meta meta = 1;
+    optional UserSchemaPayload data = 2;
+}
+
+message UserCountResponse {
+    Meta meta = 1;
+    int32 data = 2;
+}

@@ -132,7 +132,7 @@ describe('AutopayController (e2e)', () => {
     expect(response.data).toHaveProperty('rows');
 
     expect(response.data.rows[0]).toHaveProperty('id');
-    expect(response.data.rows[0]).toHaveProperty('title');
+    expect(response.data.rows[0]).toHaveProperty('name');
     expect(response.data.rows[0]).toHaveProperty('count');
     expect(response.data.rows[0]).toHaveProperty('values');
 

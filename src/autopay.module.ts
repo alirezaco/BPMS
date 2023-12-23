@@ -20,6 +20,9 @@ import { proxies } from 'domain/services/proxies';
 import { BullModule } from '@nestjs/bull';
 import { FAILED_QUEUE, JOBS_QUEUE } from 'infrastructure/constants';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { USER_PACKAGE_NAME } from 'infrastructure/interfaces';
+import { join } from 'path';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -70,6 +73,37 @@ import { ScheduleModule } from '@nestjs/schedule';
       },
     ),
     ScheduleModule.forRoot(),
+    ClientsModule.registerAsync({
+      isGlobal: true,
+      clients: [
+        {
+          name: USER_PACKAGE_NAME,
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => ({
+            transport: Transport.GRPC,
+            options: {
+              package: USER_PACKAGE_NAME,
+              channelOptions: {
+                'grpc.max_reconnect_backoff_ms': 700,
+                'grpc.min_reconnect_backoff_ms': 200,
+                'grpc.initial_reconnect_backoff_ms': 400,
+              },
+              url: configService.get<string>(
+                'USER_GRPC_URL',
+                '127.0.0.0.1:3019',
+              ),
+              protoPath: join(
+                configService.get<string>('__proto_path'),
+                'user.proto',
+              ),
+              loader: {
+                keepCase: true,
+              },
+            },
+          }),
+        },
+      ],
+    }),
   ],
   controllers: [...controllers],
   providers: [

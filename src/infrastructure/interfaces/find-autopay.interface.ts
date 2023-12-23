@@ -1,6 +1,6 @@
 export interface FindAutopayInterface<T> {
   id: string;
-  title: string;
+  name: string;
   count: number;
   values: T[];
 }

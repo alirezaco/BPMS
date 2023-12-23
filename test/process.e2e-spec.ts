@@ -119,6 +119,7 @@ describe('ProcessController (e2e)', () => {
   it('list processes', async () => {
     const metadata = new Metadata();
     metadata.add('me', new Types.ObjectId().toString());
+    metadata.add('roles', 'admin');
 
     const response = await processController.listProcesses(
       {

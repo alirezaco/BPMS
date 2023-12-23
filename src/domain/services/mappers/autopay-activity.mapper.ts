@@ -55,6 +55,7 @@ export class AutoPayActivityMapper
       autopay: schema?.autopay && {
         id: schema?.autopay?._id?.toString(),
         name: schema?.autopay?.name,
+        userId: schema?.autopay?.user_id?.toString(),
       },
       process: schema?.process && {
         id: schema?.process?._id?.toString(),

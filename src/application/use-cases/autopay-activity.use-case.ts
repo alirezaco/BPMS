@@ -3,12 +3,16 @@ import { QueryBus } from '@nestjs/cqrs';
 import { AutoPayActivitySerializer } from 'application/serializers';
 import { GetAutopayActivitiesQuery } from 'application/services';
 import { AutoPayActivityEntity } from 'domain/models';
+import { UserProxy } from 'domain/services/proxies';
 import { findAndCountAll } from 'infrastructure/database';
 import { ListAutopayActivityRequest } from 'infrastructure/interfaces';
 
 @Injectable()
 export class AutopayActivityUseCase {
-  constructor(private readonly queryBus: QueryBus) {}
+  constructor(
+    private readonly queryBus: QueryBus,
+    private readonly userProxy: UserProxy,
+  ) {}
 
   async getAutopayActivity(
     request: ListAutopayActivityRequest,
@@ -20,7 +24,18 @@ export class AutopayActivityUseCase {
 
     return {
       count: res.count,
-      rows: res.rows.map((x) => new AutoPayActivitySerializer(x)),
+      rows: await Promise.all(
+        res.rows.map(async (x) => {
+          const user = await this.userProxy.findMe(x?.autopay?.userId);
+          x.setUser({
+            firstName: user.first_name,
+            lastName: user.last_name,
+            phone: user.phone,
+            id: user.id,
+          });
+          return new AutoPayActivitySerializer(x);
+        }),
+      ),
     };
   }
 }

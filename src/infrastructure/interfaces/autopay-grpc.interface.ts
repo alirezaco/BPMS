@@ -327,7 +327,7 @@ export interface GetAutopayResponse {
 
 export interface Autopays {
   id: string;
-  title: string;
+  name: string;
   count: number;
   values: Autopay[];
 }

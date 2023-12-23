@@ -348,7 +348,7 @@ message GetAutopayResponse {
 
 message Autopays {
   string id = 1;
-  string title = 2;
+  string name = 2;
   int32 count = 3;
   repeated Autopay values = 4;
 }

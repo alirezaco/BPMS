@@ -38,7 +38,7 @@ export class AutoPayActivitySchema extends BaseSchema {
   @Prop({ type: mongoose.Schema.Types.Mixed, required: false, default: [] })
   responsesSteps?: ResultStep[];
 
-  autopay?: Pick<AutoPaySchema, '_id' | 'name'>;
+  autopay?: Pick<AutoPaySchema, '_id' | 'name' | 'user_id'>;
 
   process?: Pick<ProcessSchema, '_id' | 'name'>;
 

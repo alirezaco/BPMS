@@ -15,7 +15,7 @@ export class AutoPayActivityEntity extends BaseEntity {
   paymentAmount?: number;
   RunningStep?: RunningStepType;
   responsesSteps?: ResultStep[];
-  autopay?: Pick<AutoPayEntity, 'id' | 'name'>;
+  autopay?: Pick<AutoPayEntity, 'id' | 'name' | 'userId'>;
   process?: Pick<ProcessEntity, 'id' | 'name'>;
   public user?: {
     id: string;

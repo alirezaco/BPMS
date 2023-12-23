@@ -7,7 +7,6 @@ import {
   GetAutopayQuery,
   GetAutopaysAdminQuery,
   GetAutopaysQuery,
-  GetProcessQuery,
   UpdateAutoPayDataCommand,
   UpdateAutoPayNameCommand,
   UpdateAutopayDirectDebitCommand,
@@ -15,8 +14,9 @@ import {
   UpdateAutopayMaxAmountCommand,
   UpdateAutopayPeriodCommand,
 } from 'application/services';
-import { AutoPayEntity, ProcessEntity } from 'domain/models';
+import { AutoPayEntity } from 'domain/models';
 import { AutoPayMapper } from 'domain/services';
+import { UserProxy } from 'domain/services/proxies';
 import { findAndCountAll } from 'infrastructure/database';
 import { MessageEnum } from 'infrastructure/enum';
 import {
@@ -34,6 +34,7 @@ export class AutopayUseCase {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
     private readonly autoPayMapper: AutoPayMapper,
+    private readonly userProxy: UserProxy,
   ) {}
 
   async createAutopay(
@@ -161,11 +162,14 @@ export class AutopayUseCase {
       throw new ForbiddenException(MessageEnum.FORBIDDEN);
     }
 
-    const process = await this.queryBus.execute<GetProcessQuery, ProcessEntity>(
-      new GetProcessQuery(autopay.processId),
-    );
+    const user = await this.userProxy.findMe(autopay.userId);
 
-    autopay.setUISchema(process.UISchema);
+    autopay.setUser({
+      firstName: user.first_name,
+      lastName: user.last_name,
+      phone: user.phone,
+      id: user.id,
+    });
 
     return new AutoPaySerializer(autopay);
   }
@@ -184,7 +188,7 @@ export class AutopayUseCase {
       rows: res.rows.map((x) => ({
         count: x.count,
         id: x.id,
-        title: x.title,
+        name: x.name,
         values: x.values.map((y) => new AutoPaySerializer(y)),
       })),
     };
@@ -200,7 +204,18 @@ export class AutopayUseCase {
 
     return {
       count: res.count,
-      rows: res.rows.map((x) => new AutoPaySerializer(x)),
+      rows: await Promise.all(
+        res.rows.map(async (x) => {
+          const user = await this.userProxy.findMe(x.userId);
+          x.setUser({
+            firstName: user.first_name,
+            lastName: user.last_name,
+            phone: user.phone,
+            id: user.id,
+          });
+          return new AutoPaySerializer(x);
+        }),
+      ),
     };
   }
 }

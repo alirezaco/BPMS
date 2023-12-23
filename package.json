@@ -21,7 +21,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "proto:autopay": "npx protoc --experimental_allow_proto3_optional  --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./src/infrastructure/proto --ts_proto_out=src/infrastructure/interfaces/  src/infrastructure/proto/autopay.proto --ts_proto_opt=nestJs=true --ts_proto_opt=addGrpcMetadata=true --ts_proto_opt=snakeToCamel=false --ts_proto_opt=fileSuffix=-grpc.interface"
+    "proto:autopay": "npx protoc --experimental_allow_proto3_optional  --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./src/infrastructure/proto --ts_proto_out=src/infrastructure/interfaces/  src/infrastructure/proto/autopay.proto --ts_proto_opt=nestJs=true --ts_proto_opt=addGrpcMetadata=true --ts_proto_opt=snakeToCamel=false --ts_proto_opt=fileSuffix=-grpc.interface",
+    "proto:user": "npx protoc --experimental_allow_proto3_optional  --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./src/infrastructure/proto --ts_proto_out=src/infrastructure/interfaces/  src/infrastructure/proto/user.proto --ts_proto_opt=nestJs=true --ts_proto_opt=addGrpcMetadata=true --ts_proto_opt=snakeToCamel=false --ts_proto_opt=fileSuffix=-grpc.interface"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.9.12",
