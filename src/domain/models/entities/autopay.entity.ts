@@ -31,10 +31,13 @@ export class AutoPayEntity extends BaseEntity {
     this.userId = initial?.userId;
     this.processId = initial?.processId;
     this.maxAmount = initial?.maxAmount;
-    this.allowedDirectDebit = initial?.allowedDirectDebit || false;
+    this.allowedDirectDebit =
+      initial?.allowedDirectDebit == undefined
+        ? false
+        : initial?.allowedDirectDebit;
     this.period = initial?.period;
     this.cron = initial?.cron;
-    this.isActive = initial?.isActive || true;
+    this.isActive = initial?.isActive == undefined ? true : initial?.isActive;
     this.lastRunAt = initial?.lastRunAt;
     this.processingStatus =
       initial?.processingStatus || ProcessingStatusEnum.PENDING;

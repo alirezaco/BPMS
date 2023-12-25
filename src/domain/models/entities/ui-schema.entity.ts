@@ -23,10 +23,11 @@ export class UISchemaEntity {
     this.max = initial?.max;
     this.regex = initial?.regex;
     this.errorText = initial?.errorText;
-    this.isRequired = initial?.isRequired || true;
+    this.isRequired =
+      initial?.isRequired == undefined ? true : initial?.isRequired;
     this.isMoney = initial?.isMoney || false;
     this.isEnglish = initial?.isEnglish || false;
-    this.weight = initial?.weight || 1;
+    this.weight = initial?.weight == undefined ? 1 : initial?.weight;
     this.trueText = initial?.trueText;
     this.falseText = initial?.falseText;
   }

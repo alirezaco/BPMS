@@ -28,10 +28,7 @@ export class GetAutopaysHandler implements IQueryHandler<GetAutopaysQuery> {
       id: process.id,
       name: process.name,
       count: autopays.count,
-      values: autopays.rows.map((x) => {
-        x.setUISchema(process.UISchema);
-        return x;
-      }),
+      values: autopays.rows,
     };
   }
 
