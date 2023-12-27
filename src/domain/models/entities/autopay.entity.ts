@@ -8,6 +8,7 @@ export class AutoPayEntity extends BaseEntity {
   public userId: string;
   public processId: string;
   public maxAmount: number;
+  public minAmount?: number;
   public allowedDirectDebit: boolean;
   public period: PeriodEnum;
   public cron?: string;
@@ -16,7 +17,8 @@ export class AutoPayEntity extends BaseEntity {
   public processingStatus: ProcessingStatusEnum;
   public data: Record<string, any>;
   public UISchema?: UISchemaEntity[];
-  public process?: Pick<ProcessEntity, 'id' | 'name'>;
+  public process?: Pick<ProcessEntity, 'id' | 'name' | 'serviceName'>;
+  public metadata?: Record<string, any>;
   public user?: {
     id: string;
     firstName: string;
@@ -44,6 +46,8 @@ export class AutoPayEntity extends BaseEntity {
     this.data = initial?.data || {};
     this.process = initial?.process;
     this.user = initial?.user;
+    this.metadata = initial?.metadata;
+    this.minAmount = initial?.minAmount || 0;
   }
 
   public setUISchema(uiSchema: UISchemaEntity[]) {

@@ -99,10 +99,12 @@ message Process {
   repeated string tags = 17;
 
   string name = 1;
+  string service_name = 20;
   repeated string roles = 2;
   optional string default_fail_step = 3;
   optional bool allowed_direct_debit = 4;
   optional uint64 max_amount = 5;
+  optional uint64 min_amount = 19;
   optional string period = 6;
   optional string cron = 7;
   repeated UISchema ui_schema = 8;
@@ -154,10 +156,12 @@ message StepRequest {
 
 message CreateProcessRequest {
   string name = 1;
+  string service_name = 12;
   repeated string roles = 2;
   optional string default_fail_step = 3;
   optional bool allowed_direct_debit = 4;
   optional uint64 max_amount = 5;
+  optional uint64 min_amount = 11;
   optional string period = 6;
   optional string cron = 7;
   repeated UISchema ui_schema = 8;
@@ -173,10 +177,12 @@ message CreateProcessResponse {
 message UpdateProcessRequest {
   string id = 1;
   optional string name = 2;
+  optional string service_name = 14;
   repeated string roles = 3;
   optional string default_fail_step = 4;
   optional bool allowed_direct_debit = 5;
   optional uint64 max_amount = 6;
+  optional uint64 min_amount = 13;
   optional string period = 7;
   optional string cron = 8;
   repeated UISchema ui_schema = 9;
@@ -218,9 +224,11 @@ message Processes {
   repeated string tags = 17;
 
   string name = 1;
+  string service_name = 9;
   repeated string roles = 2;
   optional bool allowed_direct_debit = 4;
   optional uint64 max_amount = 5;
+  optional uint64 min_amount = 8;
   optional string period = 6;
   optional string cron = 7;
   optional bool is_active = 18;
@@ -234,6 +242,7 @@ message ArrayProcess {
 message ActiveProcess {
   string id = 1;
   string name = 2;
+  string service_name = 3;
 }
 
 message ListProcessesRequest {
@@ -250,6 +259,7 @@ message ListProcessesAdminRequest {
   int32 limit = 2;
   int32 skip = 3;
   optional string name = 4;
+  optional string service_name = 8;
   optional bool is_active = 5;
   repeated string roles = 6;
   optional bool allowed_direct_debit = 7;
@@ -263,6 +273,7 @@ message ListProcessesAdminResponse {
 message AutopayProcess {
   string id = 1;
   string name = 2;
+  string service_name = 5;
 }
 
 message UserAutopay {
@@ -285,6 +296,7 @@ message Autopay {
   string user_id = 18;
   string process_id = 9;
   optional uint64 max_amount = 10;
+  optional uint64 min_amount = 22;
   string period = 11;
   optional string cron = 12;
   bool allowed_direct_debit = 13;
@@ -292,6 +304,7 @@ message Autopay {
   bool is_active = 15;
   string last_run_at = 16;
   string processing_status = 17;
+  string metadata = 23;
   repeated UISchema ui_schema = 19;
   optional AutopayProcess process = 20;
   optional UserAutopay user = 21;
@@ -300,11 +313,13 @@ message Autopay {
 message CreateAutopayRequest {
   string name = 1;
   string process_id = 3;
-  uint64 max_amount = 4;
+  optional uint64 max_amount = 4;
+  optional uint64 min_amount = 10;
   optional string period = 5;
   optional string cron = 6;
   optional bool allowed_direct_debit = 7;
   string data = 8;
+  string metadata = 9;
 }
 
 message CreateAutopayResponse {
@@ -316,11 +331,13 @@ message UpdateAutopayRequest {
   string id = 1;
   optional string name = 2;
   optional uint64 max_amount = 4;
+  optional uint64 min_amount = 11;
   optional string period = 5;
   optional string cron = 6;
   optional bool allowed_direct_debit = 7;
   optional string data = 8;
   optional bool is_active = 9;
+  optional string metadata = 10;
 }
 
 message UpdateAutopayResponse {
@@ -349,6 +366,7 @@ message GetAutopayResponse {
 message Autopays {
   string id = 1;
   string name = 2;
+  string service_name = 5;
   int32 count = 3;
   repeated Autopay values = 4;
 }
@@ -399,6 +417,7 @@ message ActivityAutopay {
 message ActivityProcess {
   string id = 1;
   string name = 2;
+  string service_name = 5;
 }
 
 message AutopayActivity {

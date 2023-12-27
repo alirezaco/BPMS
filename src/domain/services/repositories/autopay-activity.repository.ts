@@ -57,7 +57,7 @@ export class AutoPayActivityRepository extends BaseRepository<
         },
         {
           path: 'process',
-          select: 'name id',
+          select: 'name id service_name',
         },
       ],
     });

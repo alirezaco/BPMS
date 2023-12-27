@@ -11,6 +11,7 @@ import {
   UpdateProcessAllowedDirectDebitCommand,
   UpdateProcessIsActiveCommand,
   UpdateProcessMaxAmountCommand,
+  UpdateProcessMinAmountCommand,
   UpdateProcessNameCommand,
   UpdateProcessPeriodCommand,
   UpdateProcessRolesCommand,
@@ -117,7 +118,19 @@ export class ProcessUseCase {
       >(new UpdateProcessRolesCommand(process, request.roles));
     }
 
-    if (request.data || request.ui_schema || request.steps) {
+    if (request.min_amount) {
+      process = await this.commandBus.execute<
+        UpdateProcessMinAmountCommand,
+        ProcessEntity
+      >(new UpdateProcessMinAmountCommand(process, request.min_amount));
+    }
+
+    if (
+      request.data ||
+      request.ui_schema ||
+      request.steps ||
+      request.default_fail_step
+    ) {
       let steps = process.steps;
       let validationData = process.validationData;
       let data = process.data;

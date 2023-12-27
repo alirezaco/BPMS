@@ -82,10 +82,12 @@ export interface Process {
   restore_at?: string | undefined;
   tags: string[];
   name: string;
+  service_name: string;
   roles: string[];
   default_fail_step?: string | undefined;
   allowed_direct_debit?: boolean | undefined;
   max_amount?: number | undefined;
+  min_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
   ui_schema: UISchema[];
@@ -135,10 +137,12 @@ export interface StepRequest {
 
 export interface CreateProcessRequest {
   name: string;
+  service_name: string;
   roles: string[];
   default_fail_step?: string | undefined;
   allowed_direct_debit?: boolean | undefined;
   max_amount?: number | undefined;
+  min_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
   ui_schema: UISchema[];
@@ -154,10 +158,12 @@ export interface CreateProcessResponse {
 export interface UpdateProcessRequest {
   id: string;
   name?: string | undefined;
+  service_name?: string | undefined;
   roles: string[];
   default_fail_step?: string | undefined;
   allowed_direct_debit?: boolean | undefined;
   max_amount?: number | undefined;
+  min_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
   ui_schema: UISchema[];
@@ -198,9 +204,11 @@ export interface Processes {
   restore_at?: string | undefined;
   tags: string[];
   name: string;
+  service_name: string;
   roles: string[];
   allowed_direct_debit?: boolean | undefined;
   max_amount?: number | undefined;
+  min_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
   is_active?: boolean | undefined;
@@ -214,6 +222,7 @@ export interface ArrayProcess {
 export interface ActiveProcess {
   id: string;
   name: string;
+  service_name: string;
 }
 
 export interface ListProcessesRequest {
@@ -230,6 +239,7 @@ export interface ListProcessesAdminRequest {
   limit: number;
   skip: number;
   name?: string | undefined;
+  service_name?: string | undefined;
   is_active?: boolean | undefined;
   roles: string[];
   allowed_direct_debit?: boolean | undefined;
@@ -243,6 +253,7 @@ export interface ListProcessesAdminResponse {
 export interface AutopayProcess {
   id: string;
   name: string;
+  service_name: string;
 }
 
 export interface UserAutopay {
@@ -264,6 +275,7 @@ export interface Autopay {
   user_id: string;
   process_id: string;
   max_amount?: number | undefined;
+  min_amount?: number | undefined;
   period: string;
   cron?: string | undefined;
   allowed_direct_debit: boolean;
@@ -271,6 +283,7 @@ export interface Autopay {
   is_active: boolean;
   last_run_at: string;
   processing_status: string;
+  metadata: string;
   ui_schema: UISchema[];
   process?: AutopayProcess | undefined;
   user?: UserAutopay | undefined;
@@ -279,11 +292,13 @@ export interface Autopay {
 export interface CreateAutopayRequest {
   name: string;
   process_id: string;
-  max_amount: number;
+  max_amount?: number | undefined;
+  min_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
   allowed_direct_debit?: boolean | undefined;
   data: string;
+  metadata: string;
 }
 
 export interface CreateAutopayResponse {
@@ -295,11 +310,13 @@ export interface UpdateAutopayRequest {
   id: string;
   name?: string | undefined;
   max_amount?: number | undefined;
+  min_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
   allowed_direct_debit?: boolean | undefined;
   data?: string | undefined;
   is_active?: boolean | undefined;
+  metadata?: string | undefined;
 }
 
 export interface UpdateAutopayResponse {
@@ -328,6 +345,7 @@ export interface GetAutopayResponse {
 export interface Autopays {
   id: string;
   name: string;
+  service_name: string;
   count: number;
   values: Autopay[];
 }
@@ -378,6 +396,7 @@ export interface ActivityAutopay {
 export interface ActivityProcess {
   id: string;
   name: string;
+  service_name: string;
 }
 
 export interface AutopayActivity {

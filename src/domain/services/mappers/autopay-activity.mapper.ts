@@ -60,6 +60,7 @@ export class AutoPayActivityMapper
       process: schema?.process && {
         id: schema?.process?._id?.toString(),
         name: schema?.process?.name,
+        serviceName: schema?.process?.service_name,
       },
     });
   }

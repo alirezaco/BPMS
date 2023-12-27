@@ -9,8 +9,11 @@ import { UISchemaSchema } from './ui-schema.schema';
   id: true,
 })
 export class ProcessSchema extends BaseSchema {
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, unique: true })
   name: string;
+
+  @Prop({ type: String, required: true })
+  service_name: string;
 
   @Prop({ type: [String], required: true })
   roles: string[];
@@ -23,6 +26,9 @@ export class ProcessSchema extends BaseSchema {
 
   @Prop({ type: Number, required: false })
   max_amount?: number;
+
+  @Prop({ type: Number, required: false })
+  min_amount?: number;
 
   @Prop({ type: String, enum: PeriodEnum, required: false })
   period?: PeriodEnum;

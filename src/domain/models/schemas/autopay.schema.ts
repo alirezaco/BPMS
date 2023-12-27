@@ -20,6 +20,9 @@ export class AutoPaySchema extends BaseSchema {
   @Prop({ type: Number, required: true })
   max_amount: number;
 
+  @Prop({ type: Number, required: false, default: 0 })
+  min_amount: number;
+
   @Prop({ type: Boolean, default: false })
   allowed_direct_debit: boolean;
 
@@ -45,7 +48,10 @@ export class AutoPaySchema extends BaseSchema {
   @Prop({ type: mongoose.Schema.Types.Mixed, default: {} })
   data: Record<string, any>;
 
-  process?: Pick<ProcessSchema, '_id' | 'name'>;
+  @Prop({ type: mongoose.Schema.Types.Mixed, default: {} })
+  metadata: Record<string, any>;
+
+  process?: Pick<ProcessSchema, '_id' | 'name' | 'service_name'>;
 
   static getScehma() {
     const schema = SchemaFactory.createForClass(this);

@@ -40,7 +40,7 @@ export class AutoPayActivitySchema extends BaseSchema {
 
   autopay?: Pick<AutoPaySchema, '_id' | 'name' | 'user_id'>;
 
-  process?: Pick<ProcessSchema, '_id' | 'name'>;
+  process?: Pick<ProcessSchema, '_id' | 'name' | 'service_name'>;
 
   static getSchema() {
     const schema = SchemaFactory.createForClass(this);

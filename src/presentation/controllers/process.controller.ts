@@ -158,6 +158,7 @@ export class ProcessController
         data: processes.rows.map((x) => ({
           id: x.id,
           name: x.name,
+          service_name: x.service_name,
         })),
       };
     } catch (error) {

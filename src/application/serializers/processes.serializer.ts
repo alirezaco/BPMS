@@ -15,6 +15,8 @@ export class ProcessesSerializer {
   period?: string | undefined;
   cron?: string | undefined;
   is_active: boolean;
+  min_amount: number;
+  service_name: string;
 
   constructor(initial: ProcessEntity) {
     this.id = initial?.id;
@@ -31,5 +33,7 @@ export class ProcessesSerializer {
     this.period = initial?.period;
     this.cron = initial?.cron;
     this.is_active = initial?.isActive;
+    this.min_amount = initial?.minAmount;
+    this.service_name = initial?.serviceName;
   }
 }

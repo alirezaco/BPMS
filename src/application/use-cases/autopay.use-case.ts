@@ -12,6 +12,8 @@ import {
   UpdateAutopayDirectDebitCommand,
   UpdateAutopayIsActiveCommand,
   UpdateAutopayMaxAmountCommand,
+  UpdateAutopayMetadataCommand,
+  UpdateAutopayMinAmountCommand,
   UpdateAutopayPeriodCommand,
 } from 'application/services';
 import { AutoPayEntity } from 'domain/models';
@@ -133,6 +135,30 @@ export class AutopayUseCase {
       );
     }
 
+    if (updateAutopayRequest.metadata) {
+      autopay = await this.commandBus.execute<
+        UpdateAutopayMetadataCommand,
+        AutoPayEntity
+      >(
+        new UpdateAutopayMetadataCommand(
+          autopay,
+          JSON.parse(updateAutopayRequest.metadata),
+        ),
+      );
+    }
+
+    if (updateAutopayRequest.min_amount) {
+      autopay = await this.commandBus.execute<
+        UpdateAutopayMinAmountCommand,
+        AutoPayEntity
+      >(
+        new UpdateAutopayMinAmountCommand(
+          autopay,
+          updateAutopayRequest.min_amount,
+        ),
+      );
+    }
+
     return new AutoPaySerializer(autopay);
   }
 
@@ -189,6 +215,7 @@ export class AutopayUseCase {
         count: x.count,
         id: x.id,
         name: x.name,
+        service_name: x.service_name,
         values: x.values.map((y) => new AutoPaySerializer(y)),
       })),
     };

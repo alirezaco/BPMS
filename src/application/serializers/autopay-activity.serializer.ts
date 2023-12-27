@@ -18,7 +18,7 @@ export class AutoPayActivitySerializer {
   failed_steps: string[];
   has_payment: boolean;
   payment_amount: number;
-  process?: Pick<ProcessSerializer, 'id' | 'name'>;
+  process?: Pick<ProcessSerializer, 'id' | 'name' | 'service_name'>;
   autopay?: Pick<AutoPaySerializer, 'id' | 'name'>;
   user?: {
     id: string;
@@ -46,6 +46,7 @@ export class AutoPayActivitySerializer {
     this.process = initial?.process && {
       id: initial?.process?.id,
       name: initial?.process?.name,
+      service_name: initial?.process?.serviceName,
     };
     this.autopay = initial?.autopay && {
       id: initial?.autopay?.id,

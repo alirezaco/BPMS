@@ -27,6 +27,8 @@ export class AutoPayMapper implements BaseMapper<AutoPaySchema, AutoPayEntity> {
     schema.last_run_at = entity?.lastRunAt;
     schema.processing_status = entity?.processingStatus;
     schema.data = entity?.data;
+    schema.metadata = entity?.metadata;
+    schema.min_amount = entity?.minAmount;
 
     return schema;
   }
@@ -55,7 +57,10 @@ export class AutoPayMapper implements BaseMapper<AutoPaySchema, AutoPayEntity> {
       process: schema?.process && {
         id: schema?.process?._id?.toString(),
         name: schema?.process?.name,
+        serviceName: schema?.process?.service_name,
       },
+      metadata: schema?.metadata,
+      minAmount: schema?.min_amount,
     });
   }
 
@@ -73,6 +78,8 @@ export class AutoPayMapper implements BaseMapper<AutoPaySchema, AutoPayEntity> {
       period: request?.period && convertToPeriod(request?.period),
       cron: request?.cron,
       data: JSON.parse(request?.data || '{}'),
+      metadata: JSON.parse(request?.metadata || '{}'),
+      minAmount: request?.min_amount && +request?.min_amount.toString(),
     });
   }
 }

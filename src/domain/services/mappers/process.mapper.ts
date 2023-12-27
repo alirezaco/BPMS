@@ -40,6 +40,8 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
     schema.ui_schema = entity?.UISchema?.map((uiSchema) =>
       this.UISchemaMapper.convertEntityToSchema(uiSchema),
     );
+    schema.min_amount = entity?.minAmount;
+    schema.service_name = entity?.serviceName;
 
     return schema;
   }
@@ -70,6 +72,8 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       UISchema: schema?.ui_schema?.map((uiSchema) =>
         this.UISchemaMapper.convertSchemaToEntity(uiSchema),
       ),
+      minAmount: schema?.min_amount,
+      serviceName: schema?.service_name,
     });
   }
 
@@ -94,6 +98,8 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       ),
       data: request?.data ? JSON.parse(request?.data) : undefined,
       validationData: this.createValidationDataFromUISchema(request?.ui_schema),
+      minAmount: request?.min_amount && +request?.min_amount.toString(),
+      serviceName: request?.service_name,
     });
   }
 

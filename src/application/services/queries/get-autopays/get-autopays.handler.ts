@@ -28,6 +28,7 @@ export class GetAutopaysHandler implements IQueryHandler<GetAutopaysQuery> {
       id: process.id,
       name: process.name,
       count: autopays.count,
+      service_name: process.serviceName,
       values: autopays.rows,
     };
   }

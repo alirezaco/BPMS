@@ -21,6 +21,8 @@ export class ProcessSerializer {
   steps: StepSerializer[];
   data: string;
   is_active: boolean;
+  min_amount: number;
+  service_name: string;
 
   constructor(initial: ProcessEntity) {
     this.id = initial?.id;
@@ -43,5 +45,7 @@ export class ProcessSerializer {
     this.steps = initial?.steps?.map((step) => new StepSerializer(step));
     this.data = JSON.stringify(initial?.data || {});
     this.is_active = initial?.isActive;
+    this.min_amount = initial?.minAmount;
+    this.service_name = initial?.serviceName;
   }
 }

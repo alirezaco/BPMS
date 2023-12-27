@@ -9,6 +9,7 @@ export class ProcessEntity extends BaseEntity {
   public defaultFailStep?: string;
   public allowedDirectDebit?: boolean;
   public maxAmount?: number;
+  public minAmount?: number;
   public period?: PeriodEnum;
   public cron?: string;
   public validationData?: Record<string, any>;
@@ -16,6 +17,7 @@ export class ProcessEntity extends BaseEntity {
   public data: Record<string, any>;
   public isActive: boolean;
   public UISchema?: UISchemaEntity[];
+  public serviceName: string;
 
   constructor(initial: Partial<ProcessEntity>) {
     super(initial);
@@ -32,5 +34,7 @@ export class ProcessEntity extends BaseEntity {
     this.data = initial?.data || {};
     this.isActive = initial?.isActive || false;
     this.UISchema = initial?.UISchema || [];
+    this.minAmount = initial?.minAmount || 0;
+    this.serviceName = initial?.serviceName;
   }
 }
