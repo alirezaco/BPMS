@@ -8,7 +8,7 @@ import {
   ListAutopayAdminRequest,
   ListAutopayRequest,
 } from 'infrastructure/interfaces';
-import { CronRegexUtil } from 'infrastructure/utils';
+import { CronRegexUtil, DateUtil } from 'infrastructure/utils';
 import { PeriodEnum, ProcessingStatusEnum } from 'infrastructure/enum';
 
 export class AutoPayRepository extends BaseRepository<
@@ -120,7 +120,7 @@ export class AutoPayRepository extends BaseRepository<
             $or: [
               {
                 last_run_at: {
-                  $lt: new Date(new Date().getTime() - 60 * 60 * 1000),
+                  $lt: DateUtil.firstThisHour(),
                 },
               },
               {
@@ -131,6 +131,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
+      limit: 10,
       include: { _id: 1 },
     });
 
@@ -156,7 +157,7 @@ export class AutoPayRepository extends BaseRepository<
             $or: [
               {
                 last_run_at: {
-                  $lt: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+                  $lt: DateUtil.firstToday(),
                 },
               },
               {
@@ -167,6 +168,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
+      limit: 8,
       include: { _id: 1 },
     });
 
@@ -182,7 +184,7 @@ export class AutoPayRepository extends BaseRepository<
         $or: [
           {
             last_run_at: {
-              $lt: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+              $lt: DateUtil.firstThisPersianWeek(),
             },
           },
           {
@@ -191,6 +193,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
+      limit: 5,
       include: { _id: 1 },
     });
 
@@ -216,9 +219,7 @@ export class AutoPayRepository extends BaseRepository<
             $or: [
               {
                 last_run_at: {
-                  $lt: new Date(
-                    new Date().getTime() - 30 * 24 * 60 * 60 * 1000,
-                  ),
+                  $lt: DateUtil.firstThisPersianMonth(),
                 },
               },
               {
@@ -229,6 +230,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
+      limit: 3,
       include: { _id: 1 },
     });
 
@@ -244,7 +246,7 @@ export class AutoPayRepository extends BaseRepository<
         $or: [
           {
             last_run_at: {
-              $lt: new Date(new Date().getTime() - 365 * 24 * 60 * 60 * 1000),
+              $lt: DateUtil.firstThisPersianYear(),
             },
           },
           {
@@ -253,6 +255,7 @@ export class AutoPayRepository extends BaseRepository<
         ],
       },
       order: [['last_run_at', 'asc']],
+      limit: 1,
       include: { _id: 1 },
     });
 

@@ -1,7 +1,6 @@
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import { Queue } from 'bull';
 import { AutoPayEntity } from 'domain/models';
 import { JOBS_QUEUE, JOB_PROCESS } from 'infrastructure/constants';
@@ -11,14 +10,18 @@ import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { AutopayQueueQuery } from '../queries';
 
 @Injectable()
-export class InitialJobsCron {
+export class InitialJobsQueue implements OnModuleInit {
   constructor(
-    @InjectPinoLogger(InitialJobsCron.name)
+    @InjectPinoLogger(InitialJobsQueue.name)
     private readonly logger: PinoLogger,
     @InjectQueue(JOBS_QUEUE)
     private readonly jobsQueue: Queue,
     private readonly queryBus: QueryBus,
   ) {}
+
+  async onModuleInit() {
+    await this.reinitialJobs();
+  }
 
   private async getAutoPay(
     period: PeriodEnum,
@@ -80,28 +83,11 @@ export class InitialJobsCron {
     await this.addNewJob(autoPays);
   }
 
-  @Cron(CronExpression.EVERY_HOUR)
-  async executeHourly() {
+  async reinitialJobs() {
     await this.initialJobs(PeriodEnum.HOUR);
-  }
-
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  async executeDaily() {
     await this.initialJobs(PeriodEnum.DAY);
-  }
-
-  @Cron(CronExpression.EVERY_WEEK)
-  async executeWeekly() {
     await this.initialJobs(PeriodEnum.WEEK);
-  }
-
-  @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
-  async executeMonthly() {
     await this.initialJobs(PeriodEnum.MONTH);
-  }
-
-  @Cron('0 0 1 1 *')
-  async executeYearly() {
     await this.initialJobs(PeriodEnum.YEAR);
   }
 }

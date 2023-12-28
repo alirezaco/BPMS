@@ -10,13 +10,22 @@ import {
   RunningMessageEnum,
 } from 'infrastructure/enum';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
-import { GetAutopayQuery, GetProcessQuery } from '../queries';
+import {
+  GetAutopayActivityQuery,
+  GetAutopayQuery,
+  GetProcessQuery,
+} from '../queries';
 import {
   UpdateAutopayLastRunCommand,
   UpdateAutopayStatusCommand,
 } from '../commands';
 import { RunAutopayProcessor } from '../processors';
-import { InjectQueue, Process, Processor } from '@nestjs/bull';
+import {
+  InjectQueue,
+  OnQueueCompleted,
+  Process,
+  Processor,
+} from '@nestjs/bull';
 import {
   FAILED_QUEUE,
   JOBS_QUEUE,
@@ -24,11 +33,11 @@ import {
   JOB_PROCESS,
 } from 'infrastructure/constants';
 import { Job, Queue } from 'bull';
-import { GetAutopayActivityQuery } from '../queries/get-autopay-activity/get-autopay-activity.query';
 import {
   FailedJobPayloadInterface,
   JobPayloadInterface,
 } from 'infrastructure/interfaces';
+import { InitialJobsQueue } from './initial-jobs.queue';
 
 @Processor(JOBS_QUEUE)
 export class ProcessQueue {
@@ -40,6 +49,9 @@ export class ProcessQueue {
     private readonly runAutopayProcessor: RunAutopayProcessor,
     @InjectQueue(FAILED_QUEUE)
     private readonly failedQueue: Queue,
+    @InjectQueue(JOBS_QUEUE)
+    private readonly jobsQueue: Queue,
+    private readonly initialJobsCron: InitialJobsQueue,
   ) {}
 
   private async getAutoPay(id: string): Promise<AutoPayEntity> {
@@ -146,5 +158,14 @@ export class ProcessQueue {
     await this.updateAutoPayLastRunAt(autopay);
 
     this.logger.info(RunningMessageEnum.FINISH.replace('%id', autopay.id));
+  }
+
+  @OnQueueCompleted()
+  async onQueueCompleted() {
+    const count = await this.jobsQueue.count();
+
+    if (count <= 3) {
+      await this.initialJobsCron.reinitialJobs();
+    }
   }
 }

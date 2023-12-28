@@ -6,7 +6,6 @@ import { schemas } from './domain/models';
 import { CqrsModule } from '@nestjs/cqrs';
 import {
   commandHandlers,
-  crons,
   events,
   processors,
   queryHandlers,
@@ -19,7 +18,6 @@ import { mongoConfig } from './infrastructure/config';
 import { proxies } from 'domain/services/proxies';
 import { BullModule } from '@nestjs/bull';
 import { FAILED_QUEUE, JOBS_QUEUE } from 'infrastructure/constants';
-import { ScheduleModule } from '@nestjs/schedule';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { USER_PACKAGE_NAME } from 'infrastructure/interfaces';
 import { join } from 'path';
@@ -72,7 +70,6 @@ import { join } from 'path';
         name: FAILED_QUEUE,
       },
     ),
-    ScheduleModule.forRoot(),
     ClientsModule.registerAsync({
       isGlobal: true,
       clients: [
@@ -116,7 +113,6 @@ import { join } from 'path';
     ...events,
     ...proxies,
     ...processors,
-    ...crons,
     ...queues,
   ],
 })
