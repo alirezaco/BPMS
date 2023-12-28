@@ -11,6 +11,7 @@ export const createProcessRequestMock: CreateProcessRequest = {
   name: 'test',
   roles: [],
   allowed_direct_debit: true,
+  service_name: 'test',
   data: JSON.stringify({
     amount: 1000,
   }),

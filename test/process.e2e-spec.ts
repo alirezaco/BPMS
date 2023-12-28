@@ -18,6 +18,7 @@ describe('ProcessController (e2e)', () => {
 
   afterAll(async () => {
     await dropDbUtil(app);
+    await app.close();
   });
 
   it('create process', async () => {

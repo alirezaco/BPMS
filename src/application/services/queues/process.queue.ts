@@ -38,6 +38,7 @@ import {
   JobPayloadInterface,
 } from 'infrastructure/interfaces';
 import { InitialJobsQueue } from './initial-jobs.queue';
+import { ConfigService } from '@nestjs/config';
 
 @Processor(JOBS_QUEUE)
 export class ProcessQueue {
@@ -52,6 +53,7 @@ export class ProcessQueue {
     @InjectQueue(JOBS_QUEUE)
     private readonly jobsQueue: Queue,
     private readonly initialJobsCron: InitialJobsQueue,
+    private readonly configService: ConfigService,
   ) {}
 
   private async getAutoPay(id: string): Promise<AutoPayEntity> {
@@ -162,6 +164,10 @@ export class ProcessQueue {
 
   @OnQueueCompleted()
   async onQueueCompleted() {
+    if (this.configService.get<string>('NODE_ENV') === 'test') {
+      return;
+    }
+
     const count = await this.jobsQueue.count();
 
     if (count <= 3) {

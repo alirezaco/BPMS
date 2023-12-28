@@ -1,5 +1,9 @@
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  OnApplicationBootstrap,
+  OnModuleInit,
+} from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { Queue } from 'bull';
 import { AutoPayEntity } from 'domain/models';
@@ -8,19 +12,23 @@ import { PeriodEnum, RunningMessageEnum } from 'infrastructure/enum';
 import { AutoPayQueue } from 'infrastructure/interfaces';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { AutopayQueueQuery } from '../queries';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class InitialJobsQueue implements OnModuleInit {
+export class InitialJobsQueue implements OnApplicationBootstrap {
   constructor(
     @InjectPinoLogger(InitialJobsQueue.name)
     private readonly logger: PinoLogger,
     @InjectQueue(JOBS_QUEUE)
     private readonly jobsQueue: Queue,
     private readonly queryBus: QueryBus,
+    private readonly configService: ConfigService,
   ) {}
 
-  async onModuleInit() {
-    await this.reinitialJobs();
+  async onApplicationBootstrap() {
+    if (this.configService.get<string>('NODE_ENV') !== 'test') {
+      await this.reinitialJobs();
+    }
   }
 
   private async getAutoPay(

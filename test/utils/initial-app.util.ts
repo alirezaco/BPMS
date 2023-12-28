@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AutopayModule } from 'autopay.module';
-import { ApiProxy, GrpcProxy } from 'domain/services/proxies';
-import { apiProxyMock, grpcProxyMock } from '../mocks';
+import { ApiProxy, GrpcProxy, UserProxy } from 'domain/services/proxies';
+import { apiProxyMock, grpcProxyMock, userProxyMock } from '../mocks';
 
 export const initialApp = async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -11,6 +11,8 @@ export const initialApp = async () => {
     .useClass(grpcProxyMock)
     .overrideProvider(ApiProxy)
     .useClass(apiProxyMock)
+    .overrideProvider(UserProxy)
+    .useClass(userProxyMock)
     .compile();
 
   const app = moduleFixture.createNestApplication();

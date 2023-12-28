@@ -22,6 +22,8 @@ export const autopaySeed: SeedInterface<AutoPaySchema> = {
       process_id: new Types.ObjectId(processIdMock),
       max_amount: 10000,
       allowed_direct_debit: false,
+      metadata: {},
+      min_amount: 0,
     },
     {
       _id: new Types.ObjectId('657b139ffc13ae0569fa211e'),
@@ -38,6 +40,8 @@ export const autopaySeed: SeedInterface<AutoPaySchema> = {
       process_id: new Types.ObjectId(processIdMock),
       max_amount: 10000,
       allowed_direct_debit: false,
+      metadata: {},
+      min_amount: 0,
     },
     {
       _id: new Types.ObjectId(),
@@ -54,6 +58,8 @@ export const autopaySeed: SeedInterface<AutoPaySchema> = {
       process_id: new Types.ObjectId(processIdMock),
       max_amount: 10000,
       allowed_direct_debit: false,
+      metadata: {},
+      min_amount: 0,
     },
     {
       _id: new Types.ObjectId(),
@@ -70,6 +76,8 @@ export const autopaySeed: SeedInterface<AutoPaySchema> = {
       process_id: new Types.ObjectId(processIdMock),
       max_amount: 10000,
       allowed_direct_debit: false,
+      metadata: {},
+      min_amount: 0,
     },
     {
       _id: new Types.ObjectId(),
@@ -86,6 +94,8 @@ export const autopaySeed: SeedInterface<AutoPaySchema> = {
       process_id: new Types.ObjectId(processIdMock),
       max_amount: 10000,
       allowed_direct_debit: false,
+      metadata: {},
+      min_amount: 0,
     },
     {
       _id: new Types.ObjectId(),
@@ -102,6 +112,8 @@ export const autopaySeed: SeedInterface<AutoPaySchema> = {
       process_id: new Types.ObjectId(processIdMock),
       max_amount: 10000,
       allowed_direct_debit: false,
+      metadata: {},
+      min_amount: 0,
     },
     {
       _id: new Types.ObjectId(),
@@ -118,6 +130,8 @@ export const autopaySeed: SeedInterface<AutoPaySchema> = {
       process_id: new Types.ObjectId(processIdMock),
       max_amount: 10000,
       allowed_direct_debit: false,
+      metadata: {},
+      min_amount: 0,
     },
     {
       _id: new Types.ObjectId(),
@@ -134,6 +148,8 @@ export const autopaySeed: SeedInterface<AutoPaySchema> = {
       process_id: new Types.ObjectId(processIdMock),
       max_amount: 10000,
       allowed_direct_debit: false,
+      metadata: {},
+      min_amount: 0,
     },
     {
       _id: new Types.ObjectId(),
@@ -150,6 +166,8 @@ export const autopaySeed: SeedInterface<AutoPaySchema> = {
       process_id: new Types.ObjectId(processIdMock),
       max_amount: 10000,
       allowed_direct_debit: false,
+      metadata: {},
+      min_amount: 0,
     },
   ],
 };

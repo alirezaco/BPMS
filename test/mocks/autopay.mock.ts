@@ -12,6 +12,9 @@ export const createAutopayRequestMock: CreateAutopayRequest = {
   name: 'test',
   process_id: processIdMock,
   allowed_direct_debit: false,
+  metadata: JSON.stringify({
+    name: 'test',
+  }),
 };
 
 export const updateAutopayRequestMock: UpdateAutopayRequest = {

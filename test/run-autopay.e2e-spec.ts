@@ -61,6 +61,7 @@ describe('RunAutopay (e2e)', () => {
 
   afterAll(async () => {
     await dropDbUtil(app);
+    await app.close();
   });
 
   beforeEach(async () => {

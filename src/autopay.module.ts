@@ -90,7 +90,10 @@ import { join } from 'path';
                 '127.0.0.0.1:3019',
               ),
               protoPath: join(
-                configService.get<string>('__proto_path'),
+                configService.get<string>(
+                  '__proto_path',
+                  join(__dirname, 'infrastructure/proto/'),
+                ),
                 'user.proto',
               ),
               loader: {

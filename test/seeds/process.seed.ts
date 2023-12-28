@@ -15,9 +15,13 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       roles: ['user'],
       allowed_direct_debit: false,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {
@@ -144,9 +148,13 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       roles: ['employee'],
       allowed_direct_debit: false,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {
@@ -281,9 +289,13 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       roles: ['user'],
       allowed_direct_debit: true,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {
@@ -364,9 +376,13 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       roles: ['merchant'],
       allowed_direct_debit: true,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {
@@ -510,13 +526,17 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       created_at: new Date('2023-05-16T13:01:35.000Z'),
       updated_at: new Date('2023-01-24T06:46:38.000Z'),
       owner: new Types.ObjectId('657ac17efc13ae364bfa20fd'),
-      name: 'Solarbreeze',
+      name: 'Solarbreeeeeze',
       roles: ['user'],
       allowed_direct_debit: true,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {
@@ -572,9 +592,13 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       roles: ['merchant'],
       allowed_direct_debit: false,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {
@@ -701,9 +725,13 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       roles: ['employee'],
       allowed_direct_debit: false,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {
@@ -788,9 +816,13 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       roles: ['user'],
       allowed_direct_debit: true,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {
@@ -917,9 +949,13 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       roles: ['employee'],
       allowed_direct_debit: true,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {
@@ -1079,9 +1115,13 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       roles: ['employee'],
       allowed_direct_debit: true,
       period: 'day' as any,
-      validation_data: { type: 'object', properties: { name: { type: 'string' } } },
+      validation_data: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      },
       ui_schema: [{ key: 'name', title: 'name', type: 'String' }],
       data: { amount: 5200 },
+      service_name: 'test',
       is_active: true,
       steps: [
         {

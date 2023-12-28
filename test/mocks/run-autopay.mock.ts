@@ -27,6 +27,7 @@ export const baseProcessMock: Omit<ProcessSchema, 'steps'> = {
   },
   max_amount: 5000000,
   is_active: true,
+  service_name: 'test',
 };
 
 export const simpleSteps: StepSchema[] = [
@@ -474,6 +475,7 @@ export const autopayMock = {
   process_id: new Types.ObjectId('657ac17efc13ae364bfa20f1'),
   max_amount: 10000,
   allowed_direct_debit: false,
+  metadata: {},
 };
 
 export const grpcSteps: StepSchema[] = [
