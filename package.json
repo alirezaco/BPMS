@@ -37,6 +37,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "axios": "^1.6.2",
     "bull": "^4.11.5",
+    "cronstrue": "^2.47.0",
     "joi": "^17.11.0",
     "json-joi-converter": "^17.11.0",
     "mongoose": "^8.0.2",

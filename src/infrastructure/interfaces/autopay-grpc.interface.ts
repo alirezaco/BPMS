@@ -109,6 +109,7 @@ export interface Process {
   min_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
+  cron_desc?: string | undefined;
   ui_schema: UISchema[];
   steps: Step[];
   is_active?: boolean | undefined;
@@ -236,6 +237,7 @@ export interface Processes {
   min_amount?: number | undefined;
   period?: string | undefined;
   cron?: string | undefined;
+  cron_desc?: string | undefined;
   is_active?: boolean | undefined;
 }
 
@@ -303,6 +305,7 @@ export interface Autopay {
   min_amount?: number | undefined;
   period: string;
   cron?: string | undefined;
+  cron_desc?: string | undefined;
   allowed_direct_debit: boolean;
   data: string;
   is_active: boolean;

@@ -126,6 +126,7 @@ message Process {
   optional uint64 min_amount = 19;
   optional string period = 6;
   optional string cron = 7;
+  optional string cron_desc = 23;
   repeated UISchema ui_schema = 8;
   repeated Step steps = 9;
   optional bool is_active = 18;
@@ -256,6 +257,7 @@ message Processes {
   optional uint64 min_amount = 8;
   optional string period = 6;
   optional string cron = 7;
+  optional string cron_desc = 10;
   optional bool is_active = 18;
 }
 
@@ -324,6 +326,7 @@ message Autopay {
   optional uint64 min_amount = 22;
   string period = 11;
   optional string cron = 12;
+  optional string cron_desc = 24;
   bool allowed_direct_debit = 13;
   string data = 14;
   bool is_active = 15;

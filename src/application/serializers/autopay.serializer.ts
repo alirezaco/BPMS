@@ -1,6 +1,7 @@
 import { AutoPayEntity } from 'domain/models';
 import { UISchemaSerializer } from './ui-schema.serializer';
 import { ProcessSerializer } from './process.serializer';
+import cronstrue from 'cronstrue/i18n';
 
 export class AutoPaySerializer {
   id: string;
@@ -31,6 +32,7 @@ export class AutoPaySerializer {
   };
   metadata: string;
   min_amount: number;
+  cron_desc?: string;
 
   constructor(initial: AutoPayEntity) {
     this.id = initial?.id;
@@ -67,5 +69,12 @@ export class AutoPaySerializer {
     };
     this.metadata = JSON.stringify(initial?.metadata || {});
     this.min_amount = initial?.minAmount;
+    this.cron_desc = initial?.cron
+      ? cronstrue.toString(initial?.cron, {
+          locale: 'fa',
+          use24HourTimeFormat: true,
+          throwExceptionOnParseError: false,
+        })
+      : undefined;
   }
 }

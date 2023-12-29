@@ -1,4 +1,5 @@
 import { ProcessEntity } from 'domain/models';
+import cronstrue from 'cronstrue/i18n';
 
 export class ProcessesSerializer {
   id: string;
@@ -17,6 +18,7 @@ export class ProcessesSerializer {
   is_active: boolean;
   min_amount: number;
   service_name: string;
+  cron_desc?: string;
 
   constructor(initial: ProcessEntity) {
     this.id = initial?.id;
@@ -35,5 +37,12 @@ export class ProcessesSerializer {
     this.is_active = initial?.isActive;
     this.min_amount = initial?.minAmount;
     this.service_name = initial?.serviceName;
+    this.cron_desc = initial?.cron
+      ? cronstrue.toString(initial?.cron, {
+          locale: 'fa',
+          use24HourTimeFormat: true,
+          throwExceptionOnParseError: false,
+        })
+      : undefined;
   }
 }

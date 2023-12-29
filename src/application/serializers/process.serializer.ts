@@ -2,6 +2,7 @@ import { ProcessEntity } from 'domain/models';
 import { StepSerializer } from './step.serializer';
 import { UISchemaSerializer } from './ui-schema.serializer';
 import { RepeatSerializer } from './repeat.serializer';
+import cronstrue from 'cronstrue/i18n';
 
 export class ProcessSerializer {
   id: string;
@@ -26,6 +27,7 @@ export class ProcessSerializer {
   service_name: string;
   is_repeatable?: boolean;
   repeat?: RepeatSerializer;
+  cron_desc?: string;
 
   constructor(initial: ProcessEntity) {
     this.id = initial?.id;
@@ -52,5 +54,12 @@ export class ProcessSerializer {
     this.service_name = initial?.serviceName;
     this.is_repeatable = initial?.isRepeatable;
     this.repeat = initial?.repeat && new RepeatSerializer(initial?.repeat);
+    this.cron_desc = initial?.cron
+      ? cronstrue.toString(initial?.cron, {
+          locale: 'fa',
+          use24HourTimeFormat: true,
+          throwExceptionOnParseError: false,
+        })
+      : undefined;
   }
 }
