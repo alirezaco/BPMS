@@ -2,6 +2,7 @@ import { PeriodEnum } from 'infrastructure/enum';
 import { StepEntity } from './step.entity';
 import { BaseEntity } from './base.entity';
 import { UISchemaEntity } from './ui-schema.entity';
+import { RepeatEntity } from './repeat.entity';
 
 export class ProcessEntity extends BaseEntity {
   public name: string;
@@ -18,6 +19,8 @@ export class ProcessEntity extends BaseEntity {
   public isActive: boolean;
   public UISchema?: UISchemaEntity[];
   public serviceName: string;
+  public isRepeatable?: boolean;
+  public repeat?: RepeatEntity;
 
   constructor(initial: Partial<ProcessEntity>) {
     super(initial);
@@ -36,5 +39,7 @@ export class ProcessEntity extends BaseEntity {
     this.UISchema = initial?.UISchema || [];
     this.minAmount = initial?.minAmount || 0;
     this.serviceName = initial?.serviceName;
+    this.isRepeatable = initial?.isRepeatable || false;
+    this.repeat = initial?.repeat;
   }
 }

@@ -89,6 +89,25 @@ message Step {
   optional DataParam payment_param = 12;
 }
 
+message Counter {
+  string key = 1;
+  DataParam initial = 2;
+  string step = 3;
+  DataParam step_var = 4;
+}
+
+message RepeatCondition {
+  DataParam variable = 1;
+  string func = 2;
+}
+
+message Repeat {
+  Counter counter = 1;
+  RepeatCondition repeat_condition = 2;
+  string start_step = 3;
+  string end_step = 4;
+}
+
 message Process {
   string id = 11;
   string owner = 12;
@@ -110,6 +129,8 @@ message Process {
   repeated UISchema ui_schema = 8;
   repeated Step steps = 9;
   optional bool is_active = 18;
+  optional bool is_repeatable = 21;
+  optional Repeat repeat = 22;
   string data = 10;
 }
 
@@ -166,6 +187,8 @@ message CreateProcessRequest {
   optional string cron = 7;
   repeated UISchema ui_schema = 8;
   repeated Step steps = 9;
+  optional bool is_repeatable = 18;
+  optional Repeat repeat = 19;
   string data = 10;
 }
 
@@ -189,6 +212,8 @@ message UpdateProcessRequest {
   repeated Step steps = 10;
   optional string data = 11;
   optional bool is_active = 12;
+  optional bool is_repeatable = 18;
+  optional Repeat repeat = 19;
 }
 
 message UpdateProcessResponse {

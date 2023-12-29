@@ -7,12 +7,14 @@ import { convertToPeriod, convertType } from 'infrastructure/utils';
 import { UISchemaMapper } from './ui-schema.mapper';
 import { Schema as joiSchema } from 'json-joi-converter';
 import { Injectable } from '@nestjs/common';
+import { RepeatMapper } from './repeat.mapper';
 
 @Injectable()
 export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
   constructor(
     private readonly stepMapper: StepMapper,
     private readonly UISchemaMapper: UISchemaMapper,
+    private readonly repeatMapper: RepeatMapper,
   ) {}
 
   convertEntityToSchema(entity: ProcessEntity): ProcessSchema {
@@ -42,6 +44,9 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
     );
     schema.min_amount = entity?.minAmount;
     schema.service_name = entity?.serviceName;
+    schema.is_repeatable = entity?.isRepeatable;
+    schema.repeat =
+      entity?.repeat && this.repeatMapper.convertEntityToSchema(entity?.repeat);
 
     return schema;
   }
@@ -74,6 +79,10 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       ),
       minAmount: schema?.min_amount,
       serviceName: schema?.service_name,
+      isRepeatable: schema?.is_repeatable,
+      repeat:
+        schema?.repeat &&
+        this.repeatMapper.convertSchemaToEntity(schema?.repeat),
     });
   }
 
@@ -100,6 +109,10 @@ export class ProcessMapper implements BaseMapper<ProcessSchema, ProcessEntity> {
       validationData: this.createValidationDataFromUISchema(request?.ui_schema),
       minAmount: request?.min_amount && +request?.min_amount.toString(),
       serviceName: request?.service_name,
+      isRepeatable: request?.is_repeatable,
+      repeat:
+        request?.repeat &&
+        this.repeatMapper.convertRequestToEntity(request?.repeat),
     });
   }
 

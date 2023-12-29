@@ -73,6 +73,25 @@ export interface Step {
   payment_param?: DataParam | undefined;
 }
 
+export interface Counter {
+  key: string;
+  initial: DataParam | undefined;
+  step: string;
+  step_var: DataParam | undefined;
+}
+
+export interface RepeatCondition {
+  variable: DataParam | undefined;
+  func: string;
+}
+
+export interface Repeat {
+  counter: Counter | undefined;
+  repeat_condition: RepeatCondition | undefined;
+  start_step: string;
+  end_step: string;
+}
+
 export interface Process {
   id: string;
   owner: string;
@@ -93,6 +112,8 @@ export interface Process {
   ui_schema: UISchema[];
   steps: Step[];
   is_active?: boolean | undefined;
+  is_repeatable?: boolean | undefined;
+  repeat?: Repeat | undefined;
   data: string;
 }
 
@@ -147,6 +168,8 @@ export interface CreateProcessRequest {
   cron?: string | undefined;
   ui_schema: UISchema[];
   steps: Step[];
+  is_repeatable?: boolean | undefined;
+  repeat?: Repeat | undefined;
   data: string;
 }
 
@@ -170,6 +193,8 @@ export interface UpdateProcessRequest {
   steps: Step[];
   data?: string | undefined;
   is_active?: boolean | undefined;
+  is_repeatable?: boolean | undefined;
+  repeat?: Repeat | undefined;
 }
 
 export interface UpdateProcessResponse {

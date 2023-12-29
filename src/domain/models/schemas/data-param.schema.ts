@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SourceEnum } from 'infrastructure/enum/source.enum';
 
 @Schema({ _id: false })
@@ -11,4 +11,9 @@ export class DataParamSchema {
 
   @Prop({ required: true, type: String })
   source_key: string;
+
+  static getSchema() {
+    const schema = SchemaFactory.createForClass(this);
+    return schema;
+  }
 }

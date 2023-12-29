@@ -1,4 +1,4 @@
-import { ModelDefinition, SchemaFactory } from '@nestjs/mongoose';
+import { ModelDefinition } from '@nestjs/mongoose';
 import { ProcessSchema } from './process.schema';
 import { AutoPaySchema } from './autopay.schema';
 import { AutoPayActivitySchema } from './autopay-activity.schema';
@@ -15,6 +15,9 @@ export * from './autopay.schema';
 export * from './ui-schema.schema';
 export * from './autopay-activity.schema';
 export * from './file.schema';
+export * from './counter.schema';
+export * from './repeat.schema';
+export * from './repeat-condition.schema';
 
 export const schemas: ModelDefinition[] = [
   {

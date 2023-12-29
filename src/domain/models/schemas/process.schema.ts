@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { StepSchema } from './step.schema';
 import { PeriodEnum } from 'infrastructure/enum';
 import { UISchemaSchema } from './ui-schema.schema';
+import { RepeatSchema } from './repeat.schema';
 
 @Schema({
   id: true,
@@ -58,6 +59,12 @@ export class ProcessSchema extends BaseSchema {
 
   @Prop({ type: Boolean, default: false })
   is_active: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  is_repeatable: boolean;
+
+  @Prop({ type: RepeatSchema.getSchema(), required: false })
+  repeat?: RepeatSchema;
 
   static getSchema() {
     const schema = SchemaFactory.createForClass(this);

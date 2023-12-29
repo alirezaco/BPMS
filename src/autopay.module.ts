@@ -21,6 +21,7 @@ import { FAILED_QUEUE, JOBS_QUEUE } from 'infrastructure/constants';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { USER_PACKAGE_NAME } from 'infrastructure/interfaces';
 import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
