@@ -35,6 +35,7 @@
     "@nestjs/microservices": "^9.4.3",
     "@nestjs/mongoose": "^10.0.2",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/schedule": "^4.0.0",
     "axios": "^1.6.2",
     "bull": "^4.11.5",
     "cronstrue": "^2.47.0",

@@ -21,6 +21,7 @@ import { FAILED_QUEUE, JOBS_QUEUE } from 'infrastructure/constants';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { USER_PACKAGE_NAME } from 'infrastructure/interfaces';
 import { join } from 'path';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -105,6 +106,7 @@ import { join } from 'path';
         },
       ],
     }),
+    ScheduleModule.forRoot(),
   ],
   controllers: [...controllers],
   providers: [

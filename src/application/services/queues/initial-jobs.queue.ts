@@ -1,9 +1,5 @@
 import { InjectQueue } from '@nestjs/bull';
-import {
-  Injectable,
-  OnApplicationBootstrap,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { Queue } from 'bull';
 import { AutoPayEntity } from 'domain/models';
@@ -13,6 +9,7 @@ import { AutoPayQueue } from 'infrastructure/interfaces';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { AutopayQueueQuery } from '../queries';
 import { ConfigService } from '@nestjs/config';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class InitialJobsQueue implements OnApplicationBootstrap {
@@ -91,6 +88,7 @@ export class InitialJobsQueue implements OnApplicationBootstrap {
     await this.addNewJob(autoPays);
   }
 
+  @Cron(CronExpression.EVERY_HOUR)
   async reinitialJobs() {
     await this.initialJobs(PeriodEnum.HOUR);
     await this.initialJobs(PeriodEnum.DAY);
