@@ -14,6 +14,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Tresom',
       roles: ['user'],
       allowed_direct_debit: false,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',
@@ -147,6 +148,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Solarbreeze',
       roles: ['employee'],
       allowed_direct_debit: false,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',
@@ -288,6 +290,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Stringtough',
       roles: ['user'],
       allowed_direct_debit: true,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',
@@ -375,6 +378,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Bigtax',
       roles: ['merchant'],
       allowed_direct_debit: true,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',
@@ -529,6 +533,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Solarbreeeeeze',
       roles: ['user'],
       allowed_direct_debit: true,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',
@@ -591,6 +596,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Fix San',
       roles: ['merchant'],
       allowed_direct_debit: false,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',
@@ -724,6 +730,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Sonair',
       roles: ['employee'],
       allowed_direct_debit: false,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',
@@ -815,6 +822,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Stim',
       roles: ['user'],
       allowed_direct_debit: true,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',
@@ -948,6 +956,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Tampflex',
       roles: ['employee'],
       allowed_direct_debit: true,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',
@@ -1114,6 +1123,7 @@ export const processSeed: SeedInterface<ProcessSchema> = {
       name: 'Fintone',
       roles: ['employee'],
       allowed_direct_debit: true,
+      is_repeatable: false,
       period: 'day' as any,
       validation_data: {
         type: 'object',

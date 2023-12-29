@@ -21,7 +21,7 @@ import {
   StepResultInterface,
 } from 'infrastructure/interfaces';
 import { ResultStep, RunningStepType } from 'infrastructure/types';
-import { ComparisonUtil } from 'infrastructure/utils';
+import { CalculateUtil, ComparisonUtil } from 'infrastructure/utils';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { GetFileQuery } from '../queries';
 import { CreateAutopayActivityCommand } from '../commands';
@@ -133,6 +133,65 @@ export class RunAutopayProcessor {
       isHandledError,
       isRetry: error.isRetry,
     };
+  }
+
+  initialCounter() {
+    this.process.repeat.counter.value = this.getValueDate(
+      this.process.repeat.counter.initial,
+    );
+  }
+
+  async repeatableProcess(startStep: number, endStep: string): Promise<void> {
+    this.initialCounter();
+    const conditionVariable = this.getValueDate(
+      this.process.repeat.condition.variable,
+    );
+    const stepVar = this.getValueDate(this.process.repeat.counter.stepVar);
+
+    let index = startStep;
+
+    while (
+      ComparisonUtil.compare(
+        this.process.repeat.condition.func,
+        conditionVariable,
+        this.process.repeat.counter.value,
+      )
+    ) {
+      const step = this.process.steps[index];
+
+      if (step.isSync) {
+        this.runAstep(step).then().catch();
+        continue;
+      }
+
+      this.RunningStep = [step.name, index];
+
+      if (step.isPayment) {
+        const res = this.checkPayment(step);
+
+        if (!res) {
+          return;
+        }
+      }
+
+      const result = await this.runAstep(step);
+
+      if (!result.success) {
+        await this.handleProcessError(result);
+        return;
+      }
+
+      if (step.isFinal) break;
+
+      this.process.repeat.counter.value = CalculateUtil.calculate(
+        this.process.repeat.counter.step,
+        this.process.repeat.counter.value,
+        stepVar,
+      );
+
+      if (step.name === endStep) index = startStep;
+      else index++;
+    }
   }
 
   async runSteps(): Promise<ProcessResultInterface> {

@@ -28,6 +28,7 @@ export const baseProcessMock: Omit<ProcessSchema, 'steps'> = {
   max_amount: 5000000,
   is_active: true,
   service_name: 'test',
+  is_repeatable: false,
 };
 
 export const simpleSteps: StepSchema[] = [
