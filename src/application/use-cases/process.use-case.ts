@@ -14,11 +14,17 @@ import {
   UpdateProcessMinAmountCommand,
   UpdateProcessNameCommand,
   UpdateProcessPeriodCommand,
+  UpdateProcessRepeatCommand,
   UpdateProcessRolesCommand,
   UpdateProcessStepsCommand,
 } from 'application/services';
 import { FileEntity, ProcessEntity } from 'domain/models';
-import { FileMapper, ProcessMapper, StepMapper } from 'domain/services';
+import {
+  FileMapper,
+  ProcessMapper,
+  RepeatMapper,
+  StepMapper,
+} from 'domain/services';
 import { UISchemaMapper } from 'domain/services/mappers/ui-schema.mapper';
 import { findAndCountAll } from 'infrastructure/database';
 import {
@@ -38,6 +44,7 @@ export class ProcessUseCase {
     private readonly processMapper: ProcessMapper,
     private readonly stepMapper: StepMapper,
     private readonly UISchemaMapper: UISchemaMapper,
+    private readonly repeatMapper: RepeatMapper,
     private readonly fileMapper: FileMapper,
   ) {}
 
@@ -166,6 +173,21 @@ export class ProcessUseCase {
           data,
           UISchema,
           request.default_fail_step || process.defaultFailStep,
+        ),
+      );
+    }
+
+    if (request.is_repeatable !== undefined || request.repeat) {
+      process = await this.commandBus.execute<
+        UpdateProcessRepeatCommand,
+        ProcessEntity
+      >(
+        new UpdateProcessRepeatCommand(
+          process,
+          request.is_repeatable || process.isRepeatable,
+          request.repeat
+            ? this.repeatMapper.convertRequestToEntity(request.repeat)
+            : process.repeat,
         ),
       );
     }

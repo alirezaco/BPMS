@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   AutoPayActivityEntity,
@@ -26,7 +26,9 @@ import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { GetFileQuery } from '../queries';
 import { CreateAutopayActivityCommand } from '../commands';
 
-@Injectable()
+@Injectable({
+  scope: Scope.TRANSIENT,
+})
 export class RunAutopayProcessor {
   private static is_busy = false;
 
@@ -199,6 +201,10 @@ export class RunAutopayProcessor {
 
     if (dataParam.source === SourceEnum.PROCESS) {
       return this.process.data[dataParam.sourceKey];
+    }
+
+    if (this.process.isRepeatable && dataParam.source === SourceEnum.COUNTER) {
+      return this.process.repeat.counter.value;
     }
 
     const keys = dataParam.sourceKey.split('.');

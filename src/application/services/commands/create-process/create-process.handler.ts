@@ -171,6 +171,41 @@ export class CreateProcessHandler
     return processEntity;
   }
 
+  checkRepeat(processEntity: ProcessEntity) {
+    if (!processEntity.isRepeatable) return;
+
+    if (!processEntity.repeat)
+      throw new BadRequestException(MessageEnum.INVALID_PROCESS_REPEATABLE);
+
+    if (
+      processEntity.steps.filter(
+        (x) =>
+          x.name === processEntity.repeat.startStep ||
+          x.name === processEntity.repeat.endStep,
+      ).length !== 2
+    )
+      throw new BadRequestException(MessageEnum.INVALID_PROCESS_REPEATABLE);
+
+    if (processEntity.repeat.endStep === processEntity.repeat.startStep)
+      throw new BadRequestException(MessageEnum.INVALID_PROCESS_REPEATABLE);
+
+    this.checkParams(
+      processEntity.repeat.condition.variable,
+      processEntity.validationData,
+      processEntity.data,
+    );
+    this.checkParams(
+      processEntity.repeat.counter.stepVar,
+      processEntity.validationData,
+      processEntity.data,
+    );
+    this.checkParams(
+      processEntity.repeat.counter.initial,
+      processEntity.validationData,
+      processEntity.data,
+    );
+  }
+
   async execute({
     processEntity,
   }: CreateProcessCommand): Promise<ProcessEntity> {
@@ -178,6 +213,7 @@ export class CreateProcessHandler
     this.checkSteps(processEntity);
     this.checkFailStep(processEntity.steps, processEntity.defaultFailStep);
     this.checkPeriod(processEntity);
+    this.checkRepeat(processEntity);
 
     processEntity = this.setFinalSteps(processEntity);
 

@@ -5,6 +5,7 @@ export class CounterEntity {
   initial: DataParamEntity;
   step: string;
   stepVar: DataParamEntity;
+  value: number;
 
   constructor(initial: Partial<CounterEntity>) {
     this.key = initial?.key;

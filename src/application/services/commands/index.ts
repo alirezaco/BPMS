@@ -20,6 +20,7 @@ import { UpdateProcessMaxAmountHandler } from './update-process-max-amount';
 import { UpdateProcessMinAmountHandler } from './update-process-min-amount';
 import { UpdateProcessNameHandler } from './update-process-name';
 import { UpdateProcessPeriodHandler } from './update-process-period';
+import { UpdateProcessRepeatHandler } from './update-process-repeat';
 import { UpdateProcessRolesHandler } from './update-process-roles';
 import { UpdateProcessServiceNameHandler } from './update-process-service-name';
 import { UpdateProcessStepsHandler } from './update-process-steps';
@@ -49,6 +50,7 @@ export * from './update-autopay-metadata';
 export * from './update-autopay-min-amount';
 export * from './update-process-min-amount';
 export * from './update-process-service-name';
+export * from './update-process-repeat';
 
 export const commandHandlers = [
   CreateProcessHandler,
@@ -76,4 +78,5 @@ export const commandHandlers = [
   UpdateAutoPayMinAmountHandler,
   UpdateProcessMinAmountHandler,
   UpdateProcessServiceNameHandler,
+  UpdateProcessRepeatHandler,
 ];

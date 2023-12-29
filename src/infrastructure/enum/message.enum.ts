@@ -12,4 +12,5 @@ export enum MessageEnum {
   ACTIVITY_NOT_FOUND = 'فعالیت یافت نشد.',
   FILE_NOT_FOUND = 'فایل یافت نشد.',
   INVALID_PROCESS_STEPS = 'مراحل پردازش نامعتبر است.',
+  INVALID_PROCESS_REPEATABLE = 'تکرار پردازش نامعتبر است.',
 }
