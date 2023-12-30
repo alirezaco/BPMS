@@ -270,6 +270,12 @@ message ActiveProcess {
   string id = 1;
   string name = 2;
   string service_name = 3;
+  optional int64 max_amount = 4;
+  optional int64 min_amount = 5;
+  optional string period = 6;
+  optional string cron = 7;
+  optional string cron_desc = 8;
+  bool allowed_direct_debit = 9;
 }
 
 message ListProcessesRequest {

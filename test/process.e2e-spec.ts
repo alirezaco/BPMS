@@ -120,7 +120,7 @@ describe('ProcessController (e2e)', () => {
   it('list processes', async () => {
     const metadata = new Metadata();
     metadata.add('me', new Types.ObjectId().toString());
-    metadata.add('roles', 'admin');
+    metadata.add('roles', 'user');
 
     const response = await processController.listProcesses(
       {
@@ -133,6 +133,16 @@ describe('ProcessController (e2e)', () => {
     expect(response.meta?.status).toBe(HttpStatus.OK);
 
     expect(Array.isArray(response.data)).toBe(true);
+
+    expect(response.data[0]).toHaveProperty('id');
+    expect(response.data[0]).toHaveProperty('name');
+    expect(response.data[0]).toHaveProperty('service_name');
+    expect(response.data[0]).toHaveProperty('max_amount');
+    expect(response.data[0]).toHaveProperty('period');
+    expect(response.data[0]).toHaveProperty('min_amount');
+    expect(response.data[0]).toHaveProperty('cron');
+    expect(response.data[0]).toHaveProperty('cron_desc');
+    expect(response.data[0]).toHaveProperty('allowed_direct_debit');
   });
 
   it('list processes admin', async () => {

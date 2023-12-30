@@ -24,6 +24,8 @@ describe('AutopayController (e2e)', () => {
   it('create autopay', async () => {
     const metadata = new Metadata();
     metadata.add('me', new Types.ObjectId().toString());
+    metadata.add('roles', 'user');
+    metadata.add('roles', 'employee');
 
     const response = await autopayController.createAutopay(
       createAutopayRequestMock,

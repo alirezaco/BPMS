@@ -3,7 +3,11 @@ import { CreateAutopayCommand } from './create-autopay.command';
 import { AutoPayFactory, ProcessRepository } from 'domain/services';
 import { AutoPayEntity, ProcessEntity } from 'domain/models';
 import { MessageEnum, PeriodEnum } from 'infrastructure/enum';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { fromJson } from 'json-joi-converter';
 
 @CommandHandler(CreateAutopayCommand)
@@ -66,8 +70,13 @@ export class CreateAutopayHandler
 
   async execute({
     autopayEntity,
+    roles,
   }: CreateAutopayCommand): Promise<AutoPayEntity> {
     const process = await this.checkExistProcess(autopayEntity.processId);
+
+    if (!roles.find((x) => process.roles.includes(x))) {
+      throw new ForbiddenException(MessageEnum.FORBIDDEN);
+    }
 
     this.checkDirectDebit(process, autopayEntity);
 

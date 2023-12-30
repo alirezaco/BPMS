@@ -42,6 +42,7 @@ export class AutopayUseCase {
   async createAutopay(
     createAutopayRequest: CreateAutopayRequest,
     me: string,
+    roles: string[],
   ): Promise<AutoPaySerializer> {
     const res = await this.commandBus.execute<
       CreateAutopayCommand,
@@ -49,6 +50,7 @@ export class AutopayUseCase {
     >(
       new CreateAutopayCommand(
         this.autoPayMapper.convertRequestToEntity(createAutopayRequest, me),
+        roles,
       ),
     );
 

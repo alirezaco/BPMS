@@ -148,7 +148,7 @@ export class ProcessController
 
       const processes = await this.processUseCase.getProcesses(
         request,
-        roles[0]?.toString()?.split(','),
+        roles.map((role) => role.toString()) || [],
       );
 
       return {
@@ -159,6 +159,12 @@ export class ProcessController
           id: x.id,
           name: x.name,
           service_name: x.service_name,
+          max_amount: x.max_amount,
+          min_amount: x.min_amount,
+          period: x.period,
+          cron: x.cron,
+          cron_desc: x.cron_desc,
+          allowed_direct_debit: x.allowed_direct_debit,
         })),
       };
     } catch (error) {

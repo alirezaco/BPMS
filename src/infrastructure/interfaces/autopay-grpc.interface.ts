@@ -250,6 +250,12 @@ export interface ActiveProcess {
   id: string;
   name: string;
   service_name: string;
+  max_amount?: number | undefined;
+  min_amount?: number | undefined;
+  period?: string | undefined;
+  cron?: string | undefined;
+  cron_desc?: string | undefined;
+  allowed_direct_debit: boolean;
 }
 
 export interface ListProcessesRequest {

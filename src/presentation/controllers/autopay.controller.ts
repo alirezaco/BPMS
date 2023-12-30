@@ -62,10 +62,12 @@ export class AutopayController
   ): Promise<CreateAutopayResponse> {
     try {
       const me = metadata?.get('me')[0];
+      const roles = metadata?.get('roles');
 
       const autopay = await this.autopayUseCase.createAutopay(
         request,
         me.toString(),
+        roles.map((role) => role.toString()) || [],
       );
 
       return {
